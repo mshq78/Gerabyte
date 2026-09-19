@@ -1,4 +1,5 @@
 import { Level, OrgRank, LeagueTier } from '../types/domain';
+export { toFa, formatNumberFa, formatDurationFa } from './toFa';
 
 export const LEVEL_NAMES: Record<Level, { title: string; subtitle: string; minXp: number }> = {
   1: { title: 'آغازگر', subtitle: 'پایه‌ریزی مهارت‌های اولیه', minXp: 0 },

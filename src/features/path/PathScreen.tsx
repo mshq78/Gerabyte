@@ -80,8 +80,9 @@ export const PathScreen: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col text-ink">
-      {/* 1. Sticky Domain Selector Tabs */}
-      <header className="sticky top-0 z-30 bg-canvas/95 backdrop-blur-md border-b border-sunken py-2.5 px-3">
+      {/* 1. Merged Sticky Header (Domain selector + Unit status) */}
+      <header className="sticky top-0 z-30 bg-surface border-b border-sunken p-2.5 shadow-xs">
+        {/* Domain chips */}
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
           {domains.map((dom) => {
             const isActive = dom.id === activeDomainId;
@@ -89,10 +90,10 @@ export const PathScreen: React.FC = () => {
               <button
                 key={dom.id}
                 onClick={() => setActiveDomainId(dom.id)}
-                className={`shrink-0 min-h-[48px] px-3.5 py-2 rounded-tile text-meta font-bold transition-all select-none cursor-pointer flex items-center gap-1.5 ${
+                className={`shrink-0 min-h-[44px] sm:min-h-[48px] px-3.5 py-2 rounded-tile text-meta font-bold transition-all select-none cursor-pointer flex items-center gap-1.5 ${
                   isActive
                     ? 'bg-primary text-surface shadow-xs'
-                    : 'bg-surface text-ink/80 hover:bg-canvas border border-sunken'
+                    : 'bg-canvas text-ink/80 hover:bg-surface border border-sunken'
                 }`}
               >
                 <span>{dom.title}</span>
@@ -100,49 +101,37 @@ export const PathScreen: React.FC = () => {
             );
           })}
         </div>
-      </header>
 
-      {/* 2. Active Domain Overview Banner */}
-      {activeDomain && (
-        <div
-          className="px-5 py-4 text-ink border-b border-sunken bg-domain-1-tint"
-        >
-          <div className="flex items-center justify-between">
-            <span
-              className="text-meta font-black tracking-tight text-primary"
-            >
-              مسیر یادگیری گرابایت
-            </span>
-            <span className="text-meta text-ink/60 font-semibold">
-              {toFa(activeDomain.totalLessons)} درس · {toFa(activeDomain.unitsCount)} فصل
+        {/* Compact Unit Banner */}
+        {activePath?.units[0] && (
+          <div className="mt-1.5 pt-2 border-t border-sunken flex items-center justify-between text-meta">
+            <div className="flex items-center gap-2 truncate">
+              <span className="font-bold text-primary bg-domain-1-tint px-2 py-0.5 rounded-tile shrink-0">
+                فصل {toFa(activePath.units[0].order)}: {activePath.units[0].title}
+              </span>
+            </div>
+            <span className="text-meta text-ink/70 font-semibold shrink-0">
+              {toFa(activePath.units[0].lessons.filter((l) => l.status === 'done').length)} از {toFa(activePath.units[0].lessons.length)} درس
             </span>
           </div>
-          <h2 className="text-headline font-bold mt-1 text-ink">
-            {activeDomain.title}
-          </h2>
-          <p className="text-meta text-ink/80 mt-0.5 leading-relaxed">
-            {activeDomain.subtitle}
-          </p>
-        </div>
-      )}
+        )}
+      </header>
 
-      {/* 3. Units and Winding Vertical Path */}
-      <div className="flex-1 px-4 py-6 space-y-12">
-        {activePath?.units.map((unit) => (
+      {/* 2. Units and Winding Vertical Path */}
+      <div className="flex-1 px-4 py-4 space-y-10">
+        {activePath?.units.map((unit, uIdx) => (
           <div key={unit.id} className="relative">
-            {/* Sticky Unit Header Banner */}
-            <div className="sticky top-14 z-20 bg-surface/95 backdrop-blur-md p-3.5 rounded-tile border border-sunken shadow-xs mb-8">
-              <div className="flex items-center justify-between">
-                <span className="text-meta font-bold text-primary bg-domain-1-tint px-2 py-0.5 rounded-tile">
-                  فصل {toFa(unit.order)}
+            {/* Subsequent Unit Divider Banner */}
+            {uIdx > 0 && (
+              <div className="p-3 rounded-tile bg-surface border border-sunken shadow-xs mb-6 flex items-center justify-between text-meta">
+                <span className="font-bold text-primary bg-domain-1-tint px-2 py-0.5 rounded-tile">
+                  فصل {toFa(unit.order)}: {unit.title}
                 </span>
-                <span className="text-meta text-ink/70 font-semibold">
-                  {toFa(unit.lessons.filter((l) => l.status === 'done').length)} از {toFa(unit.lessons.length)} درس تکمیل‌شده
+                <span className="text-ink/70 font-semibold">
+                  {toFa(unit.lessons.filter((l) => l.status === 'done').length)} از {toFa(unit.lessons.length)} درس
                 </span>
               </div>
-              <h3 className="font-bold text-body text-ink mt-1.5">{unit.title}</h3>
-              <p className="text-meta text-ink/75 mt-0.5">{unit.summary}</p>
-            </div>
+            )}
 
             {/* Winding Nodes */}
             <div className="relative flex flex-col items-center gap-10 py-2">

@@ -149,7 +149,7 @@ export const PlacementScreen: React.FC = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-2 max-w-sm mx-auto w-full space-y-2">
+        <div className="pt-2 max-w-sm mx-auto w-full space-y-2 safe-bottom">
           <Button
             fullWidth
             size="lg"
@@ -232,7 +232,7 @@ export const PlacementScreen: React.FC = () => {
       </div>
 
       {/* Bottom Button */}
-      <div className="pt-2 max-w-sm mx-auto w-full">
+      <div className="pt-2 max-w-sm mx-auto w-full safe-bottom">
         <Button
           fullWidth
           size="lg"

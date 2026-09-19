@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Award,
@@ -19,12 +19,23 @@ import { Button } from '../../components/ui/Button';
 import { toFa } from '../../lib/toFa';
 import { LEVEL_NAMES } from '../../lib/format';
 import { getJalaliMonthGrid, JalaliCalendarCell } from '../../lib/jalali';
-import { MOCK_BADGES } from '../../mock/data';
-import { Level } from '../../types/domain';
+import { meApi } from '../../api/me';
+import { Badge, Level } from '../../types/domain';
 
 export const ProfileScreen: React.FC = () => {
   const navigate = useNavigate();
   const { user, subscription, unreadNotifsCount } = useApp();
+  const [badges, setBadges] = useState<Badge[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    meApi.getBadges().then((res) => {
+      if (active) setBadges(res);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const currentLevelInfo = LEVEL_NAMES[user.level];
   const nextLevel = Math.min(5, user.level + 1) as Level;
@@ -186,12 +197,12 @@ export const ProfileScreen: React.FC = () => {
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-body">نشان‌های افتخار و دستاورد</h3>
           <span className="text-meta text-primary font-bold">
-            {toFa(MOCK_BADGES.filter((b) => b.unlockedAt).length)} از {toFa(MOCK_BADGES.length)}
+            {toFa(badges.filter((b) => b.unlockedAt).length)} از {toFa(badges.length)}
           </span>
         </div>
 
         <div className="grid grid-cols-4 gap-2.5">
-          {MOCK_BADGES.map((b) => {
+          {badges.map((b) => {
             const isUnlocked = !!b.unlockedAt;
             return (
               <div

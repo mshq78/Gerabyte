@@ -99,7 +99,7 @@ export const SquircleNode: React.FC<SquircleNodeProps> = ({
       </motion.button>
 
       {label && (
-        <span className="mt-3.5 text-meta font-semibold text-ink text-center max-w-[130px] line-clamp-1 leading-snug">
+        <span className="mt-3.5 text-meta font-semibold text-ink text-center max-w-[160px] line-clamp-2 leading-snug">
           {label}
         </span>
       )}

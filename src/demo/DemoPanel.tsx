@@ -231,6 +231,33 @@ export const DemoPanel: React.FC = () => {
             </button>
           </div>
 
+          {/* Quick Navigation to New Views */}
+          <div className="pt-3 border-t border-sunken">
+            <label className="block text-meta font-bold text-ink/80 mb-2">
+              دسترسی سریع به بخش‌های سازمانی و دمو:
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <a
+                href="/org/overview"
+                className="min-h-[44px] px-3 py-2 rounded-tile bg-surface hover:bg-canvas border border-sunken text-center text-meta font-bold text-primary flex items-center justify-center"
+              >
+                داشبورد سازمان (/org)
+              </a>
+              <a
+                href="/faq"
+                className="min-h-[44px] px-3 py-2 rounded-tile bg-surface hover:bg-canvas border border-sunken text-center text-meta font-bold text-ink flex items-center justify-center"
+              >
+                پرسش‌های متداول (/faq)
+              </a>
+              <a
+                href="/demo/palette"
+                className="min-h-[44px] px-3 py-2 rounded-tile bg-surface hover:bg-canvas border border-sunken text-center text-meta font-bold text-ink flex items-center justify-center"
+              >
+                پالت رنگی (/demo/palette)
+              </a>
+            </div>
+          </div>
+
           {/* Reset All Local Data */}
           <div className="pt-3 border-t border-sunken">
             <Button

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Trophy, AlertCircle, ChevronLeft } from 'lucide-react';
+import { Sparkles, Trophy, AlertCircle, ChevronLeft, ChevronDown } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
 import { Avatar } from '../../components/ui/Avatar';
@@ -18,6 +18,7 @@ export const HomeScreen: React.FC = () => {
   const { user, subscription, updateUserLocal, showToast } = useApp();
   const [activeChallenge, setActiveChallenge] = useState<Challenge | null>(null);
   const [dismissedAiCard, setDismissedAiCard] = useState(false);
+  const [isAiCardExpanded, setIsAiCardExpanded] = useState(false);
   const [nextLesson, setNextLesson] = useState<LessonSummary | null>(null);
 
   useEffect(() => {
@@ -129,34 +130,53 @@ export const HomeScreen: React.FC = () => {
         </div>
       )}
 
-      {/* 3. AI Suggested Level Card (Dismissible) */}
+      {/* 3. AI Suggested Level Banner (Compact one-line, expandable) */}
       {!dismissedAiCard && user.aiSuggestedLevel && (
-        <div className="p-4 rounded-tile bg-surface border-2 border-primary/40 shadow-xs text-ink">
-          <div className="flex items-center justify-between mb-2">
+        <div className="rounded-tile bg-surface border border-primary/40 shadow-xs text-ink overflow-hidden transition-all">
+          <button
+            onClick={() => setIsAiCardExpanded((prev) => !prev)}
+            className="w-full min-h-[48px] px-3.5 py-2 flex items-center justify-between text-right cursor-pointer hover:bg-domain-1-tint/30 transition-colors"
+            aria-expanded={isAiCardExpanded}
+          >
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-primary" aria-hidden="true" />
-              <h3 className="font-bold text-title">پیشنهاد هوشمند ارتقای سطح</h3>
+              <Sparkles className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
+              <span className="font-bold text-body text-ink">
+                پیشنهاد سطح {toFa(user.aiSuggestedLevel.level)} آماده است
+              </span>
             </div>
-            <span className="text-meta px-2 py-0.5 rounded-pill bg-domain-1-tint text-primary font-bold">
-              سطح {toFa(user.aiSuggestedLevel.level)} ({LEVEL_NAMES[user.aiSuggestedLevel.level].title})
-            </span>
-          </div>
-          <ul className="space-y-1.5 my-3 text-body text-ink/85">
-            {user.aiSuggestedLevel.reasons.map((reason, idx) => (
-              <li key={idx} className="flex items-start gap-2">
-                <span className="w-2 h-2 rounded-pill bg-primary mt-2 shrink-0" />
-                <span>{reason}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="flex items-center gap-2 pt-1">
-            <Button size="sm" onClick={handleAcceptAiLevel}>
-              پذیرش سطح پیشنهادی
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleDismissAiLevel}>
-              بعداً
-            </Button>
-          </div>
+            <div className="flex items-center gap-1.5 text-primary">
+              <span className="text-meta font-bold">
+                {LEVEL_NAMES[user.aiSuggestedLevel.level].title}
+              </span>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  isAiCardExpanded ? 'rotate-180' : 'rotate-0'
+                }`}
+                aria-hidden="true"
+              />
+            </div>
+          </button>
+
+          {isAiCardExpanded && (
+            <div className="p-3.5 pt-1 border-t border-sunken space-y-3 bg-domain-1-tint/20">
+              <ul className="space-y-1.5 text-body text-ink/85">
+                {user.aiSuggestedLevel.reasons.map((reason, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="w-2 h-2 rounded-pill bg-primary mt-2 shrink-0" />
+                    <span>{reason}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex items-center gap-2 pt-1">
+                <Button size="sm" onClick={handleAcceptAiLevel}>
+                  پذیرش سطح پیشنهادی
+                </Button>
+                <Button variant="ghost" size="sm" onClick={handleDismissAiLevel}>
+                  بعداً
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -232,7 +232,7 @@ export const ExamScreen: React.FC = () => {
           ))}
         </div>
 
-        <div className="pt-2 max-w-md mx-auto">
+        <div className="pt-2 max-w-md mx-auto safe-bottom">
           <Button fullWidth size="lg" onClick={() => navigate('/path')}>
             بازگشت به مسیر یادگیری
           </Button>
@@ -344,7 +344,7 @@ export const ExamScreen: React.FC = () => {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="pt-3 max-w-sm mx-auto w-full flex items-center gap-3">
+      <div className="pt-3 max-w-sm mx-auto w-full flex items-center gap-3 safe-bottom">
         {currentQuestionIndex > 0 && (
           <Button
             variant="secondary"

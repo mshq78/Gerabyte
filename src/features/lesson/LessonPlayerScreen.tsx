@@ -682,7 +682,7 @@ export const LessonPlayerScreen: React.FC = () => {
       </div>
 
       {/* 3. Sticky Bottom CTA & Slide-up Explanation */}
-      <div className="sticky bottom-0 z-30 bg-surface border-t border-sunken shadow-lg">
+      <div className="sticky bottom-0 z-30 bg-surface border-t border-sunken shadow-lg safe-bottom">
         {/* Slide-up explanation for answer checks */}
         <AnimatePresence>
           {showExplanation && (

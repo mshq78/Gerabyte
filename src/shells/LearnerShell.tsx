@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Outlet } from 'react-router-dom';
 import { BottomNav } from '../components/layout/BottomNav';
 import { OfflineBanner } from '../components/ui/OfflineBanner';
 import { Toast } from '../components/ui/Toast';
@@ -7,7 +7,7 @@ import { useApp } from '../state/AppContext';
 import { DemoPanel } from '../demo/DemoPanel';
 
 interface LearnerShellProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export const LearnerShell: React.FC<LearnerShellProps> = ({ children }) => {
@@ -35,7 +35,7 @@ export const LearnerShell: React.FC<LearnerShellProps> = ({ children }) => {
 
         {/* Main View Container */}
         <main className={`flex-1 flex flex-col ${isFullScreenFlow ? '' : 'pb-24'}`}>
-          {children}
+          {children || <Outlet />}
         </main>
 
         {/* Persistent Bottom Navigation with safe-bottom */}

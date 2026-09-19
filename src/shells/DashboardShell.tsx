@@ -1,5 +1,5 @@
 import React, { useState, ReactNode } from 'react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useLocation, Link, useNavigate, Outlet } from 'react-router-dom';
 import {
   Menu,
   X,
@@ -8,26 +8,32 @@ import {
   BarChart3,
   Award,
   Settings,
-  Shield,
   LogOut,
   ChevronLeft,
   GraduationCap,
   Sliders,
+  Shield,
+  Filter,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { Avatar } from '../components/ui/Avatar';
 import { authApi } from '../api/auth';
+import { ScopeProvider, useOrgScope } from '../features/org/context/ScopeContext';
+import { OrgRole } from '../types/org';
+import { toFa } from '../lib/format';
 
-interface DashboardShellProps {
-  children: ReactNode;
+interface DashboardShellInnerProps {
+  children?: ReactNode;
   title?: string;
 }
 
-export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title }) => {
+const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, title }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useApp();
+  const { currentOrg, userRole, setUserRole, selectedUnitId, setSelectedUnitId, units, canManageAllUnits } =
+    useOrgScope();
 
   const isAdmin = location.pathname.startsWith('/admin');
   const panelTitle = isAdmin ? 'پنل تیم گرا' : 'داشبورد سازمان';
@@ -40,33 +46,29 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title 
 
   const navItems = isAdmin
     ? [
-        { label: 'مدیریت محتوا و مسیرها', icon: GraduationCap, disabled: true },
-        { label: 'سازمان‌های همکار', icon: Building2, disabled: true },
-        { label: 'کاربران و اعتبارات', icon: Users, disabled: true },
-        { label: 'گزارش‌های پیشرفته', icon: BarChart3, disabled: true },
-        { label: 'تنظیمات سامانه گرا', icon: Sliders, disabled: true },
+        { path: '/admin', label: 'مدیریت محتوا و سامانه', icon: Sliders },
+        { path: '/org/overview', label: 'داشبورد سازمانی', icon: Building2 },
       ]
     : [
-        { label: 'نمای کلی و خلاصه شاخص‌ها', icon: BarChart3, disabled: true },
-        { label: 'تیم‌ها و همکاران', icon: Users, disabled: true },
-        { label: 'گواهینامه‌های سازمانی', icon: Award, disabled: true },
-        { label: 'مسیرهای اختصاصی سازمان', icon: GraduationCap, disabled: true },
-        { label: 'تنظیمات سازمان', icon: Settings, disabled: true },
+        { path: '/org/overview', label: 'نمای کلی و شاخص‌ها', icon: BarChart3 },
+        { path: '/org/people', label: 'همکاران و مدیریت دسترسی', icon: Users },
+        { path: '/org/assignments', label: 'مأموریت‌ها و مسیرها', icon: GraduationCap },
+        { path: '/org/reports', label: 'گزارش‌های تحلیلی و چاپ', icon: Award },
       ];
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-surface border-l border-sunken text-ink">
       {/* Logo Slot */}
       <div className="p-5 border-b border-sunken flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-tile bg-primary text-surface flex items-center justify-center font-black text-headline shadow-xs">
+        <Link to="/org/overview" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-tile bg-primary text-white flex items-center justify-center font-black text-headline shadow-xs">
             گ
           </div>
           <div>
             <h2 className="text-title font-black leading-tight text-ink">گرابایت</h2>
             <p className="text-meta text-ink/60 font-medium">{panelTitle}</p>
           </div>
-        </div>
+        </Link>
 
         {/* Mobile close button */}
         <button
@@ -82,30 +84,39 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title 
       <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
         {navItems.map((item, idx) => {
           const Icon = item.icon;
+          const isActive =
+            location.pathname === item.path ||
+            (item.path !== '/org/overview' && location.pathname.startsWith(item.path));
+
           return (
-            <div
+            <Link
               key={idx}
-              className="min-h-[48px] w-full px-3 py-2.5 rounded-tile flex items-center justify-between text-meta font-bold transition-all text-ink/40 cursor-not-allowed bg-canvas/40 border border-transparent"
-              title="به‌زودی در دسترس قرار می‌گیرد"
+              to={item.path}
+              onClick={() => setDrawerOpen(false)}
+              className={`min-h-[48px] w-full px-3 py-2.5 rounded-tile flex items-center justify-between text-meta font-bold transition-all ${
+                isActive
+                  ? 'bg-primary text-white shadow-xs'
+                  : 'text-ink/80 hover:bg-canvas hover:text-ink'
+              }`}
             >
               <div className="flex items-center gap-3">
-                <Icon className="w-5 h-5 text-ink/40" aria-hidden="true" />
+                <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-ink/60'}`} aria-hidden="true" />
                 <span>{item.label}</span>
               </div>
-              <span className="text-meta font-normal text-ink/40">به‌زودی</span>
-            </div>
+              <ChevronLeft className={`w-4 h-4 ${isActive ? 'text-white/80' : 'text-ink/40'}`} />
+            </Link>
           );
         })}
       </nav>
 
       {/* User Menu at Bottom */}
-      <div className="p-4 border-t border-sunken bg-paper/50">
-        <div className="flex items-center gap-3 mb-3">
+      <div className="p-4 border-t border-sunken bg-canvas/30 space-y-3">
+        <div className="flex items-center gap-3">
           <Avatar seed={user.avatarSeed} name={user.fullName} size="sm" />
           <div className="flex-1 min-w-0">
             <h4 className="text-meta font-bold text-ink truncate">{user.fullName}</h4>
             <p className="text-meta text-ink/60 truncate">
-              {isAdmin ? 'مدیر سیستم گرا' : user.membership?.orgName || 'همکار سازمانی'}
+              {userRole === 'org_admin' ? 'مدیر ارشد سازمان' : 'مدیر واحد (شیفت)'}
             </p>
           </div>
         </div>
@@ -113,7 +124,7 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title 
         <div className="flex items-center gap-2">
           <Link
             to="/"
-            className="flex-1 min-h-[48px] px-3 py-2 rounded-tile bg-canvas hover:bg-sunken text-ink text-meta font-bold flex items-center justify-center gap-1.5 transition-all text-center"
+            className="flex-1 min-h-[48px] px-3 py-2 rounded-tile bg-canvas hover:bg-sunken border border-sunken text-ink text-meta font-bold flex items-center justify-center gap-1.5 transition-all text-center"
           >
             <span>نمای یادگیرنده</span>
             <ChevronLeft className="w-4 h-4" aria-hidden="true" />
@@ -121,7 +132,7 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title 
 
           <button
             onClick={handleLogout}
-            className="min-h-[48px] min-w-[48px] p-2.5 rounded-tile bg-canvas hover:bg-domain-2-tint text-danger hover:border-danger/30 flex items-center justify-center transition-all cursor-pointer"
+            className="min-h-[48px] min-w-[48px] p-2.5 rounded-tile bg-canvas hover:bg-domain-2-tint text-danger border border-sunken hover:border-danger/30 flex items-center justify-center transition-all cursor-pointer"
             aria-label="خروج از حساب کاربری"
           >
             <LogOut className="w-5 h-5" aria-hidden="true" />
@@ -133,8 +144,8 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title 
 
   return (
     <div className="min-h-screen bg-canvas text-ink flex selection:bg-primary selection:text-white">
-      {/* Desktop Persistent Sidebar (264px) */}
-      <aside className="hidden lg:block w-[264px] shrink-0 min-h-screen sticky top-0 h-screen z-30">
+      {/* Desktop Persistent Sidebar (264px) - hidden when printing */}
+      <aside className="print:hidden hidden lg:block w-[264px] shrink-0 min-h-screen sticky top-0 h-screen z-30">
         {sidebarContent}
       </aside>
 
@@ -142,14 +153,14 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title 
       {drawerOpen && (
         <div
           onClick={() => setDrawerOpen(false)}
-          className="lg:hidden fixed inset-0 bg-ink/40 z-40 backdrop-blur-xs transition-opacity"
+          className="print:hidden lg:hidden fixed inset-0 bg-ink/40 z-40 backdrop-blur-xs transition-opacity"
           aria-hidden="true"
         />
       )}
 
       {/* Mobile Drawer */}
       <div
-        className={`lg:hidden fixed inset-y-0 right-0 z-50 w-[264px] transform transition-transform duration-300 ease-in-out ${
+        className={`print:hidden lg:hidden fixed inset-y-0 right-0 z-50 w-[264px] transform transition-transform duration-300 ease-in-out ${
           drawerOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -158,8 +169,8 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title 
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Bar */}
-        <header className="h-16 bg-surface border-b border-sunken sticky top-0 z-20 px-4 sm:px-8 flex items-center justify-between safe-top">
+        {/* Top Header & Scope Controls (hidden when printing) */}
+        <header className="print:hidden bg-surface border-b border-sunken sticky top-0 z-20 px-4 sm:px-8 py-3 flex flex-wrap items-center justify-between gap-4 safe-top shadow-xs">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setDrawerOpen(true)}
@@ -168,25 +179,87 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title 
             >
               <Menu className="w-6 h-6" aria-hidden="true" />
             </button>
-            <h1 className="text-headline font-black text-ink">{displayTitle}</h1>
+            <div>
+              <h1 className="text-headline font-black text-ink">{displayTitle}</h1>
+              <span className="text-meta text-ink/60 font-medium hidden sm:inline">{currentOrg.name}</span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-pill bg-canvas border border-sunken">
-              <span className="w-2.5 h-2.5 rounded-full bg-success animate-pulse" />
-              <span className="text-meta font-bold text-ink/80">
-                {isAdmin ? 'دسترسی ادمین ارشد' : 'دسترسی سازمانی فعال'}
-              </span>
+          {/* Scope Controls & Role Switcher */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Unit filter dropdown for org_admin */}
+            {canManageAllUnits ? (
+              <div className="flex items-center gap-2 bg-canvas px-3 py-1.5 rounded-tile border border-sunken">
+                <Filter className="w-4 h-4 text-ink/40" />
+                <span className="text-meta font-bold text-ink/60">واحد:</span>
+                <select
+                  value={selectedUnitId}
+                  onChange={(e) => setSelectedUnitId(e.target.value)}
+                  className="text-meta font-bold text-ink bg-transparent focus:outline-none cursor-pointer"
+                  aria-label="فیلتر واحد سازمانی"
+                >
+                  <option value="all">تمام واحدهای سازمان</option>
+                  {units.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink">
+                <span>واحد نورد گرم (شیفت)</span>
+              </div>
+            )}
+
+            {/* Quick Role Switcher Pill */}
+            <div className="flex items-center p-0.5 rounded-pill bg-canvas border border-sunken">
+              <button
+                onClick={() => setUserRole('org_admin')}
+                className={`min-h-[36px] px-3 rounded-pill text-meta font-bold transition-all cursor-pointer ${
+                  userRole === 'org_admin'
+                    ? 'bg-primary text-white shadow-xs'
+                    : 'text-ink/60 hover:text-ink'
+                }`}
+                title="مشاهده داشبورد با دسترسی مدیر ارشد سازمان"
+              >
+                مدیر ارشد
+              </button>
+              <button
+                onClick={() => setUserRole('unit_manager')}
+                className={`min-h-[36px] px-3 rounded-pill text-meta font-bold transition-all cursor-pointer ${
+                  userRole === 'unit_manager'
+                    ? 'bg-secondary text-white shadow-xs'
+                    : 'text-ink/60 hover:text-ink'
+                }`}
+                title="مشاهده داشبورد با دسترسی مدیر واحد"
+              >
+                مدیر واحد
+              </button>
             </div>
+
             <Avatar seed={user.avatarSeed} name={user.fullName} size="sm" />
           </div>
         </header>
 
         {/* Page Content */}
         <main className="flex-1 p-4 sm:p-8 max-w-[1280px] w-full mx-auto safe-bottom">
-          {children}
+          {children || <Outlet />}
         </main>
       </div>
     </div>
   );
 };
+
+export const DashboardShell: React.FC<DashboardShellProps> = ({ children, title }) => {
+  return (
+    <ScopeProvider>
+      <DashboardShellInner title={title}>{children}</DashboardShellInner>
+    </ScopeProvider>
+  );
+};
+
+interface DashboardShellProps {
+  children?: ReactNode;
+  title?: string;
+}

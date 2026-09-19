@@ -30,6 +30,7 @@ export interface User {
   dailyGoal: 1 | 2 | 3; // gerabytes per day
   todayCompletedCount: number;
   membership?: OrgMembership; // undefined for individuals
+  roles?: ('learner' | 'org_admin' | 'unit_manager' | 'super_admin')[];
   householdId?: string; // reserved for phase 2 (family accounts), no UI yet
   onboardingCompleted: boolean;
 }

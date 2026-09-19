@@ -352,7 +352,7 @@ export const LoginScreen: React.FC = () => {
       </div>
 
       {/* Short Privacy Note */}
-      <footer className="text-center pb-4 text-meta text-ink/60 leading-relaxed max-w-xs mx-auto">
+      <footer className="text-center pb-4 text-meta text-ink/60 leading-relaxed max-w-xs mx-auto safe-bottom">
         <Shield className="w-4 h-4 inline ml-1 text-primary" aria-hidden="true" />
         اطلاعات شما با رعایت کامل حریم خصوصی و پروتکل‌های محرمانگی سازمانی نگهداری می‌شود.
       </footer>

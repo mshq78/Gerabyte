@@ -238,7 +238,7 @@ export const OnboardingScreen: React.FC = () => {
       </div>
 
       {/* Bottom Nav CTA */}
-      <div className="pt-2 max-w-sm mx-auto w-full">
+      <div className="pt-2 max-w-sm mx-auto w-full safe-bottom">
         {step < totalSteps ? (
           <Button
             fullWidth
