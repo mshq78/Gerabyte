@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "@fontsource-variable/vazirmatn";
+
+@layer base {
+  html, body {
+    font-family: 'Vazirmatn Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    direction: rtl;
+    background-color: #E8E1D5;
+    color: #0D3F6B;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Custom scrollbar hiding helper */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

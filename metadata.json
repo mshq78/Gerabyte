@@ -1,0 +1,6 @@
+{
+  "name": "GeraByte - گرابایت",
+  "description": "سامانه میکرولرنینگ سازمانی و فردی پردیس نوآوری گرا (Gera Innovation Campus) با آموزش‌های تعاملی، لیگ‌های هفتگی، مسیرهای مهارتی و گواهینامه‌های معتبر",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
