@@ -6,10 +6,10 @@ export const OfflineBanner: React.FC<{ isOffline: boolean }> = ({ isOffline }) =
 
   return (
     <div
-      className="bg-[#D5483F] text-white px-4 py-2 text-xs font-semibold flex items-center justify-center gap-2 sticky top-0 z-40 shadow-sm"
+      className="bg-danger text-surface px-4 py-2 text-meta font-semibold flex items-center justify-center gap-2 sticky top-0 z-40 shadow-xs"
       role="alert"
     >
-      <WifiOff className="w-4 h-4 shrink-0" />
+      <WifiOff className="w-4 h-4 shrink-0" aria-hidden="true" />
       <span>ارتباط اینترنتی برقرار نیست؛ اطلاعات ذخیره‌شده محلی نمایش داده می‌شود.</span>
     </div>
   );

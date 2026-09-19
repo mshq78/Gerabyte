@@ -4,7 +4,7 @@ import { MOCK_LESSONS, MOCK_LESSON_SHOWCASE } from '../mock/data';
 import { getStoredUser, setStoredUser } from './auth';
 import { subscriptionApi } from './subscription';
 import { computeEntitlements, RULES } from '../lib/rules';
-import { pathsApi, saveStoredPaths } from './paths';
+import { pathsApi, saveStoredPaths, getStoredPaths } from './paths';
 
 export interface LessonCompleteResult {
   lessonId: string;
@@ -24,11 +24,25 @@ export const lessonsApi = {
       if (MOCK_LESSONS[id]) {
         return MOCK_LESSONS[id];
       }
-      // Return showcase or adapted version for other lesson IDs
+      // Look up real lesson title from path data (LessonSummary.title)
+      const allPaths = getStoredPaths();
+      let realTitle = '';
+      for (const p of allPaths) {
+        for (const u of p.units) {
+          const found = u.lessons.find((l) => l.id === id);
+          if (found) {
+            realTitle = found.title;
+            break;
+          }
+        }
+        if (realTitle) break;
+      }
+
+      // Return showcase or adapted version using real lesson title
       return {
         ...MOCK_LESSON_SHOWCASE,
         id,
-        title: `گرابایت کاربردی: مهارت‌های پیشرفته (${id})`,
+        title: realTitle || 'گرابایت کاربردی: مهارت‌های پیشرفته',
       };
     }, { endpoint: `/api/v1/lessons/${id}` });
   },

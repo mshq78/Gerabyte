@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, KeyRound, Smartphone, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { authApi } from '../../api/auth';
 import { Button } from '../../components/ui/Button';
 import { useApp } from '../../state/AppContext';
@@ -27,11 +27,13 @@ export const LoginScreen: React.FC = () => {
 
   // OTP resend countdown
   useEffect(() => {
-    let timer: any;
+    let timer: ReturnType<typeof setInterval> | undefined;
     if (otpStep === 'verify' && resendTimer > 0) {
       timer = setInterval(() => setResendTimer((t) => t - 1), 1000);
     }
-    return () => clearInterval(timer);
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [otpStep, resendTimer]);
 
   const handleRequestOtp = async () => {
@@ -125,16 +127,16 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2EDE4] p-5 flex flex-col justify-between text-[#0D3F6B]">
+    <div className="min-h-screen bg-canvas p-5 flex flex-col justify-between text-ink">
       {/* Brand Header */}
       <header className="text-center pt-8 pb-4 space-y-2">
-        <div className="w-16 h-16 rounded-3xl bg-[#0D3F6B] text-white flex items-center justify-center mx-auto shadow-md">
-          <div className="w-8 h-8 rounded-xl border-2 border-white flex items-center justify-center">
-            <span className="font-black text-sm">G</span>
+        <div className="w-16 h-16 rounded-tile bg-ink text-surface flex items-center justify-center mx-auto shadow-md">
+          <div className="w-8 h-8 rounded-tile border-2 border-surface flex items-center justify-center">
+            <span className="font-black text-body">G</span>
           </div>
         </div>
-        <h1 className="text-xl font-black text-[#0D3F6B]">گرابایت · GeraByte</h1>
-        <p className="text-xs text-[#0D3F6B]/70 font-semibold">
+        <h1 className="text-headline font-black text-ink">گرابایت · GeraByte</h1>
+        <p className="text-meta text-ink/70 font-semibold">
           سامانه خردآموزی ۳ دقیقه‌ای شایستگی‌های شغلی و سازمانی
         </p>
       </header>
@@ -142,28 +144,28 @@ export const LoginScreen: React.FC = () => {
       {/* Main Login Card */}
       <div className="my-auto py-4 max-w-sm mx-auto w-full">
         {!needsSetup ? (
-          <div className="p-6 rounded-3xl bg-white border border-[#E8E1D5] shadow-lg space-y-4">
+          <div className="p-6 rounded-sheet bg-surface border border-sunken shadow-lg space-y-4">
             {/* Tabs */}
-            <div className="flex items-center gap-2 p-1 bg-[#E8E1D5]/60 rounded-2xl border border-[#E8E1D5]">
+            <div className="flex items-center gap-2 p-1 bg-sunken/60 rounded-tile border border-sunken">
               <button
                 onClick={() => {
                   setActiveTab('otp');
                   setOtpStep('request');
                 }}
-                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`flex-1 min-h-[48px] py-2 rounded-tile text-meta font-bold transition-all cursor-pointer ${
                   activeTab === 'otp'
-                    ? 'bg-white text-[#0D3F6B] shadow-xs'
-                    : 'text-[#0D3F6B]/70'
+                    ? 'bg-surface text-ink shadow-xs'
+                    : 'text-ink/70 hover:text-ink'
                 }`}
               >
                 کد یکبارمصرف (پیامک)
               </button>
               <button
                 onClick={() => setActiveTab('password')}
-                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`flex-1 min-h-[48px] py-2 rounded-tile text-meta font-bold transition-all cursor-pointer ${
                   activeTab === 'password'
-                    ? 'bg-white text-[#0D3F6B] shadow-xs'
-                    : 'text-[#0D3F6B]/70'
+                    ? 'bg-surface text-ink shadow-xs'
+                    : 'text-ink/70 hover:text-ink'
                 }`}
               >
                 رمز عبور
@@ -176,7 +178,7 @@ export const LoginScreen: React.FC = () => {
                 {otpStep === 'request' ? (
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-xs font-bold mb-1.5">
+                      <label className="block text-meta font-bold mb-1.5 text-ink">
                         شماره تلفن همراه:
                       </label>
                       <input
@@ -185,7 +187,7 @@ export const LoginScreen: React.FC = () => {
                         onChange={(e) => setMobile(e.target.value)}
                         placeholder="۰۹۱۲۳۴۵۶۷۸۹"
                         dir="ltr"
-                        className="w-full h-12 px-4 rounded-xl border border-[#E8E1D5] bg-[#FAF8F5] text-center font-mono font-bold text-sm outline-none focus:border-[#1E6FA8]"
+                        className="w-full min-h-[48px] h-12 px-4 rounded-tile border border-sunken bg-paper text-center font-mono font-bold text-body outline-none focus:border-primary text-ink"
                       />
                     </div>
 
@@ -202,7 +204,7 @@ export const LoginScreen: React.FC = () => {
                 ) : (
                   <div className="space-y-4">
                     <div className="text-center">
-                      <p className="text-xs text-[#0D3F6B]/80">
+                      <p className="text-meta text-ink/80">
                         کد ۵ رقمی ارسال شده به شماره <strong>{toFa(mobile)}</strong> را وارد نمایید:
                       </p>
                     </div>
@@ -221,25 +223,25 @@ export const LoginScreen: React.FC = () => {
                           value={digit}
                           onChange={(e) => handleOtpDigitChange(idx, e.target.value)}
                           onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                          className="w-11 h-12 text-center text-lg font-bold font-mono rounded-xl border-2 border-[#E8E1D5] focus:border-[#1E6FA8] outline-none bg-[#FAF8F5]"
+                          className="w-12 h-12 min-h-[48px] text-center text-title font-bold font-mono rounded-tile border-2 border-sunken focus:border-primary outline-none bg-paper text-ink"
                         />
                       ))}
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-[#0D3F6B]/70">
+                    <div className="flex items-center justify-between text-meta text-ink/70">
                       {resendTimer > 0 ? (
-                        <span>ارسال مجدد تا {toFa(resendTimer)} ثانیه دیگر</span>
+                        <span className="min-h-[48px] flex items-center">ارسال مجدد تا {toFa(resendTimer)} ثانیه دیگر</span>
                       ) : (
                         <button
                           onClick={handleRequestOtp}
-                          className="font-bold text-[#1E6FA8] hover:underline"
+                          className="min-h-[48px] flex items-center font-bold text-primary hover:underline cursor-pointer"
                         >
                           ارسال دوباره کد
                         </button>
                       )}
                       <button
                         onClick={() => setOtpStep('request')}
-                        className="text-[11px] underline"
+                        className="min-h-[48px] flex items-center text-meta underline text-ink/70 hover:text-ink cursor-pointer"
                       >
                         ویرایش شماره
                       </button>
@@ -263,7 +265,7 @@ export const LoginScreen: React.FC = () => {
             {activeTab === 'password' && (
               <div className="space-y-3 pt-1">
                 <div>
-                  <label className="block text-xs font-bold mb-1.5">
+                  <label className="block text-meta font-bold mb-1.5 text-ink">
                     شماره تلفن همراه:
                   </label>
                   <input
@@ -272,12 +274,12 @@ export const LoginScreen: React.FC = () => {
                     onChange={(e) => setMobile(e.target.value)}
                     dir="ltr"
                     placeholder="۰۹۱۲۳۴۵۶۷۸۹"
-                    className="w-full h-12 px-4 rounded-xl border border-[#E8E1D5] bg-[#FAF8F5] text-center font-mono font-bold text-sm outline-none focus:border-[#1E6FA8]"
+                    className="w-full min-h-[48px] h-12 px-4 rounded-tile border border-sunken bg-paper text-center font-mono font-bold text-body outline-none focus:border-primary text-ink"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1.5">
+                  <label className="block text-meta font-bold mb-1.5 text-ink">
                     کلمه عبور:
                   </label>
                   <input
@@ -285,7 +287,7 @@ export const LoginScreen: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full h-12 px-4 rounded-xl border border-[#E8E1D5] bg-[#FAF8F5] text-center font-bold text-sm outline-none focus:border-[#1E6FA8]"
+                    className="w-full min-h-[48px] h-12 px-4 rounded-tile border border-sunken bg-paper text-center font-bold text-body outline-none focus:border-primary text-ink"
                   />
                 </div>
 
@@ -303,27 +305,27 @@ export const LoginScreen: React.FC = () => {
           </div>
         ) : (
           /* FIRST LOGIN SETUP STEP */
-          <div className="p-6 rounded-3xl bg-white border border-[#E8E1D5] shadow-lg space-y-4">
-            <h3 className="font-bold text-sm text-[#0D3F6B]">
+          <div className="p-6 rounded-sheet bg-surface border border-sunken shadow-lg space-y-4">
+            <h3 className="font-bold text-title text-ink">
               تأیید مشخصات اولیه کاربری
             </h3>
-            <p className="text-xs text-[#0D3F6B]/70">
+            <p className="text-meta text-ink/70">
               این مشخصات در گواهینامه‌های رسمی و رده‌بندی لیگ درج خواهند شد:
             </p>
 
             <div className="space-y-3 pt-1">
               <div>
-                <label className="block text-xs font-bold mb-1">نام و نام خانوادگی:</label>
+                <label className="block text-meta font-bold mb-1 text-ink">نام و نام خانوادگی:</label>
                 <input
                   type="text"
                   value={setupFullName}
                   onChange={(e) => setSetupFullName(e.target.value)}
-                  className="w-full h-11 px-3 rounded-xl border border-[#E8E1D5] text-xs font-bold outline-none"
+                  className="w-full min-h-[48px] h-12 px-3 rounded-tile border border-sunken text-body font-bold outline-none text-ink bg-paper"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1">
+                <label className="block text-meta font-bold mb-1 text-ink">
                   نام مستعار در جدول عمومی (اختیاری):
                 </label>
                 <input
@@ -331,7 +333,7 @@ export const LoginScreen: React.FC = () => {
                   value={setupNickname}
                   onChange={(e) => setSetupNickname(e.target.value)}
                   placeholder="مثال: یادگیرنده کوشا"
-                  className="w-full h-11 px-3 rounded-xl border border-[#E8E1D5] text-xs outline-none"
+                  className="w-full min-h-[48px] h-12 px-3 rounded-tile border border-sunken text-body outline-none text-ink bg-paper"
                 />
               </div>
 
@@ -350,8 +352,8 @@ export const LoginScreen: React.FC = () => {
       </div>
 
       {/* Short Privacy Note */}
-      <footer className="text-center pb-4 text-[11px] text-[#0D3F6B]/60 leading-relaxed max-w-xs mx-auto">
-        <Shield className="w-3.5 h-3.5 inline ml-1 text-[#1E6FA8]" />
+      <footer className="text-center pb-4 text-meta text-ink/60 leading-relaxed max-w-xs mx-auto">
+        <Shield className="w-4 h-4 inline ml-1 text-primary" aria-hidden="true" />
         اطلاعات شما با رعایت کامل حریم خصوصی و پروتکل‌های محرمانگی سازمانی نگهداری می‌شود.
       </footer>
     </div>

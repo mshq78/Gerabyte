@@ -17,21 +17,21 @@ export const BottomNav: React.FC = () => {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E8E1D5] max-w-[480px] mx-auto pb-safe shadow-[0_-4px_12px_rgba(13,63,107,0.04)]"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md border-t border-sunken max-w-[480px] mx-auto safe-bottom shadow-[0_-4px_12px_rgba(13,63,107,0.04)]"
       role="navigation"
       aria-label="منوی اصلی ناوبری"
     >
-      <div className="flex items-center justify-around h-16 px-2">
+      <div className="flex items-center justify-around h-16 px-1">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.to === '/'}
             className={({ isActive }) =>
-              `relative flex flex-col items-center justify-center flex-1 h-full py-1 text-xs font-semibold select-none transition-all duration-150 ${
+              `relative flex flex-col items-center justify-center flex-1 h-full min-h-[48px] py-1 text-meta font-semibold select-none transition-all duration-150 ${
                 isActive
-                  ? 'text-[#1E6FA8]'
-                  : 'text-[#0D3F6B]/60 hover:text-[#0D3F6B]'
+                  ? 'text-primary'
+                  : 'text-ink/60 hover:text-ink'
               }`
             }
           >
@@ -44,18 +44,19 @@ export const BottomNav: React.FC = () => {
                       className={`w-6 h-6 transition-transform ${
                         isActive ? 'scale-110 stroke-[2.5]' : 'stroke-[2]'
                       }`}
+                      aria-hidden="true"
                     />
                     {item.badge > 0 && (
-                      <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-[#D5483F] text-white text-[10px] font-bold flex items-center justify-center leading-none">
+                      <span className="absolute -top-1.5 -right-2 min-w-[18px] h-4 px-1 rounded-pill bg-danger text-surface text-meta font-bold flex items-center justify-center leading-none">
                         {toFa(item.badge)}
                       </span>
                     )}
                   </div>
-                  <span className={`mt-1 tracking-tight text-[11px] ${isActive ? 'font-bold' : 'font-normal'}`}>
+                  <span className={`mt-0.5 tracking-tight text-meta whitespace-nowrap ${isActive ? 'font-bold' : 'font-normal'}`}>
                     {item.label}
                   </span>
                   {isActive && (
-                    <span className="absolute bottom-1 w-8 h-1 rounded-full bg-[#1E6FA8]" />
+                    <span className="absolute bottom-1 w-8 h-1 rounded-pill bg-primary" />
                   )}
                 </>
               );

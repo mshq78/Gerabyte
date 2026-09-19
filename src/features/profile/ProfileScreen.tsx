@@ -5,7 +5,6 @@ import {
   Zap,
   CheckCircle2,
   Calendar as CalendarIcon,
-  Shield,
   ChevronLeft,
   Building2,
   Lock,
@@ -38,23 +37,23 @@ export const ProfileScreen: React.FC = () => {
   const xpToNextLevel = 500;
 
   return (
-    <div className="flex-1 flex flex-col p-4 space-y-4 text-[#0D3F6B]">
+    <div className="flex-1 flex flex-col p-4 space-y-4 text-ink">
       {/* 1. Header Profile Card */}
-      <header className="p-5 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs relative overflow-hidden space-y-4">
+      <header className="p-5 rounded-sheet bg-surface border border-sunken shadow-xs relative overflow-hidden space-y-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3.5">
             <Avatar seed={user.avatarSeed} size={56} />
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-black text-[#0D3F6B]">
+                <h2 className="text-title font-black text-ink">
                   {user.fullName}
                 </h2>
               </div>
-              <p className="text-xs text-[#0D3F6B]/60 font-mono mt-0.5">
+              <p className="text-meta text-ink/60 font-mono mt-0.5">
                 {toFa(user.phone)}
               </p>
               <div className="flex items-center gap-1.5 mt-1">
-                <span className="px-2.5 py-0.5 rounded-md bg-[#EAF3F9] text-[#1E6FA8] text-[11px] font-bold">
+                <span className="px-2.5 py-0.5 rounded-tile bg-domain-1-tint text-primary text-meta font-bold">
                   سطح {toFa(user.level)}: {currentLevelInfo.title}
                 </span>
               </div>
@@ -63,31 +62,31 @@ export const ProfileScreen: React.FC = () => {
 
           <button
             onClick={() => navigate('/notifications')}
-            className="p-2 rounded-xl text-[#0D3F6B]/60 hover:text-[#0D3F6B] hover:bg-gray-100 relative"
+            className="w-12 h-12 rounded-tile text-ink/60 hover:text-ink hover:bg-canvas flex items-center justify-center relative cursor-pointer"
             aria-label="اعلان‌ها"
           >
-            <Bell className="w-5 h-5" />
+            <Bell className="w-5 h-5" aria-hidden="true" />
             {unreadNotifsCount > 0 && (
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#D5483F]" />
+              <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-pill bg-danger" />
             )}
           </button>
         </div>
 
         {/* Level XP Progress Bar */}
-        <div className="space-y-1.5 pt-1 border-t border-[#E8E1D5]">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-semibold text-[#0D3F6B]/70">پیشرفت تا سطح بعدی</span>
-            <span className="font-bold text-[#1E6FA8]">
+        <div className="space-y-1.5 pt-1 border-t border-sunken">
+          <div className="flex items-center justify-between text-meta">
+            <span className="font-semibold text-ink/70">پیشرفت تا سطح بعدی</span>
+            <span className="font-bold text-primary">
               {toFa(xpInLevel)} از {toFa(xpToNextLevel)} XP
             </span>
           </div>
-          <div className="h-2.5 bg-[#E8E1D5] rounded-full overflow-hidden">
+          <div className="h-2.5 bg-sunken rounded-pill overflow-hidden">
             <div
-              className="h-full bg-[#1E6FA8] rounded-full transition-all duration-300"
+              className="h-full bg-primary rounded-pill transition-all duration-300"
               style={{ width: `${(xpInLevel / xpToNextLevel) * 100}%` }}
             />
           </div>
-          <p className="text-[10px] text-[#0D3F6B]/60 text-left">
+          <p className="text-meta text-ink/60 text-left">
             هدف بعدی: سطح {toFa(nextLevel)} ({nextLevelInfo.title})
           </p>
         </div>
@@ -95,37 +94,37 @@ export const ProfileScreen: React.FC = () => {
 
       {/* 2. Stats Grid */}
       <section className="grid grid-cols-2 gap-2.5">
-        <div className="p-3.5 rounded-2xl bg-white border border-[#E8E1D5] shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#EAF3F9] text-[#1E6FA8] flex items-center justify-center shrink-0">
-            <Zap className="w-5 h-5 stroke-[2.2]" />
+        <div className="p-3.5 rounded-tile bg-surface border border-sunken shadow-xs flex items-center gap-3 min-h-[48px]">
+          <div className="w-10 h-10 rounded-tile bg-domain-1-tint text-primary flex items-center justify-center shrink-0">
+            <Zap className="w-5 h-5 stroke-[2.2]" aria-hidden="true" />
           </div>
           <div>
-            <span className="text-[11px] text-[#0D3F6B]/60 block">مجموع امتیاز</span>
-            <span className="text-base font-black text-[#0D3F6B]">
+            <span className="text-meta text-ink/60 block">مجموع امتیاز</span>
+            <span className="text-body font-black text-ink">
               {toFa(user.xpTotal)} XP
             </span>
           </div>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-white border border-[#E8E1D5] shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#FEF6EC] text-[#F2A93B] flex items-center justify-center shrink-0">
+        <div className="p-3.5 rounded-tile bg-surface border border-sunken shadow-xs flex items-center gap-3 min-h-[48px]">
+          <div className="w-10 h-10 rounded-tile bg-domain-5-tint text-coin flex items-center justify-center shrink-0">
             <StreakChain count={user.bestStreak} size="sm" showLabel={false} />
           </div>
           <div>
-            <span className="text-[11px] text-[#0D3F6B]/60 block">بهترین زنجیره</span>
-            <span className="text-base font-black text-[#0D3F6B]">
+            <span className="text-meta text-ink/60 block">بهترین زنجیره</span>
+            <span className="text-body font-black text-ink">
               {toFa(user.bestStreak)} روز
             </span>
           </div>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-white border border-[#E8E1D5] shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#EDF8F6] text-[#2E9E6B] flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-5 h-5 stroke-[2.2]" />
+        <div className="p-3.5 rounded-tile bg-surface border border-sunken shadow-xs flex items-center gap-3 min-h-[48px]">
+          <div className="w-10 h-10 rounded-tile bg-domain-3-tint text-success flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-5 h-5 stroke-[2.2]" aria-hidden="true" />
           </div>
           <div>
-            <span className="text-[11px] text-[#0D3F6B]/60 block">سکه افتخار</span>
-            <span className="text-base font-black text-[#0D3F6B]">
+            <span className="text-meta text-ink/60 block">سکه افتخار</span>
+            <span className="text-body font-black text-ink">
               {toFa(user.coins)} سکه
             </span>
           </div>
@@ -133,14 +132,14 @@ export const ProfileScreen: React.FC = () => {
 
         <div
           onClick={() => navigate('/certificates')}
-          className="p-3.5 rounded-2xl bg-white border border-[#E8E1D5] hover:border-[#1E6FA8]/40 shadow-xs flex items-center gap-3 cursor-pointer"
+          className="p-3.5 rounded-tile bg-surface border border-sunken hover:border-primary/40 shadow-xs flex items-center gap-3 cursor-pointer min-h-[48px]"
         >
-          <div className="w-10 h-10 rounded-xl bg-[#F2EFFF] text-[#7A5BD6] flex items-center justify-center shrink-0">
-            <Award className="w-5 h-5 stroke-[2.2]" />
+          <div className="w-10 h-10 rounded-tile bg-domain-4-tint text-domain-4 flex items-center justify-center shrink-0">
+            <Award className="w-5 h-5 stroke-[2.2]" aria-hidden="true" />
           </div>
           <div>
-            <span className="text-[11px] text-[#0D3F6B]/60 block">گواهینامه‌ها</span>
-            <span className="text-base font-black text-[#0D3F6B]">
+            <span className="text-meta text-ink/60 block">گواهینامه‌ها</span>
+            <span className="text-body font-black text-ink">
               مشاهده مدارک
             </span>
           </div>
@@ -148,11 +147,11 @@ export const ProfileScreen: React.FC = () => {
       </section>
 
       {/* 3. Jalali Month Streak Calendar */}
-      <section className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-3">
+      <section className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CalendarIcon className="w-4 h-4 text-[#1E6FA8]" />
-            <h3 className="font-bold text-xs">تقویم استمرار و زنجیره (شهریور ۱۴۰۵)</h3>
+            <CalendarIcon className="w-4 h-4 text-primary" aria-hidden="true" />
+            <h3 className="font-bold text-body">تقویم استمرار و زنجیره (شهریور ۱۴۰۵)</h3>
           </div>
           <StreakChain count={user.streakDays} size="sm" showLabel={false} />
         </div>
@@ -160,7 +159,7 @@ export const ProfileScreen: React.FC = () => {
         {/* Days Grid */}
         <div className="grid grid-cols-7 gap-1.5 text-center pt-1">
           {['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'].map((day, idx) => (
-            <span key={idx} className="text-[10px] text-[#0D3F6B]/50 font-bold py-1">
+            <span key={idx} className="text-meta text-ink/50 font-bold py-1">
               {day}
             </span>
           ))}
@@ -168,12 +167,12 @@ export const ProfileScreen: React.FC = () => {
           {calendarGrid.map((cell: JalaliCalendarCell, idx: number) => (
             <div
               key={idx}
-              className={`aspect-square rounded-xl flex items-center justify-center text-xs font-bold transition-all ${
+              className={`aspect-square rounded-tile flex items-center justify-center text-meta font-bold transition-all ${
                 cell.isStreakDay
-                  ? 'bg-[#FEF6EC] text-[#E58A1F] border border-[#F2A93B]/40 shadow-2xs font-black'
+                  ? 'bg-domain-5-tint text-coin border border-coin/40 shadow-2xs font-black'
                   : cell.isToday
-                  ? 'border-2 border-[#1E6FA8] text-[#1E6FA8]'
-                  : 'bg-[#FAF8F5] text-[#0D3F6B]/60'
+                  ? 'border-2 border-primary text-primary'
+                  : 'bg-paper text-ink/60'
               }`}
             >
               {toFa(cell.day)}
@@ -182,11 +181,11 @@ export const ProfileScreen: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. Badges Collection (12 Badges) */}
-      <section className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-3">
+      {/* 4. Badges Collection */}
+      <section className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="font-bold text-xs">نشان‌های افتخار و دستاورد</h3>
-          <span className="text-xs text-[#1E6FA8] font-bold">
+          <h3 className="font-bold text-body">نشان‌های افتخار و دستاورد</h3>
+          <span className="text-meta text-primary font-bold">
             {toFa(MOCK_BADGES.filter((b) => b.unlockedAt).length)} از {toFa(MOCK_BADGES.length)}
           </span>
         </div>
@@ -197,17 +196,17 @@ export const ProfileScreen: React.FC = () => {
             return (
               <div
                 key={b.id}
-                className={`p-2.5 rounded-2xl flex flex-col items-center text-center transition-all ${
+                className={`p-2.5 rounded-tile flex flex-col items-center text-center transition-all ${
                   isUnlocked
-                    ? 'bg-[#FEF6EC] border border-[#F2A93B]/30'
-                    : 'bg-[#FAF8F5] opacity-50 border border-[#E8E1D5]'
+                    ? 'bg-domain-5-tint border border-coin/30'
+                    : 'bg-paper opacity-50 border border-sunken'
                 }`}
                 title={b.description}
               >
-                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-xs font-black shadow-2xs mb-1 text-[#1E6FA8]">
+                <div className="w-10 h-10 rounded-tile bg-surface flex items-center justify-center text-meta font-black shadow-2xs mb-1 text-primary">
                   {b.icon[0]}
                 </div>
-                <span className="text-[10px] font-bold text-[#0D3F6B] leading-tight line-clamp-1">
+                <span className="text-meta font-bold text-ink leading-tight line-clamp-1">
                   {b.title}
                 </span>
               </div>
@@ -217,59 +216,59 @@ export const ProfileScreen: React.FC = () => {
       </section>
 
       {/* 5. Memberships & Multi-Level Org Hierarchy */}
-      <section className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-3">
-        <h3 className="font-bold text-xs">عضویت‌ها و سازمان</h3>
+      <section className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-3">
+        <h3 className="font-bold text-body">عضویت‌ها و سازمان</h3>
 
         {user.accountType === 'org_member' && user.membership ? (
-          <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-[#E8E1D5] space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#1E6FA8]">
-              <Building2 className="w-4 h-4" />
+          <div className="p-3.5 rounded-tile bg-paper border border-sunken space-y-2">
+            <div className="flex items-center gap-2 text-meta font-bold text-primary">
+              <Building2 className="w-4 h-4" aria-hidden="true" />
               <span>سازمان متصل: {user.membership.orgName}</span>
             </div>
 
             {/* 4-level hierarchy path */}
-            <div className="flex items-center flex-wrap gap-1 text-[11px] text-[#0D3F6B]/80 font-medium">
+            <div className="flex items-center flex-wrap gap-1 text-meta text-ink/80 font-medium">
               {user.membership.nodePath.map((step: string, idx: number) => (
                 <React.Fragment key={idx}>
-                  <span className="px-2 py-0.5 rounded-md bg-white border border-[#E8E1D5]">
+                  <span className="px-2 py-0.5 rounded-tile bg-surface border border-sunken">
                     {step}
                   </span>
                   {idx < user.membership!.nodePath.length - 1 && (
-                    <span className="text-[#0D3F6B]/40">‹</span>
+                    <span className="text-ink/40">‹</span>
                   )}
                 </React.Fragment>
               ))}
             </div>
 
-            <p className="text-[11px] text-[#0D3F6B]/70 pt-1">
+            <p className="text-meta text-ink/70 pt-1">
               رده سازمانی: <strong>{user.membership.orgRank}</strong>
             </p>
           </div>
         ) : (
-          <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-[#E8E1D5] flex items-center gap-2 text-xs text-[#0D3F6B]">
-            <UserIcon className="w-4 h-4 text-[#1E6FA8]" />
+          <div className="p-3.5 rounded-tile bg-paper border border-sunken flex items-center gap-2 text-meta text-ink">
+            <UserIcon className="w-4 h-4 text-primary" aria-hidden="true" />
             <span>حساب کاربری مستقل (فردی)</span>
           </div>
         )}
 
         {/* Disabled Family Row */}
-        <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-dashed border-[#CFC5B6] flex items-center justify-between opacity-70">
-          <div className="flex items-center gap-2 text-xs">
-            <Lock className="w-4 h-4 text-[#0D3F6B]/60" />
-            <span className="font-semibold text-[#0D3F6B]/70">عضویت خانواده گرابایت</span>
+        <div className="p-3 rounded-tile bg-paper border border-dashed border-sunken-darker flex items-center justify-between opacity-70">
+          <div className="flex items-center gap-2 text-meta">
+            <Lock className="w-4 h-4 text-ink/60" aria-hidden="true" />
+            <span className="font-semibold text-ink/70">عضویت خانواده گرابایت</span>
           </div>
-          <span className="px-2 py-0.5 rounded bg-gray-200 text-[#0D3F6B]/60 text-[10px] font-bold">
+          <span className="px-2 py-0.5 rounded-pill bg-sunken text-ink/60 text-meta font-bold">
             به‌زودی
           </span>
         </div>
       </section>
 
       {/* 6. Subscription Card */}
-      <section className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-3">
+      <section className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-bold text-xs">وضعیت اشتراک</h3>
-            <p className="text-xs text-[#0D3F6B]/70 mt-0.5">
+            <h3 className="font-bold text-body">وضعیت اشتراک</h3>
+            <p className="text-meta text-ink/70 mt-0.5">
               {subscription.source === 'org_sponsored'
                 ? `اشتراک سازمانی (${subscription.sponsorOrgName || 'فولاد نمونه'})`
                 : subscription.tier === 'full'
@@ -278,12 +277,12 @@ export const ProfileScreen: React.FC = () => {
             </p>
           </div>
           <span
-            className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+            className={`text-meta font-bold px-2.5 py-1 rounded-pill ${
               subscription.status === 'active'
-                ? 'bg-[#EDF8F6] text-[#2E9E6B]'
+                ? 'bg-domain-3-tint text-success'
                 : subscription.status === 'expiring'
-                ? 'bg-[#FEF6EC] text-[#E58A1F]'
-                : 'bg-gray-100 text-[#0D3F6B]'
+                ? 'bg-domain-5-tint text-coin'
+                : 'bg-sunken text-ink'
             }`}
           >
             {subscription.status === 'active' && subscription.remainingDays
@@ -299,25 +298,25 @@ export const ProfileScreen: React.FC = () => {
           size="sm"
           variant="secondary"
           onClick={() => navigate('/subscription')}
-          rightIcon={<ChevronLeft className="w-4 h-4" />}
+          rightIcon={<ChevronLeft className="w-4 h-4" aria-hidden="true" />}
         >
           مدیریت اشتراک و ارتقا
         </Button>
       </section>
 
       {/* Settings / Notifications quick link */}
-      <div className="pt-2 flex items-center justify-between text-xs">
+      <div className="pt-2 flex items-center justify-between text-meta">
         <button
           onClick={() => navigate('/notification-settings')}
-          className="font-bold text-[#1E6FA8] hover:underline"
+          className="min-h-[48px] flex items-center font-bold text-primary hover:underline cursor-pointer"
         >
           تنظیمات زمان یادآوری و کانال‌ها
         </button>
         <button
           onClick={() => navigate('/login')}
-          className="font-bold text-[#D5483F] flex items-center gap-1 hover:underline"
+          className="min-h-[48px] flex items-center font-bold text-danger gap-1 hover:underline cursor-pointer"
         >
-          <LogOut className="w-3.5 h-3.5" />
+          <LogOut className="w-4 h-4" aria-hidden="true" />
           <span>خروج از حساب</span>
         </button>
       </div>

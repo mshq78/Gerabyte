@@ -1,13 +1,113 @@
 @import "tailwindcss";
 @import "@fontsource-variable/vazirmatn";
 
+@theme {
+  --color-canvas: #F2EDE4;
+  --color-surface: #FFFFFF;
+  --color-sunken: #E8E1D5;
+  --color-sunken-dark: #DCD4C7;
+  --color-sunken-darker: #CFC5B6;
+  --color-paper: #FAF8F5;
+  --color-ink: #0D3F6B;
+
+  --color-primary: #1E6FA8;
+  --color-primary-dark: #1A6295;
+  --color-accent: #009BEC;
+
+  --color-coin: #F2A93B;
+  --color-coin-dark: #C7821B;
+  --color-success: #2E9E6B;
+  --color-success-dark: #288D5E;
+  --color-success-tint: #F6FBF8;
+  --color-danger: #D5483F;
+  --color-danger-dark: #9C2D25;
+  --color-danger-tint: #FDF9F9;
+
+  --color-domain-1: #1E6FA8;
+  --color-domain-1-tint: #EAF3F9;
+  --color-domain-2: #E2665A;
+  --color-domain-2-tint: #FDF2F0;
+  --color-domain-3: #1F9A8A;
+  --color-domain-3-tint: #EDF8F6;
+  --color-domain-4: #7A5BD6;
+  --color-domain-4-tint: #F2EFFF;
+  --color-domain-5: #E58A1F;
+  --color-domain-5-tint: #FEF6EC;
+
+  --radius-tile: 14px;
+  --radius-sheet: 24px;
+  --radius-pill: 999px;
+
+  --font-size-meta: 14px;
+  --font-size-body: 15px;
+  --font-size-action: 16px;
+  --font-size-read: 17px;
+  --font-size-title: 18px;
+  --font-size-headline: 22px;
+  --font-size-display: 28px;
+}
+
+@utility text-meta {
+  font-size: 14px;
+  line-height: 1.6;
+}
+@utility text-body {
+  font-size: 15px;
+  line-height: 1.75;
+}
+@utility text-action {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+@utility text-read {
+  font-size: 17px;
+  line-height: 1.9;
+}
+@utility text-title {
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+@utility text-headline {
+  font-size: 22px;
+  line-height: 1.5;
+  font-weight: 800;
+}
+@utility text-display {
+  font-size: 28px;
+  line-height: 1.3;
+  font-weight: 900;
+}
+
+@utility safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+@utility safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 @layer base {
   html, body {
     font-family: 'Vazirmatn Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     direction: rtl;
-    background-color: #E8E1D5;
-    color: #0D3F6B;
+    background-color: var(--color-sunken);
+    color: var(--color-ink);
     -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

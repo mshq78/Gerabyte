@@ -13,7 +13,6 @@ import { notificationsApi } from '../../api/notifications';
 import { AppNotification } from '../../types/domain';
 import { useApp } from '../../state/AppContext';
 import { formatJalaliShort } from '../../lib/jalali';
-import { toFa } from '../../lib/toFa';
 
 export const NotificationsScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -48,50 +47,50 @@ export const NotificationsScreen: React.FC = () => {
   const getIcon = (kind: string) => {
     switch (kind) {
       case 'league':
-        return <Trophy className="w-5 h-5 text-[#F2A93B]" />;
+        return <Trophy className="w-5 h-5 text-coin" aria-hidden="true" />;
       case 'challenge':
-        return <Calendar className="w-5 h-5 text-[#E58A1F]" />;
+        return <Calendar className="w-5 h-5 text-coin" aria-hidden="true" />;
       case 'reminder':
-        return <Bell className="w-5 h-5 text-[#1E6FA8]" />;
+        return <Bell className="w-5 h-5 text-primary" aria-hidden="true" />;
       default:
-        return <AlertCircle className="w-5 h-5 text-[#7A5BD6]" />;
+        return <AlertCircle className="w-5 h-5 text-domain-4" aria-hidden="true" />;
     }
   };
 
   return (
-    <div className="flex-1 flex flex-col p-4 space-y-4 text-[#0D3F6B]">
+    <div className="flex-1 flex flex-col p-4 space-y-4 text-ink">
       {/* Header */}
       <header className="flex items-center justify-between">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-xl text-[#0D3F6B]/60 hover:text-[#0D3F6B] hover:bg-white flex items-center gap-1 text-xs font-bold"
+          className="min-h-[48px] px-3 py-2 rounded-tile text-ink/60 hover:text-ink hover:bg-surface flex items-center gap-1.5 text-meta font-bold cursor-pointer"
         >
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
           <span>بازگشت</span>
         </button>
 
         <button
           onClick={() => navigate('/notification-settings')}
-          className="p-2 rounded-xl text-[#0D3F6B]/60 hover:text-[#0D3F6B] hover:bg-white flex items-center gap-1.5 text-xs font-bold"
+          className="min-h-[48px] px-3 py-2 rounded-tile text-ink/60 hover:text-ink hover:bg-surface flex items-center gap-1.5 text-meta font-bold cursor-pointer"
         >
-          <Settings className="w-4 h-4" />
+          <Settings className="w-4 h-4" aria-hidden="true" />
           <span>تنظیمات کانال‌ها</span>
         </button>
       </header>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-black">مرکز پیام و اعلان‌های هوشمند</h2>
+        <h2 className="text-title font-black text-ink">مرکز پیام و اعلان‌های هوشمند</h2>
         <button
           onClick={handleMarkAllRead}
-          className="text-xs font-bold text-[#1E6FA8] flex items-center gap-1 hover:underline"
+          className="min-h-[48px] px-2 text-meta font-bold text-primary flex items-center gap-1 hover:underline cursor-pointer"
         >
-          <CheckCheck className="w-4 h-4" />
+          <CheckCheck className="w-4 h-4" aria-hidden="true" />
           <span>خواندن همه</span>
         </button>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-1 text-xs">
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-meta">
         {[
           { id: 'all', label: 'همه' },
           { id: 'reminder', label: 'یادآوری‌ها' },
@@ -102,10 +101,10 @@ export const NotificationsScreen: React.FC = () => {
           <button
             key={tab.id}
             onClick={() => setActiveFilter(tab.id as any)}
-            className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition-all ${
+            className={`min-h-[48px] px-3.5 py-1.5 rounded-tile font-bold whitespace-nowrap transition-all cursor-pointer ${
               activeFilter === tab.id
-                ? 'bg-[#1E6FA8] text-white shadow-xs'
-                : 'bg-white text-[#0D3F6B]/70 border border-[#E8E1D5]'
+                ? 'bg-primary text-surface shadow-xs'
+                : 'bg-surface text-ink/70 border border-sunken hover:bg-canvas'
             }`}
           >
             {tab.label}
@@ -116,7 +115,7 @@ export const NotificationsScreen: React.FC = () => {
       {/* Notifications List */}
       <div className="space-y-2.5">
         {filtered.length === 0 ? (
-          <div className="p-8 text-center text-xs text-[#0D3F6B]/60 bg-white rounded-2xl border border-[#E8E1D5]">
+          <div className="p-8 text-center text-meta text-ink/60 bg-surface rounded-tile border border-sunken">
             اعلان جدیدی در این دسته وجود ندارد.
           </div>
         ) : (
@@ -124,32 +123,32 @@ export const NotificationsScreen: React.FC = () => {
             <div
               key={item.id}
               onClick={() => handleMarkAsRead(item.id)}
-              className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
+              className={`p-3.5 min-h-[48px] rounded-tile border transition-all cursor-pointer flex items-start gap-3 ${
                 item.read
-                  ? 'bg-white border-[#E8E1D5]'
-                  : 'bg-[#EAF3F9]/60 border-[#1E6FA8]/40 shadow-xs'
+                  ? 'bg-surface border-sunken'
+                  : 'bg-domain-1-tint/60 border-primary/40 shadow-xs'
               }`}
             >
-              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 border border-[#E8E1D5] shadow-2xs mt-0.5">
+              <div className="w-10 h-10 rounded-tile bg-surface flex items-center justify-center shrink-0 border border-sunken shadow-2xs mt-0.5">
                 {getIcon(item.kind)}
               </div>
 
               <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between">
-                  <h4 className={`text-xs font-bold ${item.read ? 'text-[#0D3F6B]' : 'text-[#1E6FA8]'}`}>
+                  <h4 className={`text-body font-bold ${item.read ? 'text-ink' : 'text-primary'}`}>
                     {item.title}
                   </h4>
-                  <span className="text-[10px] text-[#0D3F6B]/50 font-mono">
+                  <span className="text-meta text-ink/50 font-mono">
                     {formatJalaliShort(item.at)}
                   </span>
                 </div>
-                <p className="text-xs text-[#0D3F6B]/80 leading-relaxed font-normal">
+                <p className="text-meta text-ink/80 leading-relaxed font-normal">
                   {item.body}
                 </p>
               </div>
 
               {!item.read && (
-                <span className="w-2 h-2 rounded-full bg-[#1E6FA8] shrink-0 mt-2" />
+                <span className="w-2.5 h-2.5 rounded-pill bg-primary shrink-0 mt-2" />
               )}
             </div>
           ))

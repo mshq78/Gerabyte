@@ -18,12 +18,16 @@ export const StreakChain: React.FC<StreakChainProps> = ({
 }) => {
   const isZero = count === 0;
 
-  const chainColor = isZero ? '#9CA3AF' : isActiveToday ? '#F2A93B' : '#E58A1F';
-  const badgeBg = isZero ? 'bg-gray-100' : 'bg-[#FEF6EC] border border-[#F2A93B]/30';
+  const chainColor = isZero
+    ? 'var(--color-sunken-darker)'
+    : isActiveToday
+    ? 'var(--color-coin)'
+    : 'var(--color-domain-5)';
+  const badgeBg = isZero ? 'bg-sunken/40' : 'bg-domain-5-tint border border-coin/30';
 
   return (
     <div
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl ${badgeBg} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-tile ${badgeBg} ${className}`}
       title={`زنجیره یادگیری: ${toFa(count)} روز متوالی`}
       role="status"
       aria-label={`زنجیره یادگیری: ${toFa(count)} روز متوالی`}
@@ -36,6 +40,7 @@ export const StreakChain: React.FC<StreakChainProps> = ({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="shrink-0"
+        aria-hidden="true"
       >
         {/* Square link 1 */}
         <rect
@@ -62,15 +67,15 @@ export const StreakChain: React.FC<StreakChainProps> = ({
           fillOpacity={isZero ? 0 : 0.8}
         />
         {/* Center Interlock Dot */}
-        <circle cx="11" cy="11" r="1.2" fill={isZero ? '#9CA3AF' : '#0D3F6B'} />
+        <circle cx="11" cy="11" r="1.2" fill={isZero ? 'var(--color-sunken-darker)' : 'var(--color-ink)'} />
       </svg>
 
-      <span className="font-bold text-sm tracking-tight text-[#0D3F6B]">
+      <span className="font-bold text-body tracking-tight text-ink">
         {toFa(count)}
       </span>
 
       {showLabel && (
-        <span className="text-xs text-[#0D3F6B]/70 font-medium">
+        <span className="text-meta text-ink/70 font-medium">
           روز زنجیره
         </span>
       )}

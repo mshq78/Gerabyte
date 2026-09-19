@@ -4,7 +4,7 @@ import { MOCK_DOMAINS, MOCK_PATHS } from '../mock/data';
 
 const STORAGE_PATHS_KEY = 'gerabyte:paths_state';
 
-function getStoredPaths(): LearningPath[] {
+export function getStoredPaths(): LearningPath[] {
   if (typeof window !== 'undefined') {
     const raw = localStorage.getItem(STORAGE_PATHS_KEY);
     if (raw) {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import {
   X,
   Play,
@@ -27,7 +27,8 @@ import { toFa, formatDurationFa } from '../../lib/toFa';
 export const LessonPlayerScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, updateUserLocal, entitlements, showToast } = useApp();
+  const { updateUserLocal, showToast } = useApp();
+  const shouldReduceMotion = useReducedMotion();
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -94,10 +95,10 @@ export const LessonPlayerScreen: React.FC = () => {
 
   if (loading || !lesson) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-6 text-[#0D3F6B]">
+      <div className="min-h-screen bg-surface flex items-center justify-center p-6 text-ink">
         <div className="text-center space-y-3">
-          <div className="w-10 h-10 border-4 border-[#1E6FA8] border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-bold">در حال بارگذاری گرابایت...</p>
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-pill animate-spin mx-auto" />
+          <p className="text-body font-bold">در حال بارگذاری گرابایت...</p>
         </div>
       </div>
     );
@@ -193,43 +194,43 @@ export const LessonPlayerScreen: React.FC = () => {
   // ==================== COMPLETION VIEW ====================
   if (isCompleted && completeResult) {
     return (
-      <div className="min-h-screen bg-[#F2EDE4] flex flex-col justify-between p-6 text-[#0D3F6B] select-none">
+      <div className="min-h-screen bg-canvas flex flex-col justify-between p-6 text-ink select-none">
         <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 pt-8">
           {/* Snap celebration circle */}
           <motion.div
-            initial={{ scale: 0, rotate: -20 }}
+            initial={shouldReduceMotion ? false : { scale: 0, rotate: -20 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: 'spring', damping: 18, stiffness: 260 }}
-            className="w-24 h-24 rounded-3xl bg-[#2E9E6B] text-white flex items-center justify-center shadow-lg border-4 border-white"
+            className="w-24 h-24 rounded-sheet bg-success text-surface flex items-center justify-center shadow-lg border-4 border-surface"
           >
-            <Check className="w-14 h-14 stroke-[3]" />
+            <Check className="w-14 h-14 stroke-[3]" aria-hidden="true" />
           </motion.div>
 
           <div>
-            <span className="px-3 py-1 rounded-full bg-[#EDF8F6] text-[#2E9E6B] text-xs font-black border border-[#2E9E6B]/30">
+            <span className="px-3 py-1 rounded-pill bg-domain-3-tint text-success text-meta font-black border border-success/30">
               گرابایت با موفقیت تکمیل شد
             </span>
-            <h2 className="text-xl font-black mt-2 text-[#0D3F6B]">
+            <h2 className="text-headline font-black mt-2 text-ink">
               خسته نباشید!
             </h2>
-            <p className="text-xs text-[#0D3F6B]/70 mt-1 max-w-xs">
+            <p className="text-meta text-ink/70 mt-1 max-w-xs">
               {lesson.title}
             </p>
           </div>
 
           {/* XP & Coins Countup Box */}
-          <div className="w-full max-w-xs p-4 rounded-2xl bg-white border border-[#E8E1D5] shadow-xs space-y-3">
+          <div className="w-full max-w-xs p-4 rounded-tile bg-surface border border-sunken shadow-xs space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#0D3F6B]/70">امتیاز تجربه کسب‌شده:</span>
-              <span className="text-lg font-black text-[#1E6FA8]">
+              <span className="text-meta font-semibold text-ink/70">امتیاز تجربه کسب‌شده:</span>
+              <span className="text-headline font-black text-primary">
                 + {toFa(displayedXp)} XP
               </span>
             </div>
 
             {completeResult.coinsEarned > 0 && (
-              <div className="flex items-center justify-between pt-2 border-t border-[#E8E1D5]">
-                <span className="text-xs font-semibold text-[#0D3F6B]/70">سکه‌های دریافتی:</span>
-                <span className="text-sm font-black text-[#F2A93B] flex items-center gap-1">
+              <div className="flex items-center justify-between pt-2 border-t border-sunken">
+                <span className="text-meta font-semibold text-ink/70">سکه‌های دریافتی:</span>
+                <span className="text-body font-black text-coin flex items-center gap-1">
                   + {toFa(completeResult.coinsEarned)} سکه
                 </span>
               </div>
@@ -237,10 +238,10 @@ export const LessonPlayerScreen: React.FC = () => {
           </div>
 
           {/* Daily Goal Byte Row Update */}
-          <div className="w-full max-w-xs p-4 rounded-2xl bg-white border border-[#E8E1D5] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-[#0D3F6B]">پیشرفت هدف امروز</span>
-              <span className="font-bold text-[#1E6FA8]">
+          <div className="w-full max-w-xs p-4 rounded-tile bg-surface border border-sunken shadow-xs space-y-2">
+            <div className="flex items-center justify-between text-meta">
+              <span className="font-bold text-ink">پیشرفت هدف امروز</span>
+              <span className="font-bold text-primary">
                 {toFa(completeResult.user.todayCompletedCount)} از {toFa(completeResult.user.dailyGoal)}
               </span>
             </div>
@@ -249,18 +250,18 @@ export const LessonPlayerScreen: React.FC = () => {
                 total={completeResult.user.dailyGoal}
                 completed={completeResult.user.todayCompletedCount}
                 size="md"
-                activeColor="#1E6FA8"
+                activeColor="var(--color-primary)"
                 animatedIndex={completeResult.user.todayCompletedCount - 1}
               />
             </div>
           </div>
 
           {/* Streak Link Status */}
-          <div className="flex items-center gap-2 text-xs font-bold bg-white px-4 py-2 rounded-xl border border-[#E8E1D5]">
+          <div className="flex items-center gap-2 text-meta font-bold bg-surface px-4 py-2 rounded-tile border border-sunken">
             <span>زنجیره یادگیری:</span>
             <StreakChain count={completeResult.user.streakDays} size="sm" showLabel={false} />
             {completeResult.streakIncremented && (
-              <span className="text-[#2E9E6B] text-[11px]">
+              <span className="text-success text-meta">
                 (+۱ پیوند جدید!)
               </span>
             )}
@@ -268,13 +269,13 @@ export const LessonPlayerScreen: React.FC = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="pt-4 shrink-0 space-y-2">
+        <div className="pt-4 shrink-0 space-y-2 max-w-sm mx-auto w-full">
           <Button
             fullWidth
             size="lg"
             variant="primary"
             onClick={() => navigate('/path')}
-            rightIcon={<ChevronLeft className="w-5 h-5 stroke-[2.5]" />}
+            rightIcon={<ChevronLeft className="w-5 h-5 stroke-[2.5]" aria-hidden="true" />}
           >
             ادامه مسیر یادگیری
           </Button>
@@ -297,21 +298,21 @@ export const LessonPlayerScreen: React.FC = () => {
       case 'text':
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-black text-[#0D3F6B] leading-snug">
+            <h3 className="text-headline font-black text-ink leading-snug">
               {card.headline}
             </h3>
-            <div className="space-y-3 text-sm leading-[1.8] text-[#0D3F6B]/90 font-medium">
+            <div className="space-y-3 text-read leading-[1.8] text-ink/90 font-medium">
               {card.content.map((p, idx) => (
                 <p key={idx}>{p}</p>
               ))}
             </div>
             {card.keyTakeaway && (
-              <div className="p-3.5 rounded-2xl bg-[#EAF3F9] border border-[#1E6FA8]/30 text-[#0D3F6B] space-y-1">
-                <span className="text-[11px] font-bold text-[#1E6FA8] flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5" />
+              <div className="p-3.5 rounded-tile bg-domain-1-tint border border-primary/30 text-ink space-y-1">
+                <span className="text-meta font-bold text-primary flex items-center gap-1">
+                  <Sparkles className="w-4 h-4" aria-hidden="true" />
                   <span>نکته کلیدی</span>
                 </span>
-                <p className="text-xs font-semibold leading-relaxed">
+                <p className="text-body font-semibold leading-relaxed">
                   {card.keyTakeaway}
                 </p>
               </div>
@@ -322,50 +323,50 @@ export const LessonPlayerScreen: React.FC = () => {
       case 'video':
         return (
           <div className="space-y-4">
-            <h3 className="text-base font-bold text-[#0D3F6B]">{card.title}</h3>
+            <h3 className="text-title font-bold text-ink">{card.title}</h3>
             {/* Mock Video Player */}
-            <div className="relative aspect-video rounded-2xl overflow-hidden bg-[#0D3F6B] border border-[#E8E1D5] shadow-sm flex flex-col justify-between p-3 text-white">
-              <div className="flex items-center justify-between text-xs">
-                <span className="px-2 py-0.5 rounded bg-black/50 text-[10px] font-mono">
+            <div className="relative aspect-video rounded-sheet overflow-hidden bg-ink border border-sunken shadow-sm flex flex-col justify-between p-3 text-surface">
+              <div className="flex items-center justify-between text-meta">
+                <span className="px-2 py-0.5 rounded-tile bg-ink/70 text-meta font-mono">
                   {formatDurationFa(videoElapsed)} / {formatDurationFa(card.durationSeconds)}
                 </span>
-                <span className="text-[11px] opacity-80">{card.posterTitle}</span>
+                <span className="text-meta opacity-80">{card.posterTitle}</span>
               </div>
 
               {/* Center Play Button */}
               <button
                 onClick={() => setIsVideoPlaying(!isVideoPlaying)}
-                className="w-14 h-14 rounded-full bg-white/90 text-[#0D3F6B] flex items-center justify-center mx-auto shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className="w-14 h-14 rounded-pill bg-surface/90 text-ink flex items-center justify-center mx-auto shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
                 aria-label={isVideoPlaying ? 'توقف ویدیو' : 'پخش ویدیو'}
               >
                 {isVideoPlaying ? (
-                  <Pause className="w-6 h-6 fill-current" />
+                  <Pause className="w-6 h-6 fill-current" aria-hidden="true" />
                 ) : (
-                  <Play className="w-6 h-6 fill-current translate-x-0.5" />
+                  <Play className="w-6 h-6 fill-current translate-x-0.5" aria-hidden="true" />
                 )}
               </button>
 
               {/* Video Timeline bar */}
               <div className="space-y-1">
-                <div className="w-full h-1.5 bg-white/30 rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-surface/30 rounded-pill overflow-hidden">
                   <div
-                    className="h-full bg-[#1E6FA8] transition-all duration-300"
+                    className="h-full bg-primary transition-all duration-300"
                     style={{ width: `${(videoElapsed / card.durationSeconds) * 100}%` }}
                   />
                 </div>
               </div>
             </div>
 
-            <p className="text-xs text-[#0D3F6B]/80 leading-relaxed">
+            <p className="text-meta text-ink/80 leading-relaxed">
               {card.description}
             </p>
 
-            <div className="p-3.5 rounded-2xl bg-white border border-[#E8E1D5] space-y-2">
-              <h4 className="text-xs font-bold text-[#0D3F6B]">محورهای کلیدی ویدیو:</h4>
-              <ul className="space-y-1.5 text-xs text-[#0D3F6B]/85">
+            <div className="p-3.5 rounded-tile bg-surface border border-sunken space-y-2">
+              <h4 className="text-meta font-bold text-ink">محورهای کلیدی ویدیو:</h4>
+              <ul className="space-y-1.5 text-body text-ink/85">
                 {card.keyPoints.map((pt, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#2E9E6B] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" aria-hidden="true" />
                     <span>{pt}</span>
                   </li>
                 ))}
@@ -378,32 +379,32 @@ export const LessonPlayerScreen: React.FC = () => {
         return (
           <div className="space-y-5">
             <div>
-              <h3 className="text-base font-bold text-[#0D3F6B]">{card.title}</h3>
-              <p className="text-xs text-[#0D3F6B]/60 mt-0.5">{card.speaker}</p>
+              <h3 className="text-title font-bold text-ink">{card.title}</h3>
+              <p className="text-meta text-ink/60 mt-0.5">{card.speaker}</p>
             </div>
 
             {/* Mock Audio Waveform Player */}
-            <div className="p-4 rounded-2xl bg-white border border-[#E8E1D5] shadow-xs space-y-4">
+            <div className="p-4 rounded-tile bg-surface border border-sunken shadow-xs space-y-4">
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setIsAudioPlaying(!isAudioPlaying)}
-                  className="w-12 h-12 rounded-full bg-[#1E6FA8] text-white flex items-center justify-center shrink-0 hover:bg-[#1A6295] active:scale-95 transition-all shadow-sm"
+                  className="w-14 h-14 rounded-pill bg-primary text-surface flex items-center justify-center shrink-0 hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer"
                   aria-label={isAudioPlaying ? 'توقف پادکست' : 'پخش پادکست'}
                 >
                   {isAudioPlaying ? (
-                    <Pause className="w-5 h-5 fill-current" />
+                    <Pause className="w-6 h-6 fill-current" aria-hidden="true" />
                   ) : (
-                    <Play className="w-5 h-5 fill-current translate-x-0.5" />
+                    <Play className="w-6 h-6 fill-current translate-x-0.5" aria-hidden="true" />
                   )}
                 </button>
 
                 {/* Animated Waveform bars */}
-                <div className="flex-1 flex items-center justify-between gap-1 h-12 px-2 bg-[#FAF8F5] rounded-xl border border-[#E8E1D5]/60">
+                <div className="flex-1 flex items-center justify-between gap-1 h-14 px-2 bg-paper rounded-tile border border-sunken">
                   {card.waveformSeed.map((height, idx) => (
                     <motion.div
                       key={idx}
-                      className="w-1.5 rounded-full bg-[#1E6FA8]"
-                      animate={{
+                      className="w-1.5 rounded-pill bg-primary"
+                      animate={shouldReduceMotion ? false : {
                         height: isAudioPlaying ? [height * 0.4, height, height * 0.4] : height * 0.5,
                       }}
                       transition={{
@@ -416,18 +417,18 @@ export const LessonPlayerScreen: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-xs text-[#0D3F6B]/70 font-mono">
+              <div className="flex items-center justify-between text-meta text-ink/70 font-mono">
                 <span>{formatDurationFa(audioElapsed)}</span>
                 <span>{formatDurationFa(card.durationSeconds)}</span>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-[#E8E1D5] space-y-1.5">
-              <span className="text-[11px] font-bold text-[#0D3F6B]/60 flex items-center gap-1">
-                <Volume2 className="w-3.5 h-3.5" />
+            <div className="p-3.5 rounded-tile bg-paper border border-sunken space-y-1.5">
+              <span className="text-meta font-bold text-ink/60 flex items-center gap-1">
+                <Volume2 className="w-4 h-4" aria-hidden="true" />
                 <span>متن کوتاه پادکست:</span>
               </span>
-              <p className="text-xs text-[#0D3F6B] leading-relaxed italic">
+              <p className="text-body text-ink leading-relaxed italic">
                 «{card.transcript}»
               </p>
             </div>
@@ -438,32 +439,28 @@ export const LessonPlayerScreen: React.FC = () => {
         return (
           <div className="space-y-4">
             <div>
-              <h3 className="text-base font-bold text-[#0D3F6B]">{card.title}</h3>
-              <p className="text-xs text-[#0D3F6B]/70 mt-1">{card.caption}</p>
+              <h3 className="text-title font-bold text-ink">{card.title}</h3>
+              <p className="text-meta text-ink/70 mt-1">{card.caption}</p>
             </div>
 
             {/* Structured SVG Infographic Pillars */}
             <div className="space-y-3">
               {card.items.map((item, idx) => {
-                const colors = ['#1E6FA8', '#1F9A8A', '#7A5BD6'];
-                const itemColor = colors[idx % colors.length];
-
                 return (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-2xl bg-white border border-[#E8E1D5] shadow-xs flex items-start gap-3"
+                    className="p-3.5 rounded-tile bg-surface border border-sunken shadow-xs flex items-start gap-3"
                   >
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-white font-bold text-sm shadow-xs"
-                      style={{ backgroundColor: itemColor }}
+                      className="w-12 h-12 rounded-tile flex items-center justify-center shrink-0 text-surface font-bold text-body shadow-xs bg-primary"
                     >
-                      {idx === 0 ? <Target className="w-5 h-5" /> : idx === 1 ? <Clock className="w-5 h-5" /> : <UserCheck className="w-5 h-5" />}
+                      {idx === 0 ? <Target className="w-6 h-6" aria-hidden="true" /> : idx === 1 ? <Clock className="w-6 h-6" aria-hidden="true" /> : <UserCheck className="w-6 h-6" aria-hidden="true" />}
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm text-[#0D3F6B]">
+                      <h4 className="font-bold text-body text-ink">
                         {item.title}
                       </h4>
-                      <p className="text-xs text-[#0D3F6B]/80 mt-1 leading-relaxed">
+                      <p className="text-meta text-ink/80 mt-1 leading-relaxed">
                         {item.desc}
                       </p>
                     </div>
@@ -479,8 +476,8 @@ export const LessonPlayerScreen: React.FC = () => {
         return (
           <div className="space-y-4">
             <div>
-              <h3 className="text-base font-bold text-[#0D3F6B]">فلش‌کارت‌های مرور مفاهیم</h3>
-              <p className="text-xs text-[#0D3F6B]/70 mt-0.5">{fcSet.instruction}</p>
+              <h3 className="text-title font-bold text-ink">فلش‌کارت‌های مرور مفاهیم</h3>
+              <p className="text-meta text-ink/70 mt-0.5">{fcSet.instruction}</p>
             </div>
 
             <div className="space-y-3">
@@ -495,23 +492,23 @@ export const LessonPlayerScreen: React.FC = () => {
                         [fc.id]: !prev[fc.id],
                       }))
                     }
-                    className="min-h-[110px] p-4 rounded-2xl bg-white border-2 border-[#E8E1D5] hover:border-[#1E6FA8]/40 shadow-xs cursor-pointer flex flex-col justify-between transition-all select-none"
+                    className="min-h-[110px] p-4 rounded-tile bg-surface border-2 border-sunken hover:border-primary/40 shadow-xs cursor-pointer flex flex-col justify-between transition-all select-none"
                   >
-                    <div className="flex items-center justify-between text-[11px] text-[#0D3F6B]/50 font-semibold">
+                    <div className="flex items-center justify-between text-meta text-ink/50 font-semibold">
                       <span>{fc.category || 'مرور'}</span>
-                      <span className="flex items-center gap-1 text-[#1E6FA8]">
-                        <RotateCcw className="w-3.5 h-3.5" />
+                      <span className="flex items-center gap-1 text-primary">
+                        <RotateCcw className="w-4 h-4" aria-hidden="true" />
                         <span>{isFlipped ? 'روی کارت' : 'پشت کارت'}</span>
                       </span>
                     </div>
 
                     <div className="my-2">
-                      <p className={`text-sm font-bold leading-relaxed ${isFlipped ? 'text-[#1E6FA8]' : 'text-[#0D3F6B]'}`}>
+                      <p className={`text-body font-bold leading-relaxed ${isFlipped ? 'text-primary' : 'text-ink'}`}>
                         {isFlipped ? fc.back : fc.front}
                       </p>
                     </div>
 
-                    <span className="text-[10px] text-[#0D3F6B]/40">
+                    <span className="text-meta text-ink/40">
                       ضربه برای وارونه کردن
                     </span>
                   </div>
@@ -525,24 +522,24 @@ export const LessonPlayerScreen: React.FC = () => {
         const sc = card as ScenarioCard;
         return (
           <div className="space-y-4">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#EAF3F9] text-[#1E6FA8] text-xs font-bold">
+            <span className="px-2.5 py-0.5 rounded-pill bg-domain-1-tint text-primary text-meta font-bold">
               سناریوی واقعی محیط کار
             </span>
 
             {/* Situation Card */}
-            <div className="p-4 rounded-2xl bg-white border border-[#E8E1D5] shadow-xs space-y-2">
-              <h3 className="font-bold text-sm text-[#0D3F6B]">صورت مسئله:</h3>
-              <p className="text-xs text-[#0D3F6B]/85 leading-relaxed">
+            <div className="p-4 rounded-tile bg-surface border border-sunken shadow-xs space-y-2">
+              <h3 className="font-bold text-body text-ink">صورت مسئله:</h3>
+              <p className="text-body text-ink/85 leading-relaxed">
                 {sc.situation}
               </p>
-              <div className="pt-2 border-t border-[#E8E1D5] text-xs text-[#0D3F6B]/70 font-semibold">
+              <div className="pt-2 border-t border-sunken text-meta text-ink/70 font-semibold">
                 نقش شما: {sc.roleContext}
               </div>
             </div>
 
             {/* Options */}
             <div className="space-y-2 pt-1">
-              <span className="text-xs font-bold text-[#0D3F6B]">
+              <span className="text-meta font-bold text-ink">
                 بهترین واکنش در این شرایط چیست؟
               </span>
               {sc.options.map((opt) => {
@@ -551,18 +548,18 @@ export const LessonPlayerScreen: React.FC = () => {
                   <button
                     key={opt.id}
                     onClick={() => setSelectedScenarioOption(opt.id)}
-                    className={`w-full p-3.5 rounded-xl text-right text-xs transition-all border select-none cursor-pointer flex items-start gap-2.5 ${
+                    className={`w-full min-h-[48px] p-3.5 rounded-tile text-right text-meta transition-all border select-none cursor-pointer flex items-start gap-2.5 ${
                       isSelected
-                        ? 'bg-[#EAF3F9] border-[#1E6FA8] font-bold text-[#0D3F6B] shadow-xs'
-                        : 'bg-white border-[#E8E1D5] text-[#0D3F6B]/80 hover:bg-gray-50'
+                        ? 'bg-domain-1-tint border-primary font-bold text-ink shadow-xs'
+                        : 'bg-surface border-sunken text-ink/80 hover:bg-canvas'
                     }`}
                   >
                     <span
-                      className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-0.5 ${
-                        isSelected ? 'border-[#1E6FA8] bg-[#1E6FA8] text-white' : 'border-[#CFC5B6]'
+                      className={`w-4 h-4 rounded-pill border flex items-center justify-center shrink-0 mt-0.5 ${
+                        isSelected ? 'border-primary bg-primary text-surface' : 'border-sunken-darker'
                       }`}
                     >
-                      {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                      {isSelected && <span className="w-1.5 h-1.5 rounded-pill bg-surface" />}
                     </span>
                     <span className="leading-relaxed">{opt.text}</span>
                   </button>
@@ -578,11 +575,11 @@ export const LessonPlayerScreen: React.FC = () => {
 
         return (
           <div className="space-y-4">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#EDF8F6] text-[#1F9A8A] text-xs font-bold">
+            <span className="px-2.5 py-0.5 rounded-pill bg-domain-3-tint text-success text-meta font-bold">
               ارزیابی مفهومی درس
             </span>
 
-            <h3 className="text-base font-bold text-[#0D3F6B] leading-snug">
+            <h3 className="text-read font-bold text-ink leading-snug">
               {q.prompt}
             </h3>
 
@@ -610,20 +607,20 @@ export const LessonPlayerScreen: React.FC = () => {
                   <button
                     key={opt.id}
                     onClick={handleToggle}
-                    className={`w-full p-3.5 rounded-xl text-right text-xs transition-all border select-none cursor-pointer flex items-start gap-3 ${
+                    className={`w-full min-h-[48px] p-3.5 rounded-tile text-right text-meta transition-all border select-none cursor-pointer flex items-start gap-3 ${
                       isSelected
-                        ? 'bg-[#EAF3F9] border-[#1E6FA8] font-bold text-[#0D3F6B] shadow-xs'
-                        : 'bg-white border-[#E8E1D5] text-[#0D3F6B]/80 hover:bg-gray-50'
+                        ? 'bg-domain-1-tint border-primary font-bold text-ink shadow-xs'
+                        : 'bg-surface border-sunken text-ink/80 hover:bg-canvas'
                     }`}
                   >
                     <span
                       className={`w-4 h-4 ${
-                        q.kind === 'multi' ? 'rounded-md' : 'rounded-full'
+                        q.kind === 'multi' ? 'rounded-tile' : 'rounded-pill'
                       } border flex items-center justify-center shrink-0 mt-0.5 ${
-                        isSelected ? 'border-[#1E6FA8] bg-[#1E6FA8] text-white' : 'border-[#CFC5B6]'
+                        isSelected ? 'border-primary bg-primary text-surface' : 'border-sunken-darker'
                       }`}
                     >
-                      {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                      {isSelected && <Check className="w-3 h-3 stroke-[3]" aria-hidden="true" />}
                     </span>
                     <span className="leading-relaxed">{opt.text}</span>
                   </button>
@@ -639,16 +636,16 @@ export const LessonPlayerScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2EDE4] flex flex-col justify-between">
+    <div className="min-h-screen bg-canvas flex flex-col justify-between text-ink">
       {/* 1. Top Bar: Close Button + Segmented Progress Bar */}
-      <header className="sticky top-0 z-30 bg-[#F2EDE4]/95 backdrop-blur-md px-4 py-3 border-b border-[#E8E1D5]">
+      <header className="sticky top-0 z-30 bg-canvas/95 backdrop-blur-md px-4 py-3 border-b border-sunken">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/path')}
-            className="p-2 rounded-xl text-[#0D3F6B]/70 hover:text-[#0D3F6B] hover:bg-white transition-colors"
+            className="w-12 h-12 rounded-tile text-ink/70 hover:text-ink hover:bg-surface transition-colors flex items-center justify-center cursor-pointer"
             aria-label="خروج از درس"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" aria-hidden="true" />
           </button>
 
           {/* Segmented Progress Row for Cards */}
@@ -656,14 +653,14 @@ export const LessonPlayerScreen: React.FC = () => {
             {lesson.cards.map((_, idx) => (
               <div
                 key={idx}
-                className={`h-2 flex-1 rounded-full transition-all duration-200 ${
-                  idx <= currentCardIndex ? 'bg-[#1E6FA8]' : 'bg-[#DCD4C7]'
+                className={`h-2 flex-1 rounded-pill transition-all duration-200 ${
+                  idx <= currentCardIndex ? 'bg-primary' : 'bg-sunken-dark'
                 }`}
               />
             ))}
           </div>
 
-          <span className="text-xs font-bold text-[#0D3F6B]/70 font-mono">
+          <span className="text-meta font-bold text-ink/70 font-mono">
             {toFa(currentCardIndex + 1)}/{toFa(totalCards)}
           </span>
         </div>
@@ -674,9 +671,9 @@ export const LessonPlayerScreen: React.FC = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentCardIndex}
-            initial={{ opacity: 0, x: 20 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            exit={shouldReduceMotion ? undefined : { opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
           >
             {renderCardContent(currentCard)}
@@ -685,34 +682,34 @@ export const LessonPlayerScreen: React.FC = () => {
       </div>
 
       {/* 3. Sticky Bottom CTA & Slide-up Explanation */}
-      <div className="sticky bottom-0 z-30 bg-white border-t border-[#E8E1D5] shadow-lg">
+      <div className="sticky bottom-0 z-30 bg-surface border-t border-sunken shadow-lg">
         {/* Slide-up explanation for answer checks */}
         <AnimatePresence>
           {showExplanation && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
+              initial={shouldReduceMotion ? false : { height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              exit={shouldReduceMotion ? undefined : { height: 0, opacity: 0 }}
               className={`p-4 border-b ${
                 isLastAnswerCorrect
-                  ? 'bg-[#EDF8F6] border-[#2E9E6B]/30 text-[#2E9E6B]'
-                  : 'bg-[#FDF2F0] border-[#D5483F]/30 text-[#D5483F]'
+                  ? 'bg-domain-3-tint border-success/30 text-success'
+                  : 'bg-danger-tint border-danger/30 text-danger'
               }`}
             >
-              <div className="flex items-center gap-2 mb-1 font-bold text-sm">
+              <div className="flex items-center gap-2 mb-1 font-bold text-body">
                 {isLastAnswerCorrect ? (
                   <>
-                    <CheckCircle2 className="w-5 h-5 shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
                     <span>پاسخ صحیح است!</span>
                   </>
                 ) : (
                   <>
-                    <XCircle className="w-5 h-5 shrink-0" />
+                    <XCircle className="w-5 h-5 shrink-0" aria-hidden="true" />
                     <span>نیاز به دقت بیشتر:</span>
                   </>
                 )}
               </div>
-              <p className="text-xs text-[#0D3F6B]/80 leading-relaxed font-medium">
+              <p className="text-meta text-ink/80 leading-relaxed font-medium">
                 {explanationText}
               </p>
             </motion.div>
@@ -725,11 +722,11 @@ export const LessonPlayerScreen: React.FC = () => {
             size="lg"
             variant="primary"
             onClick={handleNext}
-            rightIcon={<ChevronLeft className="w-5 h-5 stroke-[2.5]" />}
+            rightIcon={<ChevronLeft className="w-5 h-5 stroke-[2.5]" aria-hidden="true" />}
           >
             {currentCardIndex === totalCards - 1 && !showExplanation && currentCard.type !== 'quiz'
               ? 'تکمیل گرابایت'
-              : showExplanation || currentCard.type !== 'quiz' && currentCard.type !== 'scenario'
+              : showExplanation || (currentCard.type !== 'quiz' && currentCard.type !== 'scenario')
               ? 'ادامه'
               : 'بررسی پاسخ'}
           </Button>

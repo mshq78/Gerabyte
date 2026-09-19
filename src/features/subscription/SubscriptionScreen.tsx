@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShieldCheck,
   Check,
   CreditCard,
-  Building,
-  Sparkles,
   ArrowRight,
   Gift,
   CheckCircle2,
@@ -18,7 +15,7 @@ import { toFa } from '../../lib/toFa';
 
 export const SubscriptionScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { user, subscription, setSubscriptionLocal, showToast } = useApp();
+  const { subscription, setSubscriptionLocal, showToast } = useApp();
 
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   const [selectedPlanId, setSelectedPlanId] = useState<string>('plan-3m');
@@ -38,7 +35,7 @@ export const SubscriptionScreen: React.FC = () => {
         if (list.length > 1) {
           setSelectedPlanId(list[1].id);
         }
-      } catch (err: any) {
+      } catch {
         showToast('خطا در دریافت لیست پلن‌ها', 'error');
       }
     }
@@ -83,30 +80,30 @@ export const SubscriptionScreen: React.FC = () => {
   // SUCCESS CHECKOUT SCREEN
   if (checkoutResult) {
     return (
-      <div className="min-h-screen bg-[#F2EDE4] p-5 flex flex-col justify-between text-[#0D3F6B]">
+      <div className="min-h-screen bg-canvas p-5 flex flex-col justify-between text-ink">
         <div className="my-auto py-6 max-w-sm mx-auto w-full text-center space-y-5">
-          <div className="w-16 h-16 rounded-3xl bg-[#EDF8F6] text-[#2E9E6B] flex items-center justify-center mx-auto border border-[#2E9E6B]/30 shadow-md">
-            <CheckCircle2 className="w-9 h-9 stroke-[2.5]" />
+          <div className="w-16 h-16 rounded-sheet bg-domain-3-tint text-success flex items-center justify-center mx-auto border border-success/30 shadow-md">
+            <CheckCircle2 className="w-9 h-9 stroke-[2.5]" aria-hidden="true" />
           </div>
 
           <div>
-            <span className="px-3 py-1 rounded-full bg-[#EDF8F6] text-[#2E9E6B] text-xs font-bold">
+            <span className="px-3 py-1 rounded-pill bg-domain-3-tint text-success text-meta font-bold">
               تراکنش موفقیت‌آمیز
             </span>
-            <h2 className="text-xl font-black mt-2">اشتراک کامل شما فعال شد</h2>
-            <p className="text-xs text-[#0D3F6B]/70 mt-1">
+            <h2 className="text-title font-black mt-2 text-ink">اشتراک کامل شما فعال شد</h2>
+            <p className="text-meta text-ink/70 mt-1">
               تمام دروس، آزمون‌های صدور مدرک و جوایز اکنون بازگشایی شدند.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white border border-[#E8E1D5] shadow-xs text-xs text-right space-y-2">
+          <div className="p-4 rounded-tile bg-surface border border-sunken shadow-xs text-meta text-right space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[#0D3F6B]/60">شماره مرجع پرداخت:</span>
+              <span className="text-ink/60">شماره مرجع پرداخت:</span>
               <span className="font-mono font-bold">{checkoutResult.referenceId}</span>
             </div>
-            <div className="flex items-center justify-between border-t border-[#E8E1D5] pt-2">
-              <span className="text-[#0D3F6B]/60">مدت اشتراک اعطا شده:</span>
-              <span className="font-bold text-[#1E6FA8]">
+            <div className="flex items-center justify-between border-t border-sunken pt-2">
+              <span className="text-ink/60">مدت اشتراک اعطا شده:</span>
+              <span className="font-bold text-primary">
                 {toFa(checkoutResult.subscription.remainingDays || 30)} روز دسترسی کامل
               </span>
             </div>
@@ -125,26 +122,26 @@ export const SubscriptionScreen: React.FC = () => {
   const selectedPlan = plans.find((p) => p.id === selectedPlanId) || plans[0];
 
   return (
-    <div className="flex-1 flex flex-col p-4 space-y-5 text-[#0D3F6B]">
+    <div className="flex-1 flex flex-col p-4 space-y-5 text-ink">
       {/* Header */}
       <header className="flex items-center justify-between">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-xl text-[#0D3F6B]/60 hover:text-[#0D3F6B] hover:bg-white flex items-center gap-1 text-xs font-bold"
+          className="min-h-[48px] px-3 py-2 rounded-tile text-ink/60 hover:text-ink hover:bg-surface flex items-center gap-1.5 text-meta font-bold cursor-pointer"
         >
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
           <span>بازگشت</span>
         </button>
-        <span className="text-xs font-bold text-[#1E6FA8] bg-[#EAF3F9] px-3 py-1 rounded-full">
+        <span className="text-meta font-bold text-primary bg-domain-1-tint px-3 py-1.5 rounded-pill">
           پلن‌های عضویت
         </span>
       </header>
 
       {/* 1. Current Subscription Status Variant Card */}
-      <div className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-2">
-        <span className="text-[11px] font-bold text-[#1E6FA8]">وضعیت اشتراک کنونی:</span>
+      <div className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-2">
+        <span className="text-meta font-bold text-primary">وضعیت اشتراک کنونی:</span>
         <div className="flex items-center justify-between">
-          <h3 className="font-black text-sm">
+          <h3 className="font-black text-body text-ink">
             {subscription.source === 'org_sponsored'
               ? `اشتراک هدیه سازمان (${subscription.sponsorOrgName || 'فولاد نمونه'})`
               : subscription.tier === 'full'
@@ -152,12 +149,12 @@ export const SubscriptionScreen: React.FC = () => {
               : 'طرح پایه و رایگان'}
           </h3>
           <span
-            className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+            className={`text-meta font-bold px-2.5 py-0.5 rounded-pill ${
               subscription.status === 'active'
-                ? 'bg-[#EDF8F6] text-[#2E9E6B]'
+                ? 'bg-domain-3-tint text-success'
                 : subscription.status === 'expiring'
-                ? 'bg-[#FEF6EC] text-[#E58A1F]'
-                : 'bg-gray-100 text-gray-700'
+                ? 'bg-domain-5-tint text-coin'
+                : 'bg-sunken text-ink'
             }`}
           >
             {subscription.status === 'active' && subscription.remainingDays
@@ -168,52 +165,52 @@ export const SubscriptionScreen: React.FC = () => {
           </span>
         </div>
         {subscription.source === 'org_sponsored' && (
-          <p className="text-[11px] text-[#0D3F6B]/70 leading-relaxed">
+          <p className="text-meta text-ink/70 leading-relaxed">
             این اشتراک توسط سازمان شما تأمین مالی شده و تا پایان مهلت اعتبار فعال است.
           </p>
         )}
       </div>
 
       {/* 2. Compare Free vs Full Table */}
-      <div className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-3">
-        <h3 className="font-bold text-xs text-[#0D3F6B]">
+      <div className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-3">
+        <h3 className="font-bold text-body text-ink">
           مقایسه امکانات طرح «رایگان» و طرح «کامل»:
         </h3>
 
-        <div className="overflow-hidden rounded-xl border border-[#E8E1D5] text-xs">
-          <table className="w-full text-right divide-y divide-[#E8E1D5]">
-            <thead className="bg-[#FAF8F5] text-[11px] font-bold text-[#0D3F6B]/70">
+        <div className="overflow-hidden rounded-tile border border-sunken text-meta">
+          <table className="w-full text-right divide-y divide-sunken">
+            <thead className="bg-paper text-meta font-bold text-ink/70">
               <tr>
                 <th className="p-2.5">قابلیت</th>
                 <th className="p-2.5 text-center">رایگان</th>
-                <th className="p-2.5 text-center text-[#1E6FA8]">کامل</th>
+                <th className="p-2.5 text-center text-primary">کامل</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E8E1D5] font-medium">
+            <tbody className="divide-y divide-sunken font-medium">
               <tr>
                 <td className="p-2.5">دروس پایه هر فصل</td>
-                <td className="p-2.5 text-center text-[#2E9E6B]">✓</td>
-                <td className="p-2.5 text-center text-[#2E9E6B]">✓</td>
+                <td className="p-2.5 text-center text-success">✓</td>
+                <td className="p-2.5 text-center text-success">✓</td>
               </tr>
               <tr>
                 <td className="p-2.5">تمام دروس تخصصی</td>
-                <td className="p-2.5 text-center text-[#D5483F]">✗</td>
-                <td className="p-2.5 text-center text-[#2E9E6B]">✓</td>
+                <td className="p-2.5 text-center text-danger">✗</td>
+                <td className="p-2.5 text-center text-success">✓</td>
               </tr>
               <tr>
                 <td className="p-2.5">آزمون و گواهینامه معتبر QR</td>
-                <td className="p-2.5 text-center text-[#D5483F]">✗</td>
-                <td className="p-2.5 text-center text-[#2E9E6B]">✓</td>
+                <td className="p-2.5 text-center text-danger">✗</td>
+                <td className="p-2.5 text-center text-success">✓</td>
               </tr>
               <tr>
                 <td className="p-2.5">دریافت سکه و تبادل با جوایز</td>
-                <td className="p-2.5 text-center text-[#D5483F]">✗</td>
-                <td className="p-2.5 text-center text-[#2E9E6B]">✓</td>
+                <td className="p-2.5 text-center text-danger">✗</td>
+                <td className="p-2.5 text-center text-success">✓</td>
               </tr>
               <tr>
                 <td className="p-2.5">شرکت در لیگ و پویش‌ها</td>
-                <td className="p-2.5 text-center text-[#2E9E6B]">✓</td>
-                <td className="p-2.5 text-center text-[#2E9E6B]">✓</td>
+                <td className="p-2.5 text-center text-success">✓</td>
+                <td className="p-2.5 text-center text-success">✓</td>
               </tr>
             </tbody>
           </table>
@@ -223,8 +220,8 @@ export const SubscriptionScreen: React.FC = () => {
       {/* 3. Pricing Cards */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
-          <h3 className="font-bold text-xs">تعرفه‌ها و طرح‌های اشتراک:</h3>
-          <span className="text-[10px] text-[#0D3F6B]/50 font-bold">
+          <h3 className="font-bold text-body text-ink">تعرفه‌ها و طرح‌های اشتراک:</h3>
+          <span className="text-meta text-ink/50 font-bold">
             (قیمت‌ها نمایشی آزمایشی)
           </span>
         </div>
@@ -237,33 +234,33 @@ export const SubscriptionScreen: React.FC = () => {
               <div
                 key={plan.id}
                 onClick={() => setSelectedPlanId(plan.id)}
-                className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between select-none ${
+                className={`p-3 min-h-[48px] rounded-tile border-2 transition-all cursor-pointer flex flex-col justify-between select-none ${
                   isSelected
-                    ? 'bg-white border-[#1E6FA8] shadow-md'
-                    : 'bg-white/60 border-[#E8E1D5] hover:border-gray-300'
+                    ? 'bg-surface border-primary shadow-md'
+                    : 'bg-surface/60 border-sunken hover:border-sunken-darker'
                 }`}
               >
                 <div>
                   {plan.discountBadge && (
-                    <span className="text-[9px] font-black text-white bg-[#E58A1F] px-1.5 py-0.5 rounded-full inline-block mb-1">
+                    <span className="text-meta font-black text-surface bg-coin px-1.5 py-0.5 rounded-pill inline-block mb-1">
                       {plan.discountBadge}
                     </span>
                   )}
-                  <h4 className="font-bold text-xs leading-tight">{plan.name}</h4>
+                  <h4 className="font-bold text-body leading-tight text-ink">{plan.name}</h4>
                 </div>
 
                 <div className="my-2">
-                  <span className="font-black text-xs text-[#1E6FA8] block leading-tight">
+                  <span className="font-black text-body text-primary block leading-tight">
                     {plan.formattedPrice}
                   </span>
                 </div>
 
                 <div
-                  className={`w-4 h-4 rounded-full border mx-auto flex items-center justify-center ${
-                    isSelected ? 'border-[#1E6FA8] bg-[#1E6FA8] text-white' : 'border-[#CFC5B6]'
+                  className={`w-4 h-4 rounded-pill border mx-auto flex items-center justify-center ${
+                    isSelected ? 'border-primary bg-primary text-surface' : 'border-sunken-darker'
                   }`}
                 >
-                  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                  {isSelected && <Check className="w-3 h-3 stroke-[3]" aria-hidden="true" />}
                 </div>
               </div>
             );
@@ -278,18 +275,18 @@ export const SubscriptionScreen: React.FC = () => {
         variant="accent"
         isLoading={isCheckingOut}
         onClick={handleCheckout}
-        leftIcon={<CreditCard className="w-5 h-5" />}
+        leftIcon={<CreditCard className="w-5 h-5" aria-hidden="true" />}
       >
         ارتقا به اشتراک کامل {selectedPlan ? `(${selectedPlan.formattedPrice})` : ''}
       </Button>
 
       {/* 4. Activation Code Input */}
-      <div className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-2.5">
-        <div className="flex items-center gap-1.5 text-xs font-bold">
-          <Gift className="w-4 h-4 text-[#1E6FA8]" />
+      <div className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-2.5">
+        <div className="flex items-center gap-1.5 text-body font-bold text-ink">
+          <Gift className="w-4 h-4 text-primary" aria-hidden="true" />
           <span>کد فعال‌سازی سازمانی یا کارت هدیه:</span>
         </div>
-        <p className="text-[11px] text-[#0D3F6B]/70 leading-relaxed">
+        <p className="text-meta text-ink/70 leading-relaxed">
           اگر از طرف سازمان خود کد فعال‌سازی دریافت کرده‌اید، آن را وارد نمایید (نمونه: FOOLAD-2026):
         </p>
 
@@ -299,7 +296,7 @@ export const SubscriptionScreen: React.FC = () => {
             value={activationCode}
             onChange={(e) => setActivationCode(e.target.value.toUpperCase())}
             placeholder="مثال: FOOLAD-2026"
-            className="flex-1 h-11 px-3 rounded-xl border border-[#E8E1D5] text-xs font-mono font-bold text-center outline-none focus:border-[#1E6FA8]"
+            className="flex-1 min-h-[48px] h-12 px-3 rounded-tile border border-sunken text-meta font-mono font-bold text-center outline-none focus:border-primary text-ink bg-surface"
           />
           <Button
             size="sm"

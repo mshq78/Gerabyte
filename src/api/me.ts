@@ -1,6 +1,7 @@
 import { mockRequest } from './client';
-import { User, NotificationPrefs, Level } from '../types/domain';
+import { User, NotificationPrefs, Level, Badge } from '../types/domain';
 import { getStoredUser, setStoredUser } from './auth';
+import { MOCK_BADGES } from '../mock/data';
 
 const STORAGE_PREFS_KEY = 'gerabyte:notif_prefs';
 
@@ -105,5 +106,12 @@ export const meApi = {
       setStoredUser(updated);
       return updated;
     }, { endpoint: '/api/v1/me/level' });
+  },
+
+  // TODO(backend): GET /api/v1/me/badges
+  async getBadges(): Promise<Badge[]> {
+    return mockRequest(() => {
+      return MOCK_BADGES;
+    }, { endpoint: '/api/v1/me/badges' });
   },
 };

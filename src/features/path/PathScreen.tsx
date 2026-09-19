@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Sparkles, Award, CheckCircle2, ChevronLeft, AlertCircle } from 'lucide-react';
+import { Lock, CheckCircle2, ChevronLeft } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { pathsApi } from '../../api/paths';
 import { Domain, LearningPath, Unit, LessonSummary } from '../../types/domain';
@@ -11,7 +11,7 @@ import { toFa } from '../../lib/toFa';
 
 export const PathScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { user, entitlements, subscription } = useApp();
+  const { entitlements } = useApp();
   const [domains, setDomains] = useState<Domain[]>([]);
   const [activeDomainId, setActiveDomainId] = useState<string>('domain-1');
   const [activePath, setActivePath] = useState<LearningPath | null>(null);
@@ -79,9 +79,9 @@ export const PathScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col text-ink">
       {/* 1. Sticky Domain Selector Tabs */}
-      <header className="sticky top-0 z-30 bg-[#F2EDE4]/95 backdrop-blur-md border-b border-[#E8E1D5] py-2.5 px-3">
+      <header className="sticky top-0 z-30 bg-canvas/95 backdrop-blur-md border-b border-sunken py-2.5 px-3">
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
           {domains.map((dom) => {
             const isActive = dom.id === activeDomainId;
@@ -89,10 +89,10 @@ export const PathScreen: React.FC = () => {
               <button
                 key={dom.id}
                 onClick={() => setActiveDomainId(dom.id)}
-                className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition-all select-none cursor-pointer flex items-center gap-1.5 ${
+                className={`shrink-0 min-h-[48px] px-3.5 py-2 rounded-tile text-meta font-bold transition-all select-none cursor-pointer flex items-center gap-1.5 ${
                   isActive
-                    ? 'bg-[#1E6FA8] text-white shadow-xs'
-                    : 'bg-white text-[#0D3F6B]/80 hover:bg-gray-100 border border-[#E8E1D5]'
+                    ? 'bg-primary text-surface shadow-xs'
+                    : 'bg-surface text-ink/80 hover:bg-canvas border border-sunken'
                 }`}
               >
                 <span>{dom.title}</span>
@@ -105,24 +105,22 @@ export const PathScreen: React.FC = () => {
       {/* 2. Active Domain Overview Banner */}
       {activeDomain && (
         <div
-          className="px-5 py-4 text-[#0D3F6B] border-b border-[#E8E1D5]"
-          style={{ backgroundColor: activeDomain.lightColorToken }}
+          className="px-5 py-4 text-ink border-b border-sunken bg-domain-1-tint"
         >
           <div className="flex items-center justify-between">
             <span
-              className="text-xs font-black tracking-tight"
-              style={{ color: activeDomain.colorToken }}
+              className="text-meta font-black tracking-tight text-primary"
             >
               مسیر یادگیری گرابایت
             </span>
-            <span className="text-xs text-[#0D3F6B]/60 font-semibold">
+            <span className="text-meta text-ink/60 font-semibold">
               {toFa(activeDomain.totalLessons)} درس · {toFa(activeDomain.unitsCount)} فصل
             </span>
           </div>
-          <h2 className="text-lg font-bold mt-1 text-[#0D3F6B]">
+          <h2 className="text-headline font-bold mt-1 text-ink">
             {activeDomain.title}
           </h2>
-          <p className="text-xs text-[#0D3F6B]/80 mt-0.5 leading-relaxed">
+          <p className="text-meta text-ink/80 mt-0.5 leading-relaxed">
             {activeDomain.subtitle}
           </p>
         </div>
@@ -130,26 +128,26 @@ export const PathScreen: React.FC = () => {
 
       {/* 3. Units and Winding Vertical Path */}
       <div className="flex-1 px-4 py-6 space-y-12">
-        {activePath?.units.map((unit, uIdx) => (
+        {activePath?.units.map((unit) => (
           <div key={unit.id} className="relative">
             {/* Sticky Unit Header Banner */}
-            <div className="sticky top-14 z-20 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-[#E8E1D5] shadow-xs mb-8">
+            <div className="sticky top-14 z-20 bg-surface/95 backdrop-blur-md p-3.5 rounded-tile border border-sunken shadow-xs mb-8">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-[#1E6FA8] bg-[#EAF3F9] px-2 py-0.5 rounded-md">
+                <span className="text-meta font-bold text-primary bg-domain-1-tint px-2 py-0.5 rounded-tile">
                   فصل {toFa(unit.order)}
                 </span>
-                <span className="text-xs text-[#0D3F6B]/70 font-semibold">
+                <span className="text-meta text-ink/70 font-semibold">
                   {toFa(unit.lessons.filter((l) => l.status === 'done').length)} از {toFa(unit.lessons.length)} درس تکمیل‌شده
                 </span>
               </div>
-              <h3 className="font-bold text-sm text-[#0D3F6B] mt-1.5">{unit.title}</h3>
-              <p className="text-xs text-[#0D3F6B]/75 mt-0.5">{unit.summary}</p>
+              <h3 className="font-bold text-body text-ink mt-1.5">{unit.title}</h3>
+              <p className="text-meta text-ink/75 mt-0.5">{unit.summary}</p>
             </div>
 
-            {/* Winding Nodes with SVG connecting line */}
+            {/* Winding Nodes */}
             <div className="relative flex flex-col items-center gap-10 py-2">
               {unit.lessons.map((lesson, lIdx) => {
-                // Calculate slight horizontal alternating offset for winding aesthetic
+                // Alternating offset for winding path
                 const offsetClass =
                   lIdx % 3 === 0
                     ? 'translate-x-0'
@@ -168,7 +166,7 @@ export const PathScreen: React.FC = () => {
                       status={status}
                       minutes={lesson.minutes}
                       xp={lesson.xp}
-                      accentColor={activeDomain?.colorToken || '#1E6FA8'}
+                      accentColor="var(--color-primary)"
                       label={lesson.title}
                       onClick={() => handleNodeClick(lesson, unit)}
                     />
@@ -183,7 +181,7 @@ export const PathScreen: React.FC = () => {
                     index={unit.lessons.length + 1}
                     status={unit.lessons.every((l) => l.status === 'done') ? 'available' : 'locked'}
                     isCheckpoint
-                    accentColor="#7A5BD6"
+                    accentColor="var(--color-domain-4)"
                     label="ارزیابی چک‌پوینت این فصل"
                     onClick={() =>
                       handleNodeClick(
@@ -208,15 +206,15 @@ export const PathScreen: React.FC = () => {
 
         {/* 4. Domain Final Certificate Exam Node */}
         {activePath?.certificateExamId && (
-          <div className="pt-6 pb-8 flex flex-col items-center justify-center border-t-2 border-dashed border-[#CFC5B6]">
-            <span className="text-xs font-bold text-[#F2A93B] bg-[#FEF6EC] px-3 py-1 rounded-full mb-3 border border-[#F2A93B]/40">
+          <div className="pt-6 pb-8 flex flex-col items-center justify-center border-t-2 border-dashed border-sunken-darker">
+            <span className="text-meta font-bold text-coin bg-domain-5-tint px-3 py-1 rounded-pill mb-3 border border-coin/40">
               آزمون اعطای گواهینامه رسمی
             </span>
             <SquircleNode
               index={99}
               status={entitlements.canTakeCertificateExams ? 'available' : 'paywalled'}
               isCertificate
-              accentColor="#F2A93B"
+              accentColor="var(--color-coin)"
               label="گواهینامه تخصصی پردیس گرا"
               onClick={() => {
                 if (!entitlements.canTakeCertificateExams) {
@@ -250,33 +248,33 @@ export const PathScreen: React.FC = () => {
         subtitle={selectedLesson?.unitTitle}
       >
         {selectedLesson && (
-          <div className="space-y-4 text-[#0D3F6B]">
-            <h3 className="font-bold text-base leading-snug">
+          <div className="space-y-4 text-ink">
+            <h3 className="font-bold text-title leading-snug">
               {selectedLesson.lesson.title}
             </h3>
 
             <div className="grid grid-cols-2 gap-3 py-2">
-              <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#E8E1D5] flex flex-col">
-                <span className="text-xs text-[#0D3F6B]/60 font-medium">مدت زمان تخمینی</span>
-                <span className="text-sm font-bold mt-1 text-[#0D3F6B]">
+              <div className="p-3 rounded-tile bg-paper border border-sunken flex flex-col">
+                <span className="text-meta text-ink/60 font-medium">مدت زمان تخمینی</span>
+                <span className="text-body font-bold mt-1 text-ink">
                   ⏱ {toFa(selectedLesson.lesson.minutes)} دقیقه
                 </span>
               </div>
-              <div className="p-3 rounded-xl bg-[#EAF3F9] border border-[#1E6FA8]/20 flex flex-col">
-                <span className="text-xs text-[#1E6FA8] font-medium">پاداش تجربه</span>
-                <span className="text-sm font-bold mt-1 text-[#1E6FA8]">
+              <div className="p-3 rounded-tile bg-domain-1-tint border border-primary/20 flex flex-col">
+                <span className="text-meta text-primary font-medium">پاداش تجربه</span>
+                <span className="text-body font-bold mt-1 text-primary">
                   + {toFa(selectedLesson.lesson.xp)} XP
                 </span>
               </div>
             </div>
 
             {selectedLesson.lesson.status === 'done' ? (
-              <div className="p-3 rounded-xl bg-[#EDF8F6] border border-[#2E9E6B]/40 text-[#2E9E6B] text-xs font-semibold flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <div className="p-3 rounded-tile bg-domain-3-tint border border-success/40 text-success text-meta font-semibold flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
                 <span>شما این درس را قبلاً با موفقیت گذرانده‌اید (مرور مجدد شامل امتیاز نخواهد بود).</span>
               </div>
             ) : (
-              <p className="text-xs text-[#0D3F6B]/80 leading-relaxed">
+              <p className="text-meta text-ink/80 leading-relaxed">
                 این گرابایت شامل مفاهیم تعاملی، صوت کاربردی و ارزیابی سناریویی است.
               </p>
             )}
@@ -286,7 +284,7 @@ export const PathScreen: React.FC = () => {
                 fullWidth
                 size="lg"
                 onClick={handleStartActivity}
-                rightIcon={<ChevronLeft className="w-5 h-5 stroke-[2.5]" />}
+                rightIcon={<ChevronLeft className="w-5 h-5 stroke-[2.5]" aria-hidden="true" />}
               >
                 {selectedLesson.lesson.status === 'done'
                   ? 'مرور دوباره گرابایت'
@@ -304,26 +302,26 @@ export const PathScreen: React.FC = () => {
         title="دسترسی ویژه اشتراک کامل"
         subtitle="این درس و آزمون‌های گواهینامه مختص اعضای اشتراک کامل هستند"
       >
-        <div className="space-y-4 text-[#0D3F6B]">
-          <div className="w-12 h-12 rounded-2xl bg-[#FEF6EC] text-[#F2A93B] flex items-center justify-center mx-auto mb-2 border border-[#F2A93B]/30">
-            <Lock className="w-6 h-6 stroke-[2.5]" />
+        <div className="space-y-4 text-ink">
+          <div className="w-12 h-12 rounded-tile bg-domain-5-tint text-coin flex items-center justify-center mx-auto mb-2 border border-coin/30">
+            <Lock className="w-6 h-6 stroke-[2.5]" aria-hidden="true" />
           </div>
 
-          <p className="text-sm text-center leading-relaxed font-semibold">
+          <p className="text-body text-center leading-relaxed font-semibold">
             با ارتقا به اشتراک کامل، تمام دروس تخصصی، آزمون‌های صدور گواهینامه و دریافت سکه‌های جوایز بازگشایی می‌شوند.
           </p>
 
-          <div className="space-y-2 py-1 text-xs">
+          <div className="space-y-2 py-1 text-body">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#2E9E6B] shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-success shrink-0" aria-hidden="true" />
               <span>دسترسی نامحدود به تمامی دروس و حوزه‌های پنج‌گانه</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#2E9E6B] shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-success shrink-0" aria-hidden="true" />
               <span>امکان شرکت در آزمون‌های صدور گواهینامه معتبر با کد اصالت</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#2E9E6B] shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-success shrink-0" aria-hidden="true" />
               <span>کسب سکه و تبدیل به جوایز فیزیکی و اعتباری</span>
             </div>
           </div>

@@ -5,11 +5,8 @@ import {
   ArrowRight,
   Download,
   Share2,
-  CheckCircle2,
   Award,
   ShieldCheck,
-  Calendar,
-  Building,
 } from 'lucide-react';
 import { certificatesApi } from '../../api/certificates';
 import { Certificate } from '../../types/domain';
@@ -44,8 +41,8 @@ export const CertificateDetailScreen: React.FC = () => {
 
   if (loading || !cert) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-6 text-[#0D3F6B]">
-        <div className="w-10 h-10 border-4 border-[#1E6FA8] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-surface flex items-center justify-center p-6 text-ink">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-pill animate-spin" />
       </div>
     );
   }
@@ -74,79 +71,79 @@ export const CertificateDetailScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2EDE4] p-4 flex flex-col justify-between text-[#0D3F6B]">
+    <div className="min-h-screen bg-canvas p-4 flex flex-col justify-between text-ink">
       {/* Top Bar */}
       <header className="flex items-center justify-between py-2">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-xl text-[#0D3F6B]/60 hover:text-[#0D3F6B] hover:bg-white flex items-center gap-1 text-xs font-bold"
+          className="min-h-[48px] px-3 py-2 rounded-tile text-ink/60 hover:text-ink hover:bg-surface flex items-center gap-1.5 text-meta font-bold cursor-pointer"
         >
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
           <span>بازگشت</span>
         </button>
-        <span className="text-xs font-bold text-[#1E6FA8] bg-[#EAF3F9] px-3 py-1 rounded-full flex items-center gap-1">
-          <ShieldCheck className="w-3.5 h-3.5" />
+        <span className="text-meta font-bold text-primary bg-domain-1-tint px-3 py-1.5 rounded-pill flex items-center gap-1.5">
+          <ShieldCheck className="w-4 h-4" aria-hidden="true" />
           <span>اصالت تضمین‌شده</span>
         </span>
       </header>
 
       {/* Certificate Framed Card */}
       <div className="my-auto py-4 max-w-sm mx-auto w-full">
-        <div className="p-6 rounded-3xl bg-white border-2 border-[#1E6FA8]/40 shadow-xl relative overflow-hidden space-y-5 text-center">
+        <div className="p-6 rounded-sheet bg-surface border-2 border-primary/40 shadow-xl relative overflow-hidden space-y-5 text-center">
           {/* Subtle Guilloche Border Accent */}
-          <div className="absolute inset-2 rounded-2xl border border-dashed border-[#1E6FA8]/20 pointer-events-none" />
+          <div className="absolute inset-2 rounded-tile border border-dashed border-primary/20 pointer-events-none" />
 
           {/* Seal / Header */}
           <div className="flex flex-col items-center space-y-1.5 pt-2">
-            <div className="w-14 h-14 rounded-2xl bg-[#FEF6EC] text-[#F2A93B] flex items-center justify-center border border-[#F2A93B]/40 shadow-xs">
-              <Award className="w-8 h-8 stroke-[2.2]" />
+            <div className="w-14 h-14 rounded-tile bg-domain-5-tint text-coin flex items-center justify-center border border-coin/40 shadow-xs">
+              <Award className="w-8 h-8 stroke-[2.2]" aria-hidden="true" />
             </div>
-            <span className="text-[11px] font-bold text-[#0D3F6B]/60">
+            <span className="text-meta font-bold text-ink/60">
               پردیس نوآوری گرا · سامانه اعتبارسنجی شایستگی
             </span>
-            <h2 className="text-base font-black text-[#0D3F6B]">
+            <h2 className="text-title font-black text-ink">
               گواهینامه رسمی شایستگی تخصصی
             </h2>
           </div>
 
           {/* Candidate Name & Title */}
-          <div className="space-y-1 py-1 border-y border-[#E8E1D5]">
-            <p className="text-xs text-[#0D3F6B]/70">اعطا شده به جناب/سرکار</p>
-            <h3 className="text-lg font-black text-[#1E6FA8]">{cert.holderName}</h3>
-            <p className="text-xs text-[#0D3F6B]/80 font-semibold pt-1">
+          <div className="space-y-1 py-1 border-y border-sunken">
+            <p className="text-meta text-ink/70">اعطا شده به جناب/سرکار</p>
+            <h3 className="text-headline font-black text-primary">{cert.holderName}</h3>
+            <p className="text-meta text-ink/80 font-semibold pt-1">
               جهت گذراندن موفقیت‌آمیز سرفصل:
             </p>
-            <p className="text-sm font-bold text-[#0D3F6B]">{cert.title}</p>
+            <p className="text-body font-bold text-ink">{cert.title}</p>
           </div>
 
           {/* Details & QR Code */}
-          <div className="flex items-center justify-between gap-4 pt-1 text-right text-xs">
+          <div className="flex items-center justify-between gap-4 pt-1 text-right text-meta">
             <div className="space-y-1.5 flex-1">
               <div>
-                <span className="text-[10px] text-[#0D3F6B]/60 block">کد رهگیری و سریال:</span>
-                <span className="font-mono font-bold text-xs text-[#0D3F6B] tracking-wider">
+                <span className="text-meta text-ink/60 block">کد رهگیری و سریال:</span>
+                <span className="font-mono font-bold text-meta text-ink tracking-wider">
                   {cert.serial}
                 </span>
               </div>
               <div>
-                <span className="text-[10px] text-[#0D3F6B]/60 block">تاریخ صدور:</span>
-                <span className="font-bold text-[#0D3F6B]">{formatJalaliDate(cert.issuedAt)}</span>
+                <span className="text-meta text-ink/60 block">تاریخ صدور:</span>
+                <span className="font-bold text-ink">{formatJalaliDate(cert.issuedAt)}</span>
               </div>
               <div>
-                <span className="text-[10px] text-[#0D3F6B]/60 block">نمره احرازشده:</span>
-                <span className="font-black text-[#2E9E6B]">{toFa(cert.scorePct)}٪ نمره کل</span>
+                <span className="text-meta text-ink/60 block">نمره احرازشده:</span>
+                <span className="font-black text-success">{toFa(cert.scorePct)}٪ نمره کل</span>
               </div>
             </div>
 
             {/* Real Offline QR Code rendered with SVG */}
-            <div className="p-2 rounded-xl bg-white border border-[#E8E1D5] shadow-xs shrink-0 flex flex-col items-center">
+            <div className="p-2 rounded-tile bg-surface border border-sunken shadow-xs shrink-0 flex flex-col items-center">
               <QRCodeSVG
                 value={verifyUrl}
                 size={84}
                 level="M"
                 fgColor="#0D3F6B"
               />
-              <span className="text-[9px] text-[#0D3F6B]/50 mt-1 font-mono">اسکن اصالت</span>
+              <span className="text-meta text-ink/50 mt-1 font-mono">اسکن اصالت</span>
             </div>
           </div>
         </div>
@@ -158,7 +155,7 @@ export const CertificateDetailScreen: React.FC = () => {
           variant="primary"
           size="md"
           onClick={handleDownloadPdf}
-          leftIcon={<Download className="w-4 h-4" />}
+          leftIcon={<Download className="w-4 h-4" aria-hidden="true" />}
         >
           دریافت PDF
         </Button>
@@ -166,7 +163,7 @@ export const CertificateDetailScreen: React.FC = () => {
           variant="secondary"
           size="md"
           onClick={handleShare}
-          leftIcon={<Share2 className="w-4 h-4" />}
+          leftIcon={<Share2 className="w-4 h-4" aria-hidden="true" />}
         >
           اشتراک‌گذاری
         </Button>
@@ -188,22 +185,22 @@ export const CertificatesScreen: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col p-4 space-y-4 text-[#0D3F6B]">
+    <div className="flex-1 flex flex-col p-4 space-y-4 text-ink">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-black">گواهینامه‌های رسمی شما</h2>
-          <p className="text-xs text-[#0D3F6B]/70 mt-0.5">
+          <h2 className="text-headline font-black">گواهینامه‌های رسمی شما</h2>
+          <p className="text-meta text-ink/70 mt-0.5">
             صادره از پردیس نوآوری گرا با قابلیت استعلام آنلاین
           </p>
         </div>
-        <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EAF3F9] text-[#1E6FA8]">
+        <span className="text-meta font-bold px-2.5 py-1 rounded-pill bg-domain-1-tint text-primary">
           {toFa(certs.length)} گواهینامه
         </span>
       </header>
 
       <div className="space-y-3">
         {certs.length === 0 ? (
-          <div className="p-8 text-center text-xs text-[#0D3F6B]/60 bg-white rounded-2xl border border-[#E8E1D5]">
+          <div className="p-8 text-center text-meta text-ink/60 bg-surface rounded-tile border border-sunken">
             شما هنوز گواهینامه‌ای دریافت نکرده‌اید. با گذراندن دروس و قبولی در آزمون‌های جامع فصول، گواهینامه معتبر کسب کنید.
           </div>
         ) : (
@@ -211,17 +208,17 @@ export const CertificatesScreen: React.FC = () => {
             <div
               key={c.serial}
               onClick={() => navigate(`/certificates/${c.serial}`)}
-              className="p-4 rounded-2xl bg-white border border-[#E8E1D5] hover:border-[#1E6FA8]/50 shadow-xs cursor-pointer transition-all flex items-center justify-between"
+              className="p-4 rounded-tile bg-surface border border-sunken hover:border-primary/50 shadow-xs cursor-pointer transition-all flex items-center justify-between min-h-[48px]"
             >
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#FEF6EC] text-[#F2A93B] flex items-center justify-center shrink-0 border border-[#F2A93B]/30">
-                  <Award className="w-6 h-6 stroke-[2.2]" />
+                <div className="w-12 h-12 rounded-tile bg-domain-5-tint text-coin flex items-center justify-center shrink-0 border border-coin/30">
+                  <Award className="w-6 h-6 stroke-[2.2]" aria-hidden="true" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs text-[#0D3F6B] leading-snug">
+                  <h4 className="font-bold text-body text-ink leading-snug">
                     {c.title}
                   </h4>
-                  <div className="flex items-center gap-2 mt-1 text-[11px] text-[#0D3F6B]/60">
+                  <div className="flex items-center gap-2 mt-1 text-meta text-ink/60">
                     <span className="font-mono">{c.serial}</span>
                     <span>·</span>
                     <span>نمره: {toFa(c.scorePct)}٪</span>
@@ -229,7 +226,7 @@ export const CertificatesScreen: React.FC = () => {
                 </div>
               </div>
 
-              <span className="text-xs font-bold text-[#1E6FA8]">مشاهده</span>
+              <span className="text-meta font-bold text-primary">مشاهده</span>
             </div>
           ))
         )}

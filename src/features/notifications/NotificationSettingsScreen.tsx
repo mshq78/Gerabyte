@@ -38,8 +38,8 @@ export const NotificationSettingsScreen: React.FC = () => {
 
   if (!prefs) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-6 text-[#0D3F6B]">
-        <div className="w-8 h-8 border-4 border-[#1E6FA8] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-surface flex items-center justify-center p-6 text-ink">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-pill animate-spin" />
       </div>
     );
   }
@@ -80,37 +80,37 @@ export const NotificationSettingsScreen: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 flex flex-col p-4 space-y-4 text-[#0D3F6B]">
+    <div className="flex-1 flex flex-col p-4 space-y-4 text-ink">
       {/* Top Bar */}
       <header className="flex items-center justify-between">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-xl text-[#0D3F6B]/60 hover:text-[#0D3F6B] hover:bg-white flex items-center gap-1 text-xs font-bold"
+          className="min-h-[48px] px-3 py-2 rounded-tile text-ink/60 hover:text-ink hover:bg-surface flex items-center gap-1 text-meta font-bold cursor-pointer"
         >
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
           <span>بازگشت</span>
         </button>
-        <span className="text-xs font-bold text-[#1E6FA8] bg-[#EAF3F9] px-3 py-1 rounded-full">
+        <span className="text-meta font-bold text-primary bg-domain-1-tint px-3 py-1.5 rounded-pill">
           تنظیمات ارتباطی
         </span>
       </header>
 
-      <h2 className="text-base font-black">کانال‌های دریافت یادآوری و زمان‌بندی</h2>
+      <h2 className="text-title font-black text-ink">کانال‌های دریافت یادآوری و زمان‌بندی</h2>
 
       {/* Failover note banner */}
-      <div className="p-3.5 rounded-2xl bg-[#EAF3F9] border border-[#1E6FA8]/30 text-xs text-[#0D3F6B] space-y-1">
-        <div className="flex items-center gap-1.5 font-bold text-[#1E6FA8]">
-          <Shield className="w-4 h-4 shrink-0" />
+      <div className="p-3.5 rounded-tile bg-domain-1-tint border border-primary/30 text-meta text-ink space-y-1">
+        <div className="flex items-center gap-1.5 font-bold text-primary">
+          <Shield className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>سیاست جایگزینی خودکار (Fallback Policy):</span>
         </div>
-        <p className="text-[11px] leading-relaxed">
+        <p className="text-meta leading-relaxed">
           «اگر یک مسیر به هر دلیل در دسترس یا پاسخگو نبود، سامانه به ترتیب اولویت از مسیر فعال بعدی استفاده می‌کند تا پیوستگی یادگیری شما حفظ شود.»
         </p>
       </div>
 
       {/* 1. Channel Toggles */}
-      <div className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-3">
-        <h3 className="font-bold text-xs">کانال‌های فعال ارسال:</h3>
+      <div className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-3">
+        <h3 className="font-bold text-body text-ink">کانال‌های فعال ارسال:</h3>
         <div className="space-y-2.5">
           {channelsList.map((ch) => {
             const isEnabled = prefs.channels[ch.key];
@@ -118,22 +118,22 @@ export const NotificationSettingsScreen: React.FC = () => {
               <div
                 key={ch.key}
                 onClick={() => handleToggleChannel(ch.key)}
-                className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors"
+                className="flex items-center justify-between p-3 rounded-tile hover:bg-canvas cursor-pointer transition-colors min-h-[48px]"
               >
                 <div>
-                  <span className="text-xs font-bold block">{ch.label}</span>
-                  <span className="text-[10px] text-[#0D3F6B]/60">{ch.note}</span>
+                  <span className="text-body font-bold block text-ink">{ch.label}</span>
+                  <span className="text-meta text-ink/60">{ch.note}</span>
                 </div>
 
                 {/* Custom Toggle Switch */}
                 <div
-                  className={`w-11 h-6 rounded-full transition-colors relative flex items-center px-0.5 ${
-                    isEnabled ? 'bg-[#1E6FA8]' : 'bg-[#DCD4C7]'
+                  className={`w-12 h-6 rounded-pill transition-colors relative flex items-center px-0.5 ${
+                    isEnabled ? 'bg-primary' : 'bg-sunken-darker'
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white shadow-xs transition-transform ${
-                      isEnabled ? '-translate-x-5' : 'translate-x-0'
+                    className={`w-5 h-5 rounded-pill bg-surface shadow-xs transition-transform ${
+                      isEnabled ? '-translate-x-6' : 'translate-x-0'
                     }`}
                   />
                 </div>
@@ -144,18 +144,18 @@ export const NotificationSettingsScreen: React.FC = () => {
       </div>
 
       {/* 2. Timing & Quiet Hours */}
-      <div className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-3 text-xs">
-        <h3 className="font-bold text-xs">زمان‌بندی و ساعات سکوت:</h3>
+      <div className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-3 text-body">
+        <h3 className="font-bold text-body text-ink">زمان‌بندی و ساعات سکوت:</h3>
 
-        <div className="flex items-center justify-between">
-          <span className="flex items-center gap-1.5 font-semibold">
-            <Clock className="w-4 h-4 text-[#1E6FA8]" />
+        <div className="flex items-center justify-between min-h-[48px]">
+          <span className="flex items-center gap-1.5 font-semibold text-meta">
+            <Clock className="w-4 h-4 text-primary" aria-hidden="true" />
             ساعت یادآوری روزانه:
           </span>
           <select
             value={prefs.dailyReminderTime}
             onChange={(e) => setPrefs({ ...prefs, dailyReminderTime: e.target.value })}
-            className="px-3 py-1.5 rounded-xl border border-[#E8E1D5] bg-[#FAF8F5] font-mono font-bold text-xs outline-none"
+            className="min-h-[48px] px-3 py-1.5 rounded-tile border border-sunken bg-paper font-mono font-bold text-meta outline-none cursor-pointer"
           >
             <option value="08:30">۰۸:۳۰ صبح</option>
             <option value="09:00">۰۹:۰۰ صبح</option>
@@ -166,38 +166,38 @@ export const NotificationSettingsScreen: React.FC = () => {
           </select>
         </div>
 
-        <div className="flex items-center justify-between border-t border-[#E8E1D5] pt-2.5">
-          <span className="flex items-center gap-1.5 font-semibold">
-            <Moon className="w-4 h-4 text-[#7A5BD6]" />
+        <div className="flex items-center justify-between border-t border-sunken pt-2.5 min-h-[48px]">
+          <span className="flex items-center gap-1.5 font-semibold text-meta">
+            <Moon className="w-4 h-4 text-domain-4" aria-hidden="true" />
             ساعات سکوت شبانه (عدم ارسال پیام):
           </span>
-          <span className="font-mono font-bold text-[11px] text-[#0D3F6B]/80">
+          <span className="font-mono font-bold text-meta text-ink/80">
             {toFa(prefs.quietHours[0])} تا {toFa(prefs.quietHours[1])}
           </span>
         </div>
 
-        <div className="flex items-center justify-between border-t border-[#E8E1D5] pt-2.5">
-          <span>سقف روزانه پیام‌های یادآوری:</span>
-          <span className="font-bold text-[#1E6FA8]">
+        <div className="flex items-center justify-between border-t border-sunken pt-2.5 min-h-[48px]">
+          <span className="text-meta">سقف روزانه پیام‌های یادآوری:</span>
+          <span className="font-bold text-primary text-meta">
             حداکثر {toFa(prefs.dailyCap)} پیام در روز
           </span>
         </div>
       </div>
 
-      {/* 3. Sample Respectful Messages Preview (Prompt §6: respectful, never guilt-tripping) */}
-      <div className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-2.5">
-        <h3 className="font-bold text-xs text-[#0D3F6B]">
+      {/* 3. Sample Respectful Messages Preview */}
+      <div className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-2.5">
+        <h3 className="font-bold text-body text-ink">
           پیش‌نمایش لحن پیام‌های یادآوری گرا (محترمانه و غیرسرزنش‌گر):
         </h3>
-        <p className="text-[11px] text-[#0D3F6B]/70">
+        <p className="text-meta text-ink/70">
           پیام‌های گرابایت هرگز حس تقصیر یا فشار روانی ایجاد نمی‌کنند:
         </p>
 
-        <div className="space-y-2 text-xs pt-1">
+        <div className="space-y-2 text-meta pt-1">
           {RESPECTFUL_SAMPLE_MESSAGES.map((msg, idx) => (
             <div
               key={idx}
-              className="p-2.5 rounded-xl bg-[#FAF8F5] border border-[#E8E1D5] text-[#0D3F6B]/90 leading-relaxed font-medium"
+              className="p-3 rounded-tile bg-paper border border-sunken text-ink/90 leading-relaxed font-medium"
             >
               «{msg}»
             </div>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Gift, Coins, CheckCircle2, ChevronLeft, ShieldCheck, Ticket, Building2 } from 'lucide-react';
+import { Gift, Coins, CheckCircle2, Building2 } from 'lucide-react';
 import { rewardsApi } from '../../api/rewards';
 import { Reward, RedeemedReward } from '../../types/domain';
 import { Button } from '../../components/ui/Button';
@@ -9,7 +8,6 @@ import { toFa } from '../../lib/toFa';
 import { formatJalaliShort } from '../../lib/jalali';
 
 export const RewardsScreen: React.FC = () => {
-  const navigate = useNavigate();
   const { user, updateUserLocal, showToast } = useApp();
 
   const [activeTab, setActiveTab] = useState<'store' | 'mine'>('store');
@@ -61,44 +59,44 @@ export const RewardsScreen: React.FC = () => {
   });
 
   return (
-    <div className="flex-1 flex flex-col p-4 space-y-4 text-[#0D3F6B]">
+    <div className="flex-1 flex flex-col p-4 space-y-4 text-ink">
       {/* 1. Header with Coins Balance */}
-      <header className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs flex items-center justify-between">
+      <header className="p-4 rounded-tile bg-surface border border-sunken shadow-xs flex items-center justify-between">
         <div>
-          <h2 className="text-base font-black text-[#0D3F6B]">جوایز و هدایای شایستگی</h2>
-          <p className="text-xs text-[#0D3F6B]/60 mt-0.5">
+          <h2 className="text-title font-black text-ink">جوایز و هدایای شایستگی</h2>
+          <p className="text-meta text-ink/60 mt-0.5">
             تبدیل سکه‌های کسب‌شده از گرابایت‌ها به پاداش‌های واقعی
           </p>
         </div>
 
         {/* Tactile Coin Badge */}
-        <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-[#FEF6EC] border border-[#F2A93B]/40 shadow-xs">
-          <Coins className="w-5 h-5 text-[#F2A93B] stroke-[2.2]" />
+        <div className="flex items-center gap-2 px-3.5 py-2 rounded-tile bg-domain-5-tint border border-coin/40 shadow-xs min-h-[48px]">
+          <Coins className="w-5 h-5 text-coin stroke-[2.2]" aria-hidden="true" />
           <div>
-            <span className="text-[10px] text-[#0D3F6B]/60 block font-semibold">موجودی سکه</span>
-            <span className="text-sm font-black text-[#0D3F6B]">{toFa(user.coins)} سکه</span>
+            <span className="text-meta text-ink/60 block font-semibold">موجودی سکه</span>
+            <span className="text-body font-black text-ink">{toFa(user.coins)} سکه</span>
           </div>
         </div>
       </header>
 
       {/* 2. Primary Tabs */}
-      <div className="flex items-center gap-2 p-1 bg-white rounded-2xl border border-[#E8E1D5]">
+      <div className="flex items-center gap-2 p-1 bg-surface rounded-tile border border-sunken">
         <button
           onClick={() => setActiveTab('store')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-1 min-h-[48px] py-2 rounded-tile text-meta font-bold transition-all cursor-pointer ${
             activeTab === 'store'
-              ? 'bg-[#1E6FA8] text-white shadow-xs'
-              : 'text-[#0D3F6B]/70 hover:text-[#0D3F6B]'
+              ? 'bg-primary text-surface shadow-xs'
+              : 'text-ink/70 hover:text-ink'
           }`}
         >
           ویترین جوایز
         </button>
         <button
           onClick={() => setActiveTab('mine')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all relative ${
+          className={`flex-1 min-h-[48px] py-2 rounded-tile text-meta font-bold transition-all cursor-pointer relative ${
             activeTab === 'mine'
-              ? 'bg-[#1E6FA8] text-white shadow-xs'
-              : 'text-[#0D3F6B]/70 hover:text-[#0D3F6B]'
+              ? 'bg-primary text-surface shadow-xs'
+              : 'text-ink/70 hover:text-ink'
           }`}
         >
           جوایز دریافت شده من ({toFa(myRedemptions.length)})
@@ -107,23 +105,23 @@ export const RewardsScreen: React.FC = () => {
 
       {/* NEWLY REDEEMED VOUCHER MODAL / BANNER */}
       {newlyRedeemed && (
-        <div className="p-4 rounded-3xl bg-[#EDF8F6] border-2 border-[#2E9E6B] shadow-md space-y-2.5 animate-in fade-in">
+        <div className="p-4 rounded-tile bg-domain-3-tint border-2 border-success shadow-md space-y-2.5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#2E9E6B]">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className="flex items-center gap-2 text-meta font-bold text-success">
+              <CheckCircle2 className="w-5 h-5" aria-hidden="true" />
               <span>پاداش شما صادر شد:</span>
             </div>
             <button
               onClick={() => setNewlyRedeemed(null)}
-              className="text-xs text-[#0D3F6B]/50 hover:text-[#0D3F6B]"
+              className="text-meta text-ink/50 hover:text-ink cursor-pointer min-h-[48px] px-2 flex items-center"
             >
               بستن
             </button>
           </div>
-          <h4 className="font-black text-sm">{newlyRedeemed.title}</h4>
-          <div className="p-3 rounded-xl bg-white border border-[#2E9E6B]/30 flex items-center justify-between">
-            <span className="text-xs text-[#0D3F6B]/70 font-semibold">کد پیگیری / ووچر:</span>
-            <span className="font-mono text-sm font-bold text-[#1E6FA8] tracking-wider select-all">
+          <h4 className="font-black text-body text-ink">{newlyRedeemed.title}</h4>
+          <div className="p-3 rounded-tile bg-surface border border-success/30 flex items-center justify-between">
+            <span className="text-meta text-ink/70 font-semibold">کد پیگیری / ووچر:</span>
+            <span className="font-mono text-body font-bold text-primary tracking-wider select-all">
               {newlyRedeemed.voucherCode}
             </span>
           </div>
@@ -134,34 +132,34 @@ export const RewardsScreen: React.FC = () => {
       {activeTab === 'store' && (
         <div className="space-y-3">
           {/* Sub-filters */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-xs">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-meta">
             <button
               onClick={() => setFilter('all')}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
+              className={`min-h-[48px] px-3.5 py-1.5 rounded-tile font-bold transition-all cursor-pointer ${
                 filter === 'all'
-                  ? 'bg-[#0D3F6B] text-white'
-                  : 'bg-white text-[#0D3F6B]/70 border border-[#E8E1D5]'
+                  ? 'bg-primary text-surface'
+                  : 'bg-surface text-ink/70 border border-sunken hover:bg-canvas'
               }`}
             >
               همه موارد
             </button>
             <button
               onClick={() => setFilter('org')}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
+              className={`min-h-[48px] px-3.5 py-1.5 rounded-tile font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 filter === 'org'
-                  ? 'bg-[#0D3F6B] text-white'
-                  : 'bg-white text-[#0D3F6B]/70 border border-[#E8E1D5]'
+                  ? 'bg-primary text-surface'
+                  : 'bg-surface text-ink/70 border border-sunken hover:bg-canvas'
               }`}
             >
-              <Building2 className="w-3.5 h-3.5" />
+              <Building2 className="w-4 h-4" aria-hidden="true" />
               <span>جوایز اختصاصی سازمان</span>
             </button>
             <button
               onClick={() => setFilter('gera')}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
+              className={`min-h-[48px] px-3.5 py-1.5 rounded-tile font-bold transition-all cursor-pointer ${
                 filter === 'gera'
-                  ? 'bg-[#0D3F6B] text-white'
-                  : 'bg-white text-[#0D3F6B]/70 border border-[#E8E1D5]'
+                  ? 'bg-primary text-surface'
+                  : 'bg-surface text-ink/70 border border-sunken hover:bg-canvas'
               }`}
             >
               هدایای سراسری گرا
@@ -177,42 +175,42 @@ export const RewardsScreen: React.FC = () => {
               return (
                 <div
                   key={reward.id}
-                  className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-3 relative overflow-hidden"
+                  className="p-4 rounded-tile bg-surface border border-sunken shadow-xs space-y-3 relative overflow-hidden"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                          className={`text-meta font-bold px-2 py-0.5 rounded-tile ${
                             reward.provider === 'org'
-                              ? 'bg-[#EAF3F9] text-[#1E6FA8]'
-                              : 'bg-[#FEF6EC] text-[#E58A1F]'
+                              ? 'bg-domain-1-tint text-primary'
+                              : 'bg-domain-5-tint text-coin'
                           }`}
                         >
                           {reward.provider === 'org' ? 'سازمانی' : 'سراسری گرا'}
                         </span>
-                        <span className="text-[11px] text-[#0D3F6B]/50 font-medium">
+                        <span className="text-meta text-ink/50 font-medium">
                           موجودی: {toFa(reward.stock)} عدد
                         </span>
                       </div>
-                      <h3 className="font-bold text-sm text-[#0D3F6B]">{reward.title}</h3>
+                      <h3 className="font-bold text-body text-ink">{reward.title}</h3>
                     </div>
 
                     {/* Price tag */}
                     <div className="text-left shrink-0">
-                      <div className="flex items-center gap-1 font-black text-sm text-[#1E6FA8]">
+                      <div className="flex items-center gap-1 font-black text-body text-primary">
                         <span>{toFa(reward.costCoins)}</span>
-                        <Coins className="w-4 h-4 text-[#F2A93B]" />
+                        <Coins className="w-4 h-4 text-coin" aria-hidden="true" />
                       </div>
                     </div>
                   </div>
 
-                  <p className="text-xs text-[#0D3F6B]/75 leading-relaxed font-normal">
+                  <p className="text-meta text-ink/75 leading-relaxed font-normal">
                     {reward.description}
                   </p>
 
-                  <div className="pt-1 flex items-center justify-between border-t border-[#E8E1D5]">
-                    <span className="text-[11px] text-[#0D3F6B]/60">
+                  <div className="pt-1 flex items-center justify-between border-t border-sunken">
+                    <span className="text-meta text-ink/60">
                       {canAfford
                         ? 'شما موجودی کافی برای دریافت دارید'
                         : `نیاز به ${toFa(reward.costCoins - user.coins)} سکه دیگر`}
@@ -239,41 +237,41 @@ export const RewardsScreen: React.FC = () => {
       {activeTab === 'mine' && (
         <div className="space-y-3">
           {myRedemptions.length === 0 ? (
-            <div className="p-8 text-center text-xs text-[#0D3F6B]/60 bg-white rounded-3xl border border-[#E8E1D5] space-y-3">
-              <Gift className="w-8 h-8 mx-auto text-[#0D3F6B]/40" />
+            <div className="p-8 text-center text-meta text-ink/60 bg-surface rounded-tile border border-sunken space-y-3">
+              <Gift className="w-8 h-8 mx-auto text-ink/40" aria-hidden="true" />
               <p>شما هنوز پاداشی دریافت نکرده‌اید. با تکمیل گرابایت‌ها سکه به دست آورید!</p>
             </div>
           ) : (
             myRedemptions.map((item) => (
               <div
                 key={item.id}
-                className="p-4 rounded-3xl bg-white border border-[#E8E1D5] shadow-xs space-y-3"
+                className="p-4 rounded-tile bg-surface border border-sunken shadow-xs space-y-3"
               >
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-md bg-[#EDF8F6] text-[#2E9E6B] text-[10px] font-bold">
+                      <span className="px-2 py-0.5 rounded-tile bg-domain-3-tint text-success text-meta font-bold">
                         معتبر و فعال
                       </span>
-                      <span className="text-[10px] text-[#0D3F6B]/50 font-mono">
+                      <span className="text-meta text-ink/50 font-mono">
                         {formatJalaliShort(item.redeemedAt)}
                       </span>
                     </div>
-                    <h4 className="font-bold text-sm text-[#0D3F6B] mt-1">{item.title}</h4>
+                    <h4 className="font-bold text-body text-ink mt-1">{item.title}</h4>
                   </div>
 
-                  <div className="text-left font-mono font-bold text-xs text-[#0D3F6B]/70">
+                  <div className="text-left font-mono font-bold text-meta text-ink/70">
                     {toFa(item.costCoins)} سکه
                   </div>
                 </div>
 
                 {/* Voucher code box */}
-                <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E1D5] flex items-center justify-between">
+                <div className="p-3 rounded-tile bg-paper border border-sunken flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-[#0D3F6B]/60 block font-semibold">
+                    <span className="text-meta text-ink/60 block font-semibold">
                       کد ووچر جهت تحویل به رفاهی سازمان:
                     </span>
-                    <span className="font-mono text-sm font-bold text-[#1E6FA8] tracking-wider select-all">
+                    <span className="font-mono text-body font-bold text-primary tracking-wider select-all">
                       {item.voucherCode}
                     </span>
                   </div>
