@@ -18,6 +18,7 @@ From Phase 2: Express 5 + TypeScript + Zod + Drizzle ORM + PostgreSQL (Neon), de
 - `server`       Express app: routes, services, repositories, policies, dto
 - `db`           Drizzle schema, migrations, seed
 - `api/index.ts` Vercel entry (the only vendor-specific file); `server/main.ts` is the plain Node entry
+- `docs`        RUNBOOK.md (environments, deploys, migrations) and SECURITY.md (threat model)
 
 ## Non-negotiables
 - Persian UI, RTL, Persian digits (`toFa`), Jalali dates, Asia/Tehran. Store dates as ISO/UTC.
