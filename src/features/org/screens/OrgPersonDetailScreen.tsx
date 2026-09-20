@@ -8,7 +8,6 @@ import {
   Flame,
   Award,
   Briefcase,
-  Mail,
   Phone,
 } from 'lucide-react';
 import {
@@ -27,6 +26,7 @@ import { Avatar } from '../../../components/ui/Avatar';
 import { useOrgScope } from '../context/ScopeContext';
 import { useApp } from '../../../state/AppContext';
 import { formatJalaliDate } from '../../../lib/jalali';
+import { maskPhone } from '../../../lib/privacy';
 
 export const OrgPersonDetailScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -146,7 +146,15 @@ export const OrgPersonDetailScreen: React.FC = () => {
             <div>شناسه یکتای استعلام: GB-REP-{member.id}</div>
           </div>
         </div>
+        <p className="text-meta text-ink/70 pt-2">
+          این گزارش فقط مسیرهای تخصیصی سازمان را شامل می‌شود.
+        </p>
       </div>
+
+      {/* Scope of this report, on screen as well as in print */}
+      <p className="print:hidden text-meta text-ink/70 p-3 rounded-tile bg-canvas border border-sunken">
+        این گزارش فقط مسیرهای تخصیصی سازمان را شامل می‌شود.
+      </p>
 
       {/* Member Profile Overview Card */}
       <div className="p-6 rounded-tile bg-surface border border-sunken shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6 print:border print:p-4">
@@ -182,11 +190,7 @@ export const OrgPersonDetailScreen: React.FC = () => {
               </span>
               <span className="flex items-center gap-1.5">
                 <Phone className="w-4 h-4 text-ink/40" />
-                <span dir="ltr">{member.phone}</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Mail className="w-4 h-4 text-ink/40" />
-                <span dir="ltr">{member.email}</span>
+                <span dir="ltr">{maskPhone(member.phone)}</span>
               </span>
             </div>
           </div>

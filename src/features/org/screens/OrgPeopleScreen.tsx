@@ -23,6 +23,7 @@ import {
   parseMembersFromFile,
   RawImportRow,
 } from '../utils/export';
+import { maskPhone } from '../../../lib/privacy';
 
 export const OrgPeopleScreen: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -370,7 +371,7 @@ export const OrgPeopleScreen: React.FC = () => {
                               )}
                             </div>
                             <span className="text-meta text-ink/60 font-medium">
-                              {member.phone}
+                              {maskPhone(member.phone)}
                             </span>
                           </div>
                         </div>

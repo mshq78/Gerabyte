@@ -3,6 +3,7 @@ import writeXlsx from 'write-excel-file/browser';
 import readXlsxFile from 'read-excel-file/browser';
 import { OrgMember } from '../../../types/org';
 import { toFa } from '../../../lib/format';
+import { maskPhone } from '../../../lib/privacy';
 
 /** One row of a user-supplied CSV/XLSX import, keyed by its header cell. */
 export type RawImportRow = Record<string, unknown>;
@@ -43,8 +44,7 @@ export const EXCEL_SCHEMA = [
   { column: 'زنجیره (روز)', type: Number, value: (m: OrgMember) => m.streakDays, width: 14 },
   { column: 'نرخ انطباق (٪)', type: Number, value: (m: OrgMember) => m.complianceRate, width: 16 },
   { column: 'گواهینامه‌ها', type: Number, value: (m: OrgMember) => m.certificatesCount, width: 14 },
-  { column: 'شماره تماس', type: String, value: (m: OrgMember) => m.phone, width: 16 },
-  { column: 'رایانامه', type: String, value: (m: OrgMember) => m.email, width: 26 },
+  { column: 'شماره تماس', type: String, value: (m: OrgMember) => maskPhone(m.phone), width: 16 },
   { column: 'آخرین فعالیت', type: String, value: (m: OrgMember) => m.lastActiveAt, width: 16 },
 ];
 
@@ -79,8 +79,7 @@ export function exportMembersToCsv(
     'زنجیره (روز)': m.streakDays,
     'نرخ انطباق (٪)': m.complianceRate,
     'تعداد گواهینامه': m.certificatesCount,
-    'شماره تماس': m.phone,
-    رایانامه: m.email,
+    'شماره تماس': maskPhone(m.phone),
     'آخرین فعالیت': m.lastActiveAt,
   }));
 

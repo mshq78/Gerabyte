@@ -85,12 +85,13 @@ export const orgApi = {
 
     if (params?.search) {
       const q = params.search.trim().toLowerCase();
+      // Email is never shown in the dashboard, so it is not searchable either:
+      // matching on a hidden field lets a manager confirm addresses by probing.
       list = list.filter(
         (m) =>
           m.fullName.toLowerCase().includes(q) ||
           m.nickname.toLowerCase().includes(q) ||
           m.phone.includes(q) ||
-          m.email.toLowerCase().includes(q) ||
           m.unitName.toLowerCase().includes(q)
       );
     }
