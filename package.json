@@ -14,14 +14,15 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "e2e": "playwright test",
-    "check": "npm run typecheck && npm run lint && npm run test && node scripts/run-server-tests.mjs && npm run build && node scripts/run-e2e-in-ci.mjs",
+    "check": "npm run typecheck && npm run lint && npm run test && node scripts/run-server-tests.mjs && node scripts/check-server-emit.mjs && npm run build && node scripts/run-e2e-in-ci.mjs",
     "check:e2e": "npm run check && npm run e2e",
     "dev:server": "tsx watch --env-file-if-exists=.env server/main.ts",
     "db:generate": "node --env-file-if-exists=.env node_modules/drizzle-kit/bin.cjs generate",
     "db:migrate": "tsx --env-file-if-exists=.env db/migrate.ts",
     "db:seed": "tsx --env-file-if-exists=.env db/seed.ts",
     "test:server": "vitest run --config vitest.server.config.ts",
-    "web": "vite --port=3000 --host=0.0.0.0"
+    "web": "vite --port=3000 --host=0.0.0.0",
+    "check:emit": "node scripts/check-server-emit.mjs"
   },
   "dependencies": {
     "@fontsource-variable/vazirmatn": "^5.3.0",

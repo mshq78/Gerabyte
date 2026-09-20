@@ -10,3 +10,6 @@ playwright-report/
 test-results/
 .env
 *.tsbuildinfo
+
+# scripts/check-server-emit.mjs scratch output
+.emit-check-*/
