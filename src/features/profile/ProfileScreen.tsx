@@ -57,13 +57,9 @@ export const ProfileScreen: React.FC = () => {
             <Avatar seed={user.avatarSeed} size={56} />
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-title font-black text-ink">
-                  {user.fullName}
-                </h2>
+                <h2 className="text-title font-black text-ink">{user.fullName}</h2>
               </div>
-              <p className="text-meta text-ink/60 font-mono mt-0.5">
-                {toFa(user.phone)}
-              </p>
+              <p className="text-meta text-ink/60 font-mono mt-0.5">{toFa(user.phone)}</p>
               <div className="flex items-center gap-1.5 mt-1">
                 <span className="px-2.5 py-0.5 rounded-tile bg-domain-1-tint text-primary text-meta font-bold">
                   سطح {toFa(user.level)}: {currentLevelInfo.title}
@@ -112,9 +108,7 @@ export const ProfileScreen: React.FC = () => {
           </div>
           <div>
             <span className="text-meta text-ink/60 block">مجموع امتیاز</span>
-            <span className="text-body font-black text-ink">
-              {toFa(user.xpTotal)} XP
-            </span>
+            <span className="text-body font-black text-ink">{toFa(user.xpTotal)} XP</span>
           </div>
         </div>
 
@@ -124,9 +118,7 @@ export const ProfileScreen: React.FC = () => {
           </div>
           <div>
             <span className="text-meta text-ink/60 block">بهترین زنجیره</span>
-            <span className="text-body font-black text-ink">
-              {toFa(user.bestStreak)} روز
-            </span>
+            <span className="text-body font-black text-ink">{toFa(user.bestStreak)} روز</span>
           </div>
         </div>
 
@@ -136,9 +128,7 @@ export const ProfileScreen: React.FC = () => {
           </div>
           <div>
             <span className="text-meta text-ink/60 block">سکه افتخار</span>
-            <span className="text-body font-black text-ink">
-              {toFa(user.coins)} سکه
-            </span>
+            <span className="text-body font-black text-ink">{toFa(user.coins)} سکه</span>
           </div>
         </div>
 
@@ -151,9 +141,7 @@ export const ProfileScreen: React.FC = () => {
           </div>
           <div>
             <span className="text-meta text-ink/60 block">گواهینامه‌ها</span>
-            <span className="text-body font-black text-ink">
-              مشاهده مدارک
-            </span>
+            <span className="text-body font-black text-ink">مشاهده مدارک</span>
           </div>
         </div>
       </section>
@@ -183,8 +171,8 @@ export const ProfileScreen: React.FC = () => {
                 cell.isStreakDay
                   ? 'bg-domain-5-tint text-coin border border-coin/40 shadow-2xs font-black'
                   : cell.isToday
-                  ? 'border-2 border-primary text-primary'
-                  : 'bg-paper text-ink/60'
+                    ? 'border-2 border-primary text-primary'
+                    : 'bg-paper text-ink/60'
               }`}
             >
               {toFa(cell.day)}
@@ -295,8 +283,8 @@ export const ProfileScreen: React.FC = () => {
               {subscription.source === 'org_sponsored'
                 ? `اشتراک سازمانی (${subscription.sponsorOrgName || 'فولاد نمونه'})`
                 : subscription.tier === 'full'
-                ? 'اشتراک کامل فردی'
-                : 'طرح پایه (رایگان)'}
+                  ? 'اشتراک کامل فردی'
+                  : 'طرح پایه (رایگان)'}
             </p>
           </div>
           <span
@@ -304,15 +292,15 @@ export const ProfileScreen: React.FC = () => {
               subscription.status === 'active'
                 ? 'bg-domain-3-tint text-success'
                 : subscription.status === 'expiring'
-                ? 'bg-domain-5-tint text-coin'
-                : 'bg-sunken text-ink'
+                  ? 'bg-domain-5-tint text-coin'
+                  : 'bg-sunken text-ink'
             }`}
           >
             {subscription.status === 'active' && subscription.remainingDays
               ? `${toFa(subscription.remainingDays)} روز مانده`
               : subscription.status === 'expiring' && subscription.remainingDays
-              ? `تنها ${toFa(subscription.remainingDays)} روز مانده`
-              : 'منقضی شده'}
+                ? `تنها ${toFa(subscription.remainingDays)} روز مانده`
+                : 'منقضی شده'}
           </span>
         </div>
 

@@ -7,22 +7,10 @@ interface AvatarProps {
   className?: string;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({
-  seed,
-  name,
-  size = 44,
-  className = '',
-}) => {
+export const Avatar: React.FC<AvatarProps> = ({ seed, name, size = 44, className = '' }) => {
   const seedString = seed || name || 'GeraByte';
 
-  const pixelSize =
-    typeof size === 'number'
-      ? size
-      : size === 'sm'
-      ? 36
-      : size === 'lg'
-      ? 56
-      : 44;
+  const pixelSize = typeof size === 'number' ? size : size === 'sm' ? 36 : size === 'lg' ? 56 : 44;
 
   // Simple hash function for deterministic colors & shapes
   let hash = 0;
@@ -55,20 +43,32 @@ export const Avatar: React.FC<AvatarProps> = ({
         {/* Abstract geometric human silhouette */}
         <circle cx="22" cy="16" r="8" fill={accentColor} />
         {shapeType === 0 && (
-          <rect x="8" y="28" width="28" height="18" rx="8" fill="var(--color-surface)" fillOpacity={0.85} />
+          <rect
+            x="8"
+            y="28"
+            width="28"
+            height="18"
+            rx="8"
+            fill="var(--color-surface)"
+            fillOpacity={0.85}
+          />
         )}
         {shapeType === 1 && (
           <circle cx="22" cy="36" r="14" fill="var(--color-surface)" fillOpacity={0.85} />
         )}
         {shapeType === 2 && (
-          <path
-            d="M9 40 C9 30, 35 30, 35 40 Z"
-            fill="var(--color-surface)"
-            fillOpacity={0.85}
-          />
+          <path d="M9 40 C9 30, 35 30, 35 40 Z" fill="var(--color-surface)" fillOpacity={0.85} />
         )}
         {shapeType === 3 && (
-          <rect x="10" y="27" width="24" height="20" rx="6" fill="var(--color-surface)" fillOpacity={0.9} />
+          <rect
+            x="10"
+            y="27"
+            width="24"
+            height="20"
+            rx="6"
+            fill="var(--color-surface)"
+            fillOpacity={0.9}
+          />
         )}
       </svg>
     </div>

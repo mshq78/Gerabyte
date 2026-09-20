@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  X,
-  Users,
-  CheckCircle2,
-  Lock,
-  Gift,
-} from 'lucide-react';
+import { X, Users, CheckCircle2, Lock, Gift } from 'lucide-react';
 import { challengesApi } from '../../api/challenges';
 import { Challenge } from '../../types/domain';
 import { Button } from '../../components/ui/Button';
@@ -88,12 +82,8 @@ export const ChallengeDetailScreen: React.FC = () => {
       {/* Main Details */}
       <div className="flex-1 py-4 space-y-4 max-w-sm mx-auto w-full">
         <div>
-          <h2 className="text-headline font-black text-ink leading-snug">
-            {challenge.title}
-          </h2>
-          <p className="text-meta text-ink/80 mt-1 leading-relaxed">
-            {challenge.description}
-          </p>
+          <h2 className="text-headline font-black text-ink leading-snug">{challenge.title}</h2>
+          <p className="text-meta text-ink/80 mt-1 leading-relaxed">{challenge.description}</p>
         </div>
 
         {/* Prize Banner */}
@@ -133,7 +123,9 @@ export const ChallengeDetailScreen: React.FC = () => {
           <h4 className="font-bold text-title text-ink">قوانین و اهداف چالش:</h4>
           <div className="flex items-center gap-2 text-ink/80">
             <Users className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
-            <span className="text-meta">تعداد حاضرین: {toFa(challenge.participants)} شرکت‌کننده فعال</span>
+            <span className="text-meta">
+              تعداد حاضرین: {toFa(challenge.participants)} شرکت‌کننده فعال
+            </span>
           </div>
           <div className="flex items-start gap-2 text-ink/80">
             <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" aria-hidden="true" />
@@ -142,8 +134,8 @@ export const ChallengeDetailScreen: React.FC = () => {
               {challenge.goal.type === 'streak'
                 ? 'روز زنجیره متوالی'
                 : challenge.goal.type === 'lessons'
-                ? 'درس تکمیل شده'
-                : 'امتیاز شایستگی'}
+                  ? 'درس تکمیل شده'
+                  : 'امتیاز شایستگی'}
             </span>
           </div>
         </div>
@@ -151,22 +143,19 @@ export const ChallengeDetailScreen: React.FC = () => {
         {/* Top Participants List */}
         {challenge.top && challenge.top.length > 0 && (
           <div className="space-y-2">
-            <h4 className="font-bold text-meta text-ink px-1">
-              برترین‌های چالش در حال حاضر:
-            </h4>
+            <h4 className="font-bold text-meta text-ink px-1">برترین‌های چالش در حال حاضر:</h4>
             <div className="rounded-tile bg-surface border border-sunken overflow-hidden divide-y divide-sunken">
               {challenge.top.slice(0, 5).map((p, idx) => (
-                <div key={idx} className="p-3 flex items-center justify-between text-meta min-h-[48px]">
+                <div
+                  key={idx}
+                  className="p-3 flex items-center justify-between text-meta min-h-[48px]"
+                >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-4 font-bold text-ink/60 text-center">
-                      {toFa(idx + 1)}
-                    </span>
+                    <span className="w-4 font-bold text-ink/60 text-center">{toFa(idx + 1)}</span>
                     <Avatar seed={p.avatarSeed} size={32} />
                     <span className="font-bold text-ink">{p.displayName}</span>
                   </div>
-                  <span className="font-bold text-primary">
-                    {toFa(p.weeklyXp)} XP
-                  </span>
+                  <span className="font-bold text-primary">{toFa(p.weeklyXp)} XP</span>
                 </div>
               ))}
             </div>
@@ -177,12 +166,7 @@ export const ChallengeDetailScreen: React.FC = () => {
       {/* Action CTA */}
       <div className="pt-3 max-w-sm mx-auto w-full">
         {challenge.state === 'joined' ? (
-          <Button
-            fullWidth
-            size="lg"
-            variant="primary"
-            onClick={() => navigate('/path')}
-          >
+          <Button fullWidth size="lg" variant="primary" onClick={() => navigate('/path')}>
             ادامه گرابایت‌های چالش
           </Button>
         ) : isLockedForPlan ? (
@@ -196,13 +180,7 @@ export const ChallengeDetailScreen: React.FC = () => {
             ارتقا به اشتراک کامل برای شرکت
           </Button>
         ) : (
-          <Button
-            fullWidth
-            size="lg"
-            variant="primary"
-            isLoading={isJoining}
-            onClick={handleJoin}
-          >
+          <Button fullWidth size="lg" variant="primary" isLoading={isJoining} onClick={handleJoin}>
             پیوستن به چالش
           </Button>
         )}

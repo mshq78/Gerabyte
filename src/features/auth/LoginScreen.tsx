@@ -230,7 +230,9 @@ export const LoginScreen: React.FC = () => {
 
                     <div className="flex items-center justify-between text-meta text-ink/70">
                       {resendTimer > 0 ? (
-                        <span className="min-h-[48px] flex items-center">ارسال مجدد تا {toFa(resendTimer)} ثانیه دیگر</span>
+                        <span className="min-h-[48px] flex items-center">
+                          ارسال مجدد تا {toFa(resendTimer)} ثانیه دیگر
+                        </span>
                       ) : (
                         <button
                           onClick={handleRequestOtp}
@@ -279,9 +281,7 @@ export const LoginScreen: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-meta font-bold mb-1.5 text-ink">
-                    کلمه عبور:
-                  </label>
+                  <label className="block text-meta font-bold mb-1.5 text-ink">کلمه عبور:</label>
                   <input
                     type="password"
                     value={password}
@@ -306,16 +306,16 @@ export const LoginScreen: React.FC = () => {
         ) : (
           /* FIRST LOGIN SETUP STEP */
           <div className="p-6 rounded-sheet bg-surface border border-sunken shadow-lg space-y-4">
-            <h3 className="font-bold text-title text-ink">
-              تأیید مشخصات اولیه کاربری
-            </h3>
+            <h3 className="font-bold text-title text-ink">تأیید مشخصات اولیه کاربری</h3>
             <p className="text-meta text-ink/70">
               این مشخصات در گواهینامه‌های رسمی و رده‌بندی لیگ درج خواهند شد:
             </p>
 
             <div className="space-y-3 pt-1">
               <div>
-                <label className="block text-meta font-bold mb-1 text-ink">نام و نام خانوادگی:</label>
+                <label className="block text-meta font-bold mb-1 text-ink">
+                  نام و نام خانوادگی:
+                </label>
                 <input
                   type="text"
                   value={setupFullName}

@@ -1,5 +1,10 @@
 import { OrgUnit, OrgMember, PathAssignment, OrgKpiSummary, OrgRole } from '../../types/org';
-import { MOCK_ORG_UNITS, getMockOrgMembers, getMockPathAssignments, getMockOrgKpis } from '../../mock/org/data';
+import {
+  MOCK_ORG_UNITS,
+  getMockOrgMembers,
+  getMockPathAssignments,
+  getMockOrgKpis,
+} from '../../mock/org/data';
 
 // Local storage key for persistent org state during session
 const STORAGE_KEY_MEMBERS = 'gerabyte_org_members_v2';
@@ -107,7 +112,10 @@ export const orgApi = {
     return members[idx];
   },
 
-  async updateMemberStatus(id: string, status: 'active' | 'inactive' | 'at_risk'): Promise<OrgMember> {
+  async updateMemberStatus(
+    id: string,
+    status: 'active' | 'inactive' | 'at_risk'
+  ): Promise<OrgMember> {
     const members = getStoredMembers();
     const idx = members.findIndex((m) => m.id === id);
     if (idx === -1) throw new Error('کاربر سازمانی یافت نشد');
@@ -116,7 +124,10 @@ export const orgApi = {
     return members[idx];
   },
 
-  async bulkUpdateStatus(ids: string[], status: 'active' | 'inactive' | 'at_risk'): Promise<number> {
+  async bulkUpdateStatus(
+    ids: string[],
+    status: 'active' | 'inactive' | 'at_risk'
+  ): Promise<number> {
     const members = getStoredMembers();
     let count = 0;
     members.forEach((m) => {
@@ -170,8 +181,8 @@ export const orgApi = {
       data.targetType === 'all'
         ? members.length
         : data.targetType === 'unit'
-        ? members.filter((m) => m.unitId === data.targetId).length
-        : 1;
+          ? members.filter((m) => m.unitId === data.targetId).length
+          : 1;
 
     const newAssignment: PathAssignment = {
       id: `asg-${Date.now()}`,

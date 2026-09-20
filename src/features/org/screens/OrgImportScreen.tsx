@@ -104,8 +104,9 @@ export const OrgImportScreen: React.FC = () => {
         </div>
         <h2 className="text-title font-black text-ink">دسترسی محدود به مدیر کل سازمان</h2>
         <p className="text-body text-ink/70">
-          امکان بارگذاری گروهی پرسنل (Bulk Import) صرفاً در اختیار مدیر ارشد آموزش یا مدیر کل سازمان است.
-          مدیران واحدها می‌توانند فهرست اعضای واحد خود را در بخش «اعضا و دسترسی‌ها» مدیریت نمایند.
+          امکان بارگذاری گروهی پرسنل (Bulk Import) صرفاً در اختیار مدیر ارشد آموزش یا مدیر کل سازمان
+          است. مدیران واحدها می‌توانند فهرست اعضای واحد خود را در بخش «اعضا و دسترسی‌ها» مدیریت
+          نمایند.
         </p>
       </div>
     );
@@ -290,7 +291,9 @@ export const OrgImportScreen: React.FC = () => {
           errors: validationResult.errors,
           options: {
             autoCreateNodes,
-            sponsorship: enableSponsorship ? { months: sponsorshipMonths, startsAt: 'امروز' } : undefined,
+            sponsorship: enableSponsorship
+              ? { months: sponsorshipMonths, startsAt: 'امروز' }
+              : undefined,
             sendInviteSms,
           },
           result: summary,
@@ -326,7 +329,8 @@ export const OrgImportScreen: React.FC = () => {
         <div>
           <h1 className="text-display font-black text-ink">بارگذاری گروهی پرسنل (Bulk Import)</h1>
           <p className="text-meta text-ink/70 mt-1">
-            ورود سریع اطلاعات کارکنان از طریق فایل CSV یا اکسل با تحلیل ۱۰۰٪ درون‌مرورگری و بدون ارسال فایل به سرور
+            ورود سریع اطلاعات کارکنان از طریق فایل CSV یا اکسل با تحلیل ۱۰۰٪ درون‌مرورگری و بدون
+            ارسال فایل به سرور
           </p>
         </div>
       </div>
@@ -348,8 +352,8 @@ export const OrgImportScreen: React.FC = () => {
                   step === s.num
                     ? 'bg-primary text-white shadow-xs'
                     : step > s.num
-                    ? 'bg-domain-3-tint text-success border border-success/40'
-                    : 'bg-canvas text-ink/40'
+                      ? 'bg-domain-3-tint text-success border border-success/40'
+                      : 'bg-canvas text-ink/40'
                 }`}
               >
                 {step > s.num ? '✓' : toFa(s.num)}
@@ -393,18 +397,19 @@ export const OrgImportScreen: React.FC = () => {
                 <strong>نام و نام خانوادگی:</strong> نام کامل همکار به زبان فارسی.
               </li>
               <li>
-                <strong>شماره موبایل:</strong> با ارقام فارسی یا انگلیسی، با یا بدون پیش‌شماره کشور (سامانه به‌صورت
-                خودکار شماره‌ها را به فرمت استاندار ۰۹۱۲۳۴۵۶۷۸۹ نرمال‌سازی می‌کند).
+                <strong>شماره موبایل:</strong> با ارقام فارسی یا انگلیسی، با یا بدون پیش‌شماره کشور
+                (سامانه به‌صورت خودکار شماره‌ها را به فرمت استاندار ۰۹۱۲۳۴۵۶۷۸۹ نرمال‌سازی می‌کند).
               </li>
               <li>
                 <strong>کد پرسنلی:</strong> کد یکتای سازمانی کارمند.
               </li>
               <li>
-                <strong>معاونت و واحد:</strong> موقعیت پرسنل در ساختار سازمانی. در صورت عدم وجود واحد، امکان ساخت
-                خودکار گره‌ها وجود دارد.
+                <strong>معاونت و واحد:</strong> موقعیت پرسنل در ساختار سازمانی. در صورت عدم وجود
+                واحد، امکان ساخت خودکار گره‌ها وجود دارد.
               </li>
               <li>
-                <strong>رده سازمانی:</strong> یکی از مقادیر «اپراتور»، «کارشناس»، «سرپرست»، «مدیر میانی»، «مدیر ارشد».
+                <strong>رده سازمانی:</strong> یکی از مقادیر «اپراتور»، «کارشناس»، «سرپرست»، «مدیر
+                میانی»، «مدیر ارشد».
               </li>
             </ul>
           </div>
@@ -478,19 +483,25 @@ export const OrgImportScreen: React.FC = () => {
       {step === 3 && (
         <div className="p-6 rounded-sheet bg-surface border border-sunken shadow-xs space-y-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-title font-black text-ink">مرحله ۳: تطبیق ستون‌ها (Column Mapping)</h2>
+            <h2 className="text-title font-black text-ink">
+              مرحله ۳: تطبیق ستون‌ها (Column Mapping)
+            </h2>
             <span className="text-meta text-ink/70 font-mono">
               فایل: <strong>{fileName}</strong> ({toFa(parsedRows.length)} ردیف)
             </span>
           </div>
 
           <p className="text-meta text-ink/80">
-            سرستون‌های فایل شما به‌طور خودکار شناسایی شده است. در صورت نیاز می‌توانید ستون‌های مرتبط را تغییر دهید:
+            سرستون‌های فایل شما به‌طور خودکار شناسایی شده است. در صورت نیاز می‌توانید ستون‌های مرتبط
+            را تغییر دهید:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {Object.keys(columnMapping).map((key) => (
-              <div key={key} className="p-3.5 rounded-tile bg-canvas border border-sunken space-y-1">
+              <div
+                key={key}
+                className="p-3.5 rounded-tile bg-canvas border border-sunken space-y-1"
+              >
                 <span className="text-meta text-ink/60 block font-bold">فیلد سامانه:</span>
                 <div className="text-body font-black text-ink">{columnMapping[key]}</div>
                 <span className="text-meta text-success font-bold flex items-center gap-1">
@@ -525,7 +536,9 @@ export const OrgImportScreen: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-title font-black text-ink">مرحله ۴: گزارش اعتبارسنجی داده‌ها</h2>
-              <p className="text-meta text-ink/70">بررسی ساختار شماره‌ها، کدهای پرسنلی تکراری و رده‌های سازمانی</p>
+              <p className="text-meta text-ink/70">
+                بررسی ساختار شماره‌ها، کدهای پرسنلی تکراری و رده‌های سازمانی
+              </p>
             </div>
 
             {validationResult.errors.length > 0 && (
@@ -556,7 +569,9 @@ export const OrgImportScreen: React.FC = () => {
             </div>
 
             <div className="p-4 rounded-tile bg-canvas border border-sunken">
-              <span className="text-meta text-ink/70 font-bold block">واحدهای جدید (ساخت خودکار):</span>
+              <span className="text-meta text-ink/70 font-bold block">
+                واحدهای جدید (ساخت خودکار):
+              </span>
               <div className="text-display font-black text-primary">
                 {toFa(validationResult.autoNodesToCreate.length)}
               </div>
@@ -568,8 +583,8 @@ export const OrgImportScreen: React.FC = () => {
             <div className="p-3.5 rounded-tile bg-domain-1-tint/50 border border-primary/30 flex items-start gap-2.5 text-meta">
               <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
               <div>
-                <strong>ساخت خودکار گره‌های درختی جدید:</strong> واحدهای سازمانی روبرو در سامانه یافت نشدند و در صورت
-                تأیید به‌طور خودکار به ساختار اضافه خواهند شد:{' '}
+                <strong>ساخت خودکار گره‌های درختی جدید:</strong> واحدهای سازمانی روبرو در سامانه
+                یافت نشدند و در صورت تأیید به‌طور خودکار به ساختار اضافه خواهند شد:{' '}
                 <span className="font-bold text-primary">
                   {validationResult.autoNodesToCreate.join('، ')}
                 </span>
@@ -641,7 +656,9 @@ export const OrgImportScreen: React.FC = () => {
       {/* STEP 5: Options & Seat Limit Check */}
       {step === 5 && validationResult && (
         <div className="p-6 rounded-sheet bg-surface border border-sunken shadow-xs space-y-6">
-          <h2 className="text-title font-black text-ink">مرحله ۵: تنظیمات اشتراک و تخصیص سهمیه‌ها</h2>
+          <h2 className="text-title font-black text-ink">
+            مرحله ۵: تنظیمات اشتراک و تخصیص سهمیه‌ها
+          </h2>
 
           {/* Seat Limit Warning / Blocker */}
           {seatExceeded && (
@@ -652,12 +669,13 @@ export const OrgImportScreen: React.FC = () => {
               </div>
               <p className="leading-relaxed">
                 تعداد سهمیه‌های مورد نیاز برای این بارگذاری (
-                <strong>{toFa(validationResult.validRows.length)} سهمیه</strong>) بیشتر از سهمیه‌های آزاد و تخصیص‌نیافته
-                سازمان (<strong>{toFa(unassignedSeats)} سهمیه خالی</strong>) است.
+                <strong>{toFa(validationResult.validRows.length)} سهمیه</strong>) بیشتر از سهمیه‌های
+                آزاد و تخصیص‌نیافته سازمان (<strong>{toFa(unassignedSeats)} سهمیه خالی</strong>)
+                است.
               </p>
               <p className="font-bold">
-                لطفاً ابتدا از بخش «اشتراک‌ها» اقدام به خرید یا درخواست سهمیه جدید نمایید یا تیک تخصیص اشتراک سازمانی
-                را برای این گروه موقتاً غیرفعال کنید.
+                لطفاً ابتدا از بخش «اشتراک‌ها» اقدام به خرید یا درخواست سهمیه جدید نمایید یا تیک
+                تخصیص اشتراک سازمانی را برای این گروه موقتاً غیرفعال کنید.
               </p>
             </div>
           )}
@@ -667,7 +685,9 @@ export const OrgImportScreen: React.FC = () => {
             <div className="p-4 rounded-tile bg-canvas border border-sunken space-y-3">
               <label className="flex items-center justify-between cursor-pointer">
                 <div>
-                  <strong className="text-body text-ink block">تخصیص اشتراک سازمانی (اسپانسرشیپ)</strong>
+                  <strong className="text-body text-ink block">
+                    تخصیص اشتراک سازمانی (اسپانسرشیپ)
+                  </strong>
                   <span className="text-meta text-ink/70">
                     پرسنل پس از ورود، بدون نیاز به پرداخت به تمام محتواها دسترسی کامل خواهند داشت.
                   </span>
@@ -722,7 +742,9 @@ export const OrgImportScreen: React.FC = () => {
             <div className="p-4 rounded-tile bg-canvas border border-sunken">
               <label className="flex items-center justify-between cursor-pointer">
                 <div>
-                  <strong className="text-body text-ink block">ساخت خودکار ساختارهای ناشناخته</strong>
+                  <strong className="text-body text-ink block">
+                    ساخت خودکار ساختارهای ناشناخته
+                  </strong>
                   <span className="text-meta text-ink/70">
                     واحدهایی که در درخت سازمان وجود ندارند به‌طور اتوماتیک ایجاد شوند.
                   </span>
@@ -780,7 +802,9 @@ export const OrgImportScreen: React.FC = () => {
 
           {importing && !cancelled && (
             <div className="flex items-center justify-between">
-              <span className="text-meta text-ink/70">لطفاً تا پایان عملیات مرورگر را نبندید...</span>
+              <span className="text-meta text-ink/70">
+                لطفاً تا پایان عملیات مرورگر را نبندید...
+              </span>
               <button
                 onClick={() => {
                   setCancelled(true);
@@ -803,8 +827,8 @@ export const OrgImportScreen: React.FC = () => {
                     تعداد {toFa(importResultSummary.added)} نفر با موفقیت به سازمان افزوده شدند.
                   </div>
                   <p className="text-meta text-ink/80 leading-relaxed">
-                    پرسنل جدید با وضعیت «دعوت‌شده» ثبت شدند و پس از اولین ورود به اپلیکیشن، وضعیت آن‌ها به «فعال» تغییر
-                    می‌یابد.
+                    پرسنل جدید با وضعیت «دعوت‌شده» ثبت شدند و پس از اولین ورود به اپلیکیشن، وضعیت
+                    آن‌ها به «فعال» تغییر می‌یابد.
                   </p>
                 </div>
               </div>
@@ -852,10 +876,14 @@ export const OrgImportScreen: React.FC = () => {
                 <tr key={job.id} className="hover:bg-canvas">
                   <td className="p-3 font-bold text-ink">{job.fileName}</td>
                   <td className="p-3 font-mono">{toFa(job.rowCount)}</td>
-                  <td className="p-3 font-mono text-success font-bold">{toFa(job.result?.added ?? 0)}</td>
+                  <td className="p-3 font-mono text-success font-bold">
+                    {toFa(job.result?.added ?? 0)}
+                  </td>
                   <td className="p-3 font-mono text-danger">{toFa(job.errorRows)}</td>
                   <td className="p-3">
-                    {job.options.sponsorship ? `${toFa(job.options.sponsorship.months)} ماهه` : 'بدون اشتراک'}
+                    {job.options.sponsorship
+                      ? `${toFa(job.options.sponsorship.months)} ماهه`
+                      : 'بدون اشتراک'}
                   </td>
                   <td className="p-3">
                     <span className="px-2.5 py-0.5 rounded-pill bg-domain-3-tint text-success font-bold text-meta">

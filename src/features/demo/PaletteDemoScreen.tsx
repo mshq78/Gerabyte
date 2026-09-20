@@ -1,6 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, Check, Shield, Flame, Award, HeartHandshake, Briefcase, Sparkles } from 'lucide-react';
+import {
+  ChevronLeft,
+  Check,
+  Shield,
+  Flame,
+  Award,
+  HeartHandshake,
+  Briefcase,
+  Sparkles,
+} from 'lucide-react';
 import { toFa } from '../../lib/format';
 import { Button } from '../../components/ui/Button';
 import { ByteRow } from '../../components/ui/ByteRow';
@@ -15,7 +24,9 @@ export const PaletteDemoScreen: React.FC = () => {
             سند راهنمای سبک و طراحی
           </span>
           <h1 className="text-display font-black text-ink mt-2">ویترین پالت و توکن‌های گرابایت</h1>
-          <p className="text-body text-ink/70 mt-1">بررسی انطباق پالت رسمی گرا، مقیاس تایپوگرافی و کنترل‌های دسترسی‌پذیر</p>
+          <p className="text-body text-ink/70 mt-1">
+            بررسی انطباق پالت رسمی گرا، مقیاس تایپوگرافی و کنترل‌های دسترسی‌پذیر
+          </p>
         </div>
 
         <Link
@@ -124,18 +135,26 @@ export const PaletteDemoScreen: React.FC = () => {
 
       {/* 3. Typography Scale */}
       <section className="p-6 rounded-tile bg-surface border border-sunken shadow-xs space-y-4">
-        <h2 className="text-headline font-black text-ink">۳. مقیاس تایپوگرافی وزیرمتن (بدون متن زیر ۱۴px)</h2>
+        <h2 className="text-headline font-black text-ink">
+          ۳. مقیاس تایپوگرافی وزیرمتن (بدون متن زیر ۱۴px)
+        </h2>
         <div className="space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-sunken pb-2">
-            <span className="text-display font-black text-ink">Display: ۲۴px - گرابایت یادگیری پیوسته</span>
+            <span className="text-display font-black text-ink">
+              Display: ۲۴px - گرابایت یادگیری پیوسته
+            </span>
             <span className="text-meta text-ink/60">text-display / وزن ۸۰۰</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-sunken pb-2">
-            <span className="text-headline font-black text-ink">Headline: ۲۰px - مهارت‌های بنیادین همکاری</span>
+            <span className="text-headline font-black text-ink">
+              Headline: ۲۰px - مهارت‌های بنیادین همکاری
+            </span>
             <span className="text-meta text-ink/60">text-headline / وزن ۷۰۰</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-sunken pb-2">
-            <span className="text-title font-black text-ink">Title: ۱۸px - شفافیت در تحویل شیفت‌های کاری</span>
+            <span className="text-title font-black text-ink">
+              Title: ۱۸px - شفافیت در تحویل شیفت‌های کاری
+            </span>
             <span className="text-meta text-ink/60">text-title / وزن ۷۰۰</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-sunken pb-2">
@@ -156,16 +175,20 @@ export const PaletteDemoScreen: React.FC = () => {
       {/* 4. Signature Components */}
       <section className="p-6 rounded-tile bg-surface border border-sunken shadow-xs space-y-6">
         <h2 className="text-headline font-black text-ink">۴. المان‌های امضایی و تعاملی</h2>
-        
+
         {/* ByteRow */}
         <div className="space-y-2">
-          <div className="text-meta font-bold text-ink">ردیف بایت (ByteRow) - پیشرفت ۲ از ۳ گرابایت امروز:</div>
+          <div className="text-meta font-bold text-ink">
+            ردیف بایت (ByteRow) - پیشرفت ۲ از ۳ گرابایت امروز:
+          </div>
           <ByteRow completed={2} total={3} />
         </div>
 
         {/* Buttons */}
         <div className="space-y-2">
-          <div className="text-meta font-bold text-ink">دکمه‌های استاندارد سیستم طراحی با افکت فشرده شدن:</div>
+          <div className="text-meta font-bold text-ink">
+            دکمه‌های استاندارد سیستم طراحی با افکت فشرده شدن:
+          </div>
           <div className="flex flex-wrap gap-4">
             <Button variant="primary">ادامه مسیر گرابایت</Button>
             <Button variant="secondary">بررسی نتایج آزمون</Button>

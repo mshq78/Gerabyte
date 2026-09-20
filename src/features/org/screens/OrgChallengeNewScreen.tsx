@@ -146,7 +146,8 @@ export const OrgChallengeNewScreen: React.FC = () => {
           <div>
             <h1 className="text-display font-black text-ink">درخواست برگزاری چالش سازمانی</h1>
             <p className="text-meta text-ink/70">
-              طراحی هدفمند چالش‌های مهارتی، افزایش نرخ مشارکت کارکنان و ارسال جهت تصویب و تأمین جایزه توسط گرا
+              طراحی هدفمند چالش‌های مهارتی، افزایش نرخ مشارکت کارکنان و ارسال جهت تصویب و تأمین
+              جایزه توسط گرا
             </p>
           </div>
         </div>
@@ -197,7 +198,9 @@ export const OrgChallengeNewScreen: React.FC = () => {
                 value={objective}
                 onChange={(e) => setObjective(e.target.value)}
                 className={`w-full p-4 rounded-tile bg-canvas border text-body font-medium text-ink focus:outline-none ${
-                  validationErrors.objective ? 'border-danger' : 'border-sunken focus:border-primary'
+                  validationErrors.objective
+                    ? 'border-danger'
+                    : 'border-sunken focus:border-primary'
                 }`}
               />
               {validationErrors.objective && (
@@ -237,7 +240,9 @@ export const OrgChallengeNewScreen: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">فیلتر سطوح شایستگی</label>
+              <label className="block text-meta font-bold text-ink mb-1.5">
+                فیلتر سطوح شایستگی
+              </label>
               <div className="flex items-center gap-2 pt-1 flex-wrap">
                 {([1, 2, 3, 4, 5] as Level[]).map((lvl) => {
                   const active = selectedLevels.includes(lvl);
@@ -297,7 +302,9 @@ export const OrgChallengeNewScreen: React.FC = () => {
                 className="min-h-[48px] w-full px-4 py-2 rounded-tile bg-canvas border border-sunken text-body font-bold text-ink focus:outline-none focus:border-primary"
               />
               {validationErrors.goalTarget && (
-                <p className="text-meta text-danger font-bold mt-1">{validationErrors.goalTarget}</p>
+                <p className="text-meta text-danger font-bold mt-1">
+                  {validationErrors.goalTarget}
+                </p>
               )}
             </div>
           </div>
@@ -323,7 +330,9 @@ export const OrgChallengeNewScreen: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">تاریخ پایان (شمسی)</label>
+              <label className="block text-meta font-bold text-ink mb-1.5">
+                تاریخ پایان (شمسی)
+              </label>
               <input
                 type="text"
                 placeholder="۱۴۰۳/۰۷/۲۹"
@@ -348,14 +357,17 @@ export const OrgChallengeNewScreen: React.FC = () => {
           <div className="p-3.5 rounded-tile bg-domain-5-tint/40 border border-coin/30 text-meta text-ink/80 flex items-start gap-2.5">
             <Sparkles className="w-5 h-5 text-coin shrink-0 mt-0.5" />
             <span>
-              <strong>تعهد تأمین جایزه توسط گرا:</strong> شما می‌توانید هدیه مورد نظر یا مناسب با روحیه واحد را پیشنهاد
-              دهید. تیم پشتیبانی گرا پس از ارزیابی، جایزه نهایی را تأمین، بسته‌بندی و تضمین می‌نماید.
+              <strong>تعهد تأمین جایزه توسط گرا:</strong> شما می‌توانید هدیه مورد نظر یا مناسب با
+              روحیه واحد را پیشنهاد دهید. تیم پشتیبانی گرا پس از ارزیابی، جایزه نهایی را تأمین،
+              بسته‌بندی و تضمین می‌نماید.
             </span>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">جایزه پیشنهادی به گرا (اختیاری)</label>
+              <label className="block text-meta font-bold text-ink mb-1.5">
+                جایزه پیشنهادی به گرا (اختیاری)
+              </label>
               <input
                 type="text"
                 placeholder="مثال: هندبوک تخصصی متالورژی ASM + ست هدیه گرا"
@@ -366,7 +378,9 @@ export const OrgChallengeNewScreen: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">یادداشت‌ها و شرایط اجرایی خاص (اختیاری)</label>
+              <label className="block text-meta font-bold text-ink mb-1.5">
+                یادداشت‌ها و شرایط اجرایی خاص (اختیاری)
+              </label>
               <textarea
                 rows={2}
                 placeholder="مثلاً ملاحظات مربوط به شیفت‌های چرخشی، نحوه هماهنگی سالن آزمون و..."

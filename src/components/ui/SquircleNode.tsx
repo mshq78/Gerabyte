@@ -34,7 +34,11 @@ export const SquircleNode: React.FC<SquircleNodeProps> = ({
 
   // Size configuration (all >= 48px touch target)
   const nodeSize = isCertificate ? 'w-20 h-20' : isCheckpoint ? 'w-18 h-18' : 'w-16 h-16';
-  const borderRadius = isCertificate ? 'rounded-[26px]' : isCheckpoint ? 'rounded-[22px]' : 'rounded-[20px]';
+  const borderRadius = isCertificate
+    ? 'rounded-[26px]'
+    : isCheckpoint
+      ? 'rounded-[22px]'
+      : 'rounded-[20px]';
 
   // Squircle style
   return (
@@ -47,10 +51,10 @@ export const SquircleNode: React.FC<SquircleNodeProps> = ({
           backgroundColor: isDone
             ? 'var(--color-success)'
             : isCurrent
-            ? accentColor
-            : isPaywalled
-            ? 'var(--color-domain-4)'
-            : 'var(--color-sunken-dark)',
+              ? accentColor
+              : isPaywalled
+                ? 'var(--color-domain-4)'
+                : 'var(--color-sunken-dark)',
           borderColor: isCurrent ? 'var(--color-ink)' : 'transparent',
           borderWidth: isCurrent ? 3 : 0,
         }}
@@ -69,15 +73,24 @@ export const SquircleNode: React.FC<SquircleNodeProps> = ({
         {isDone ? (
           <Check className="w-8 h-8 text-surface stroke-[3]" aria-hidden="true" />
         ) : isCertificate ? (
-          <div className="flex flex-col items-center justify-center text-surface" aria-hidden="true">
+          <div
+            className="flex flex-col items-center justify-center text-surface"
+            aria-hidden="true"
+          >
             <Award className="w-8 h-8 stroke-[2.5]" />
           </div>
         ) : isCheckpoint ? (
-          <div className="flex flex-col items-center justify-center text-surface" aria-hidden="true">
+          <div
+            className="flex flex-col items-center justify-center text-surface"
+            aria-hidden="true"
+          >
             <Sparkles className="w-7 h-7 stroke-[2.5]" />
           </div>
         ) : isPaywalled ? (
-          <div className="flex flex-col items-center justify-center text-surface" aria-hidden="true">
+          <div
+            className="flex flex-col items-center justify-center text-surface"
+            aria-hidden="true"
+          >
             <Lock className="w-6 h-6 stroke-[2.5]" />
           </div>
         ) : isLocked ? (
@@ -90,9 +103,7 @@ export const SquircleNode: React.FC<SquircleNodeProps> = ({
 
         {/* Small bottom badge for duration / XP */}
         {!isLocked && (
-          <span
-            className="absolute -bottom-2.5 px-2 py-0.5 rounded-pill text-meta font-bold bg-surface text-ink shadow-xs border border-sunken whitespace-nowrap"
-          >
+          <span className="absolute -bottom-2.5 px-2 py-0.5 rounded-pill text-meta font-bold bg-surface text-ink shadow-xs border border-sunken whitespace-nowrap">
             {isCertificate ? 'آزمون جامع' : isCheckpoint ? 'ارزیابی' : `${toFa(minutes)} د`}
           </span>
         )}

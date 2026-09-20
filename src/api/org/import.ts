@@ -6,9 +6,9 @@ import { subscriptionsApi } from './subscriptions';
 const STORAGE_KEY_IMPORT_HISTORY = 'gerabyte_org_import_history_v1';
 
 export const VALID_PERSIAN_RANKS: Record<string, OrgRank> = {
-  'اپراتور': 'operator',
-  'کارشناس': 'expert',
-  'سرپرست': 'supervisor',
+  اپراتور: 'operator',
+  کارشناس: 'expert',
+  سرپرست: 'supervisor',
   'مدیر میانی': 'middle_manager',
   'مدیر ارشد': 'senior_manager',
 };
@@ -34,9 +34,39 @@ export const CSV_TEMPLATE_HEADERS = [
 ];
 
 export const CSV_TEMPLATE_SAMPLE_ROWS = [
-  ['محمدرضا کاظمی', '09121234567', '10401', 'معاونت تولید و عملیات', 'واحد نورد گرم و مقاطع', 'شیفت A', 'کارشناس', '2', 'm.kazemi@foolad.ir'],
-  ['مینا خسروی', '09359876543', '10402', 'معاونت فنی و مهندسی', 'آزمایشگاه متالورژی و کنترل کیفی', 'کنترل خواص مکانیکی', 'سرپرست', '3', 'm.khosravi@foolad.ir'],
-  ['علی رادمنش', '09123334455', '10403', 'معاونت تولید و عملیات', 'واحد نورد گرم و مقاطع', 'شیفت B', 'اپراتور', '1', ''],
+  [
+    'محمدرضا کاظمی',
+    '09121234567',
+    '10401',
+    'معاونت تولید و عملیات',
+    'واحد نورد گرم و مقاطع',
+    'شیفت A',
+    'کارشناس',
+    '2',
+    'm.kazemi@foolad.ir',
+  ],
+  [
+    'مینا خسروی',
+    '09359876543',
+    '10402',
+    'معاونت فنی و مهندسی',
+    'آزمایشگاه متالورژی و کنترل کیفی',
+    'کنترل خواص مکانیکی',
+    'سرپرست',
+    '3',
+    'm.khosravi@foolad.ir',
+  ],
+  [
+    'علی رادمنش',
+    '09123334455',
+    '10403',
+    'معاونت تولید و عملیات',
+    'واحد نورد گرم و مقاطع',
+    'شیفت B',
+    'اپراتور',
+    '1',
+    '',
+  ],
 ];
 
 /**
@@ -219,7 +249,9 @@ export const importApi = {
   },
 
   // Check seat limit
-  async checkSeatAvailability(neededSeats: number): Promise<{ available: boolean; unassigned: number }> {
+  async checkSeatAvailability(
+    neededSeats: number
+  ): Promise<{ available: boolean; unassigned: number }> {
     const summary = await subscriptionsApi.getSummary();
     return {
       available: summary.unassigned >= neededSeats,
@@ -244,7 +276,11 @@ export const importApi = {
         errorRows: 0,
         status: 'done',
         errors: [],
-        options: { autoCreateNodes: true, sponsorship: { months: 6, startsAt: '۱۴۰۳/۰۶/۰۱' }, sendInviteSms: true },
+        options: {
+          autoCreateNodes: true,
+          sponsorship: { months: 6, startsAt: '۱۴۰۳/۰۶/۰۱' },
+          sendInviteSms: true,
+        },
         result: { added: 85, updated: 0, skipped: 0, failed: 0 },
       },
     ];

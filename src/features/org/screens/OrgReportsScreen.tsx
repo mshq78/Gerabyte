@@ -36,13 +36,14 @@ export const OrgReportsScreen: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([orgApi.getKpis(effectiveUnitId), orgApi.getMembers({ unitId: effectiveUnitId })]).then(
-      ([kpiData, memberData]) => {
-        setKpis(kpiData);
-        setMembers(memberData);
-        setLoading(false);
-      }
-    );
+    Promise.all([
+      orgApi.getKpis(effectiveUnitId),
+      orgApi.getMembers({ unitId: effectiveUnitId }),
+    ]).then(([kpiData, memberData]) => {
+      setKpis(kpiData);
+      setMembers(memberData);
+      setLoading(false);
+    });
   }, [effectiveUnitId]);
 
   const handleExportAll = async () => {
@@ -97,7 +98,9 @@ export const OrgReportsScreen: React.FC = () => {
       <div className="hidden print:block border-b-2 border-ink pb-4 mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-black text-ink">گزارش رسمی تحلیلی آموزش و شایستگی‌های سازمان</h1>
+            <h1 className="text-xl font-black text-ink">
+              گزارش رسمی تحلیلی آموزش و شایستگی‌های سازمان
+            </h1>
             <p className="text-sm text-ink/70">سامانه یادگیری پیوسته گرابایت · {currentOrg.name}</p>
           </div>
           <div className="text-left text-xs text-ink/80 space-y-1">
@@ -115,7 +118,9 @@ export const OrgReportsScreen: React.FC = () => {
             <span>میانگین نرخ انطباق کل</span>
           </span>
           <div className="flex items-baseline gap-1">
-            <span className="text-display font-black text-primary">{toFa(kpis.complianceRate)}</span>
+            <span className="text-display font-black text-primary">
+              {toFa(kpis.complianceRate)}
+            </span>
             <span className="text-meta font-bold text-ink/60">٪</span>
           </div>
           <p className="text-meta text-ink/60 mt-1">شاخص کلی فراگیری سرفصل‌های مصوب</p>
@@ -154,12 +159,19 @@ export const OrgReportsScreen: React.FC = () => {
 
       {/* Domain Coverage Bar Chart */}
       <div className="p-6 rounded-tile bg-surface border border-sunken shadow-xs">
-        <h3 className="text-headline font-black text-ink mb-1">میانگین امتیازات آزمون‌ها در حوزه‌های ۵گانه</h3>
-        <p className="text-meta text-ink/60 mb-6">تحلیل تسلط دانش تخصصی پرسنل بر اساس نتایج آزمون‌های چک‌پوینت</p>
+        <h3 className="text-headline font-black text-ink mb-1">
+          میانگین امتیازات آزمون‌ها در حوزه‌های ۵گانه
+        </h3>
+        <p className="text-meta text-ink/60 mb-6">
+          تحلیل تسلط دانش تخصصی پرسنل بر اساس نتایج آزمون‌های چک‌پوینت
+        </p>
 
         <div className="h-64 w-full" dir="ltr">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={kpis.domainStats} margin={{ top: 10, right: 20, left: -10, bottom: 20 }}>
+            <BarChart
+              data={kpis.domainStats}
+              margin={{ top: 10, right: 20, left: -10, bottom: 20 }}
+            >
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E8E1D5" />
               <XAxis dataKey="domainTitle" tick={{ fill: '#0D3F6B', fontSize: 11 }} interval={0} />
               <YAxis domain={[0, 100]} tick={{ fill: '#0D3F6B', fontSize: 12 }} />

@@ -35,9 +35,9 @@ export const VisibilitySettingsScreen: React.FC = () => {
           <h1 className="text-title font-black text-ink">چه چیزی برای مدیر من قابل مشاهده است؟</h1>
         </div>
         <p className="text-body text-ink/80 leading-relaxed">
-          در گرابایت، حفظ استقلال یادگیری و حریم خصوصی فردی شما یک اصل بنیادین است. سازمان متبوع شما (
-          <strong>{orgName}</strong>) صرفاً به پیشرفت‌های مرتبط با مسیرهای آموزشی سازمانی دسترسی دارد و
-          داده‌های شخصی شما کاملاً محرمانه باقی می‌ماند.
+          در گرابایت، حفظ استقلال یادگیری و حریم خصوصی فردی شما یک اصل بنیادین است. سازمان متبوع شما
+          (<strong>{orgName}</strong>) صرفاً به پیشرفت‌های مرتبط با مسیرهای آموزشی سازمانی دسترسی
+          دارد و داده‌های شخصی شما کاملاً محرمانه باقی می‌ماند.
         </p>
 
         {nodePath.length > 0 && (
@@ -68,9 +68,12 @@ export const VisibilitySettingsScreen: React.FC = () => {
           <li className="flex items-start gap-3 p-3 rounded-tile bg-domain-3-tint/30 border border-success/20">
             <span className="text-success font-black text-title leading-none">•</span>
             <div>
-              <strong className="text-ink block">پیشرفت و نمرات در دوره‌ها و مسیرهای سازمانی:</strong>
+              <strong className="text-ink block">
+                پیشرفت و نمرات در دوره‌ها و مسیرهای سازمانی:
+              </strong>
               <span className="text-ink/70">
-                درصدهای تکمیل، نمرات آزمون‌ها و تمرین‌های مسیرهایی که مستقیماً توسط سازمان برای شما تخصیص یافته است.
+                درصدهای تکمیل، نمرات آزمون‌ها و تمرین‌های مسیرهایی که مستقیماً توسط سازمان برای شما
+                تخصیص یافته است.
               </span>
             </div>
           </li>
@@ -79,7 +82,8 @@ export const VisibilitySettingsScreen: React.FC = () => {
             <div>
               <strong className="text-ink block">گواهینامه‌های رسمی دوره‌های سازمانی:</strong>
               <span className="text-ink/70">
-                مدارک و شماره سریال گواهینامه‌هایی که پس از گذراندن دوره‌های تخصصی سازمانی اخذ نموده‌اید.
+                مدارک و شماره سریال گواهینامه‌هایی که پس از گذراندن دوره‌های تخصصی سازمانی اخذ
+                نموده‌اید.
               </span>
             </div>
           </li>
@@ -110,7 +114,8 @@ export const VisibilitySettingsScreen: React.FC = () => {
             <div>
               <strong className="text-ink block">سایر گرابایت‌ها، حوزه‌ها و علایق شخصی:</strong>
               <span className="text-ink/70">
-                عناوین دروسی که به‌صورت اختیاری و خارج از مأموریت‌های سازمانی مطالعه می‌کنید هرگز به مدیر گزارش نمی‌شود.
+                عناوین دروسی که به‌صورت اختیاری و خارج از مأموریت‌های سازمانی مطالعه می‌کنید هرگز به
+                مدیر گزارش نمی‌شود.
               </span>
             </div>
           </li>
@@ -141,8 +146,8 @@ export const VisibilitySettingsScreen: React.FC = () => {
         <div className="space-y-1">
           <h3 className="text-body font-black text-ink">تضمین مالکیت دستاوردها</h3>
           <p className="text-meta text-ink/80 leading-relaxed">
-            «وقتی اشتراک سازمانی تمام شود، حساب شما شخصی می‌شود و تمام دستاوردها، زنجیره‌ها، گواهینامه‌ها و
-            سوابق یادگیری متعلق به شما خواهد بود و هرگز حذف نمی‌شوند.»
+            «وقتی اشتراک سازمانی تمام شود، حساب شما شخصی می‌شود و تمام دستاوردها، زنجیره‌ها،
+            گواهینامه‌ها و سوابق یادگیری متعلق به شما خواهد بود و هرگز حذف نمی‌شوند.»
           </p>
         </div>
       </div>

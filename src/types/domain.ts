@@ -176,13 +176,7 @@ export interface QuizCard extends BaseCard {
 }
 
 export type LessonCard =
-  | TextCard
-  | VideoCard
-  | AudioCard
-  | InfographicCard
-  | FlashcardSet
-  | ScenarioCard
-  | QuizCard;
+  TextCard | VideoCard | AudioCard | InfographicCard | FlashcardSet | ScenarioCard | QuizCard;
 
 export interface Lesson {
   id: string;

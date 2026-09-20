@@ -36,8 +36,15 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useApp();
-  const { currentOrg, userRole, setUserRole, selectedUnitId, setSelectedUnitId, units, canManageAllUnits } =
-    useOrgScope();
+  const {
+    currentOrg,
+    userRole,
+    setUserRole,
+    selectedUnitId,
+    setSelectedUnitId,
+    units,
+    canManageAllUnits,
+  } = useOrgScope();
 
   const isAdmin = location.pathname.startsWith('/admin');
   const panelTitle = isAdmin ? 'پنل تیم گرا' : 'داشبورد سازمان';
@@ -116,7 +123,10 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
               }`}
             >
               <div className="flex items-center gap-3">
-                <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-ink/60'}`} aria-hidden="true" />
+                <Icon
+                  className={`w-5 h-5 ${isActive ? 'text-white' : 'text-ink/60'}`}
+                  aria-hidden="true"
+                />
                 <span>{item.label}</span>
               </div>
               <ChevronLeft className={`w-4 h-4 ${isActive ? 'text-white/80' : 'text-ink/40'}`} />
@@ -197,7 +207,9 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
             </button>
             <div>
               <h1 className="text-headline font-black text-ink">{displayTitle}</h1>
-              <span className="text-meta text-ink/60 font-medium hidden sm:inline">{currentOrg.name}</span>
+              <span className="text-meta text-ink/60 font-medium hidden sm:inline">
+                {currentOrg.name}
+              </span>
             </div>
           </div>
 

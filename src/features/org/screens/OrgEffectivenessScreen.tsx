@@ -85,7 +85,11 @@ export const OrgEffectivenessScreen: React.FC = () => {
   };
 
   if (loading || !report) {
-    return <div className="text-center py-20 text-body font-bold text-ink/60">در حال تدوین گزارش اثربخشی کرک‌پاتریک...</div>;
+    return (
+      <div className="text-center py-20 text-body font-bold text-ink/60">
+        در حال تدوین گزارش اثربخشی کرک‌پاتریک...
+      </div>
+    );
   }
 
   return (
@@ -95,10 +99,13 @@ export const OrgEffectivenessScreen: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <BarChart3 className="w-7 h-7 text-primary" />
-            <h1 className="text-display font-black text-ink">گزارش ارزیابی اثربخشی آموزش (مدل کرک‌پاتریک)</h1>
+            <h1 className="text-display font-black text-ink">
+              گزارش ارزیابی اثربخشی آموزش (مدل کرک‌پاتریک)
+            </h1>
           </div>
           <p className="text-body text-ink/70 mt-1">
-            سنجش علمی بازدهی سرمایه‌گذاری آموزشی در ۴ سطح: واکنش، یادگیری، رفتار سازمانی و شاخص‌های عملیاتی
+            سنجش علمی بازدهی سرمایه‌گذاری آموزشی در ۴ سطح: واکنش، یادگیری، رفتار سازمانی و شاخص‌های
+            عملیاتی
           </p>
         </div>
 
@@ -131,7 +138,9 @@ export const OrgEffectivenessScreen: React.FC = () => {
               </div>
               <div>
                 <h2 className="text-title font-black text-ink">سطح ۱: واکنش (Reaction)</h2>
-                <span className="text-meta text-ink/60">رضایت و نگرش همکاران نسبت به گرابایت‌ها</span>
+                <span className="text-meta text-ink/60">
+                  رضایت و نگرش همکاران نسبت به گرابایت‌ها
+                </span>
               </div>
             </div>
             <span className="px-2.5 py-1 rounded-pill bg-domain-3-tint text-success font-black text-meta">
@@ -147,27 +156,27 @@ export const OrgEffectivenessScreen: React.FC = () => {
               <span className="text-meta text-ink/70 font-bold">میانگین امتیاز کیفی دروس</span>
             </div>
             <div className="p-4 rounded-tile bg-canvas border border-sunken text-center">
-              <div className="text-display font-black text-ink">
-                {toFa(report.l1.responses)}
-              </div>
+              <div className="text-display font-black text-ink">{toFa(report.l1.responses)}</div>
               <span className="text-meta text-ink/70 font-bold">تعداد بازخوردهای ثبت‌شده</span>
             </div>
           </div>
 
           <div className="space-y-2 pt-1">
-            <span className="text-meta font-bold text-ink block">رضایت به تفکیک حوزه‌های آموزشی:</span>
+            <span className="text-meta font-bold text-ink block">
+              رضایت به تفکیک حوزه‌های آموزشی:
+            </span>
             {report.l1.byDomain.map((d) => (
               <div key={d.domainId} className="flex items-center justify-between text-meta">
                 <span className="text-ink/80">
                   {d.domainId === 'hse'
                     ? 'ایمنی و بهداشت حرفه‌ای (HSE)'
                     : d.domainId === 'quality'
-                    ? 'کنترل کیفیت و متالورژی'
-                    : d.domainId === 'technical'
-                    ? 'فنی، مکانیک و نگهداری'
-                    : d.domainId === 'communication'
-                    ? 'ارتباطات و گزارش‌نویسی شیفت'
-                    : 'بهره‌وری فردی'}
+                      ? 'کنترل کیفیت و متالورژی'
+                      : d.domainId === 'technical'
+                        ? 'فنی، مکانیک و نگهداری'
+                        : d.domainId === 'communication'
+                          ? 'ارتباطات و گزارش‌نویسی شیفت'
+                          : 'بهره‌وری فردی'}
                 </span>
                 <span className="font-mono font-black text-primary">{toFa(d.avg)} ★</span>
               </div>
@@ -184,7 +193,9 @@ export const OrgEffectivenessScreen: React.FC = () => {
               </div>
               <div>
                 <h2 className="text-title font-black text-ink">سطح ۲: یادگیری (Learning)</h2>
-                <span className="text-meta text-ink/60">میزان ارتقای نمرات آزمون‌ها و دانش تخصصی</span>
+                <span className="text-meta text-ink/60">
+                  میزان ارتقای نمرات آزمون‌ها و دانش تخصصی
+                </span>
               </div>
             </div>
             <span className="px-2.5 py-1 rounded-pill bg-domain-3-tint text-success font-black text-meta">
@@ -200,9 +211,7 @@ export const OrgEffectivenessScreen: React.FC = () => {
               <span className="text-meta text-ink/80 font-bold">نرخ بهبود نمره پس‌آزمون</span>
             </div>
             <div className="p-4 rounded-tile bg-canvas border border-sunken text-center">
-              <div className="text-display font-black text-ink">
-                {toFa(report.l2.sample)}
-              </div>
+              <div className="text-display font-black text-ink">{toFa(report.l2.sample)}</div>
               <span className="text-meta text-ink/70 font-bold">حجم نمونه همکاران سنجیده‌شده</span>
             </div>
           </div>
@@ -217,10 +226,7 @@ export const OrgEffectivenessScreen: React.FC = () => {
               <strong className="font-mono text-success">{toFa(report.l2.postAvgPct)}٪</strong>
             </div>
             <div className="w-full h-3 rounded-full bg-sunken overflow-hidden mt-2">
-              <div
-                className="h-full bg-success"
-                style={{ width: `${report.l2.postAvgPct}%` }}
-              />
+              <div className="h-full bg-success" style={{ width: `${report.l2.postAvgPct}%` }} />
             </div>
           </div>
         </div>
@@ -234,7 +240,9 @@ export const OrgEffectivenessScreen: React.FC = () => {
               </div>
               <div>
                 <h2 className="text-title font-black text-ink">سطح ۳: رفتار کاری (Behavior)</h2>
-                <span className="text-meta text-ink/60">نظرسنجی ۳۰/۶۰/۹۰ روزه از مدیران مستقیم (Likert ۱ تا ۵)</span>
+                <span className="text-meta text-ink/60">
+                  نظرسنجی ۳۰/۶۰/۹۰ روزه از مدیران مستقیم (Likert ۱ تا ۵)
+                </span>
               </div>
             </div>
             <span className="px-2.5 py-1 rounded-pill bg-domain-5-tint text-coin font-black text-meta">
@@ -244,7 +252,8 @@ export const OrgEffectivenessScreen: React.FC = () => {
 
           <div className="flex items-center justify-between">
             <span className="text-meta font-bold text-ink">
-              نرخ مشارکت سرپرستان در نظرسنجی: <strong>{toFa(report.l3.surveyResponseRatePct)}٪</strong>
+              نرخ مشارکت سرپرستان در نظرسنجی:{' '}
+              <strong>{toFa(report.l3.surveyResponseRatePct)}٪</strong>
             </span>
             <button
               onClick={() => setShowSurveyModal(true)}
@@ -259,7 +268,9 @@ export const OrgEffectivenessScreen: React.FC = () => {
               <div key={idx} className="p-3 rounded-tile bg-canvas border border-sunken space-y-1">
                 <div className="flex items-center justify-between text-meta font-bold">
                   <span className="text-ink leading-relaxed">{item.text}</span>
-                  <span className="font-mono text-primary mr-2 shrink-0">{toFa(item.avg)} از ۵</span>
+                  <span className="font-mono text-primary mr-2 shrink-0">
+                    {toFa(item.avg)} از ۵
+                  </span>
                 </div>
                 <div className="w-full h-1.5 rounded-full bg-sunken overflow-hidden">
                   <div
@@ -280,8 +291,12 @@ export const OrgEffectivenessScreen: React.FC = () => {
                 L4
               </div>
               <div>
-                <h2 className="text-title font-black text-ink">سطح ۴: نتایج و شاخص‌های سازمانی (Results)</h2>
-                <span className="text-meta text-ink/60">تغییر شاخص‌های کلیدی عملکرد (KPIs) قبل و بعد از آموزش</span>
+                <h2 className="text-title font-black text-ink">
+                  سطح ۴: نتایج و شاخص‌های سازمانی (Results)
+                </h2>
+                <span className="text-meta text-ink/60">
+                  تغییر شاخص‌های کلیدی عملکرد (KPIs) قبل و بعد از آموزش
+                </span>
               </div>
             </div>
             <span className="px-2.5 py-1 rounded-pill bg-domain-2-tint text-danger font-black text-meta">
@@ -293,8 +308,9 @@ export const OrgEffectivenessScreen: React.FC = () => {
           <div className="p-3 rounded-tile bg-domain-1-tint/50 border border-primary/30 text-meta text-ink/80 flex items-start gap-2">
             <HelpCircle className="w-4 h-4 text-primary shrink-0 mt-0.5" />
             <span>
-              <strong>توجه روش‌شناختی:</strong> تغییرات این شاخص‌ها نشان‌دهنده «همبستگی مثبت (Correlation)» بین دوره‌های
-              آموزشی و عملکرد کارگاهی است و اثبات رابطه علیت مطلق (Causality) نیاز به مطالعات کنترل‌شده ایزوله دارد.
+              <strong>توجه روش‌شناختی:</strong> تغییرات این شاخص‌ها نشان‌دهنده «همبستگی مثبت
+              (Correlation)» بین دوره‌های آموزشی و عملکرد کارگاهی است و اثبات رابطه علیت مطلق
+              (Causality) نیاز به مطالعات کنترل‌شده ایزوله دارد.
             </span>
           </div>
 
@@ -315,12 +331,17 @@ export const OrgEffectivenessScreen: React.FC = () => {
               const isPositiveChange = kpi.higherIsBetter ? diff > 0 : diff < 0;
 
               return (
-                <div key={kpi.id} className="p-3.5 rounded-tile bg-canvas border border-sunken space-y-2">
+                <div
+                  key={kpi.id}
+                  className="p-3.5 rounded-tile bg-canvas border border-sunken space-y-2"
+                >
                   <div className="flex items-center justify-between">
                     <strong className="text-body text-ink">{kpi.name}</strong>
                     <span
                       className={`text-meta font-black px-2 py-0.5 rounded-pill ${
-                        isPositiveChange ? 'bg-domain-3-tint text-success' : 'bg-domain-2-tint text-danger'
+                        isPositiveChange
+                          ? 'bg-domain-3-tint text-success'
+                          : 'bg-domain-2-tint text-danger'
                       }`}
                     >
                       {isPositiveChange ? 'بهبود عملکرد' : 'تغییر نامطلوب'}
@@ -386,7 +407,9 @@ export const OrgEffectivenessScreen: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-meta font-bold text-ink mb-1">مقدار قبل از دوره:</label>
+                  <label className="block text-meta font-bold text-ink mb-1">
+                    مقدار قبل از دوره:
+                  </label>
                   <input
                     type="number"
                     step="0.1"
@@ -397,7 +420,9 @@ export const OrgEffectivenessScreen: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-meta font-bold text-ink mb-1">مقدار پس از دوره:</label>
+                  <label className="block text-meta font-bold text-ink mb-1">
+                    مقدار پس از دوره:
+                  </label>
                   <input
                     type="number"
                     step="0.1"
@@ -465,7 +490,9 @@ export const OrgEffectivenessScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">دوره ارزیابی بعد از آموزش:</label>
+                <label className="block text-meta font-bold text-ink mb-1">
+                  دوره ارزیابی بعد از آموزش:
+                </label>
                 <select
                   value={surveyDays}
                   onChange={(e) => setSurveyDays(Number(e.target.value))}
@@ -478,7 +505,8 @@ export const OrgEffectivenessScreen: React.FC = () => {
               </div>
 
               <p className="text-meta text-ink/70">
-                پرسشنامه ۵ گزینه‌ای استاندارد بر اساس طیف لیکرت به‌صورت خودکار برای سرپرستان مستقیم ارسال خواهد شد.
+                پرسشنامه ۵ گزینه‌ای استاندارد بر اساس طیف لیکرت به‌صورت خودکار برای سرپرستان مستقیم
+                ارسال خواهد شد.
               </p>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-sunken">

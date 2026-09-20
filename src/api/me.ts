@@ -22,96 +22,120 @@ const defaultPrefs: NotificationPrefs = {
 export const meApi = {
   // TODO(backend): GET /api/v1/me
   async get(): Promise<User> {
-    return mockRequest(() => {
-      return getStoredUser();
-    }, { endpoint: '/api/v1/me' });
+    return mockRequest(
+      () => {
+        return getStoredUser();
+      },
+      { endpoint: '/api/v1/me' }
+    );
   },
 
   // TODO(backend): PATCH /api/v1/me/daily-goal
   async setDailyGoal(goal: 1 | 2 | 3): Promise<User> {
-    return mockRequest(() => {
-      const current = getStoredUser();
-      const updated: User = { ...current, dailyGoal: goal, onboardingCompleted: true };
-      setStoredUser(updated);
-      return updated;
-    }, { endpoint: '/api/v1/me/daily-goal' });
+    return mockRequest(
+      () => {
+        const current = getStoredUser();
+        const updated: User = { ...current, dailyGoal: goal, onboardingCompleted: true };
+        setStoredUser(updated);
+        return updated;
+      },
+      { endpoint: '/api/v1/me/daily-goal' }
+    );
   },
 
   // TODO(backend): GET /api/v1/me/notification-prefs
   async getNotificationPrefs(): Promise<NotificationPrefs> {
-    return mockRequest(() => {
-      if (typeof window !== 'undefined') {
-        const raw = localStorage.getItem(STORAGE_PREFS_KEY);
-        if (raw) {
-          try {
-            return JSON.parse(raw);
-          } catch {
-            // fallback
+    return mockRequest(
+      () => {
+        if (typeof window !== 'undefined') {
+          const raw = localStorage.getItem(STORAGE_PREFS_KEY);
+          if (raw) {
+            try {
+              return JSON.parse(raw);
+            } catch {
+              // fallback
+            }
           }
         }
-      }
-      return defaultPrefs;
-    }, { endpoint: '/api/v1/me/notification-prefs' });
+        return defaultPrefs;
+      },
+      { endpoint: '/api/v1/me/notification-prefs' }
+    );
   },
 
   // TODO(backend): PUT /api/v1/me/notification-prefs
   async updateNotificationPrefs(prefs: NotificationPrefs): Promise<NotificationPrefs> {
-    return mockRequest(() => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_PREFS_KEY, JSON.stringify(prefs));
-      }
-      return prefs;
-    }, { endpoint: '/api/v1/me/notification-prefs' });
+    return mockRequest(
+      () => {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(STORAGE_PREFS_KEY, JSON.stringify(prefs));
+        }
+        return prefs;
+      },
+      { endpoint: '/api/v1/me/notification-prefs' }
+    );
   },
 
   // TODO(backend): POST /api/v1/me/level/accept-suggestion
   async acceptLevelSuggestion(): Promise<User> {
-    return mockRequest(() => {
-      const current = getStoredUser();
-      if (!current.aiSuggestedLevel) return current;
-      const updated: User = {
-        ...current,
-        level: current.aiSuggestedLevel.level,
-        levelSource: 'ai_suggestion',
-        aiSuggestedLevel: undefined,
-      };
-      setStoredUser(updated);
-      return updated;
-    }, { endpoint: '/api/v1/me/level/accept-suggestion' });
+    return mockRequest(
+      () => {
+        const current = getStoredUser();
+        if (!current.aiSuggestedLevel) return current;
+        const updated: User = {
+          ...current,
+          level: current.aiSuggestedLevel.level,
+          levelSource: 'ai_suggestion',
+          aiSuggestedLevel: undefined,
+        };
+        setStoredUser(updated);
+        return updated;
+      },
+      { endpoint: '/api/v1/me/level/accept-suggestion' }
+    );
   },
 
   // TODO(backend): POST /api/v1/me/level/dismiss-suggestion
   async dismissLevelSuggestion(): Promise<User> {
-    return mockRequest(() => {
-      const current = getStoredUser();
-      const updated: User = {
-        ...current,
-        aiSuggestedLevel: undefined,
-      };
-      setStoredUser(updated);
-      return updated;
-    }, { endpoint: '/api/v1/me/level/dismiss-suggestion' });
+    return mockRequest(
+      () => {
+        const current = getStoredUser();
+        const updated: User = {
+          ...current,
+          aiSuggestedLevel: undefined,
+        };
+        setStoredUser(updated);
+        return updated;
+      },
+      { endpoint: '/api/v1/me/level/dismiss-suggestion' }
+    );
   },
 
   // TODO(backend): PATCH /api/v1/me/level
   async setLevelManually(level: Level): Promise<User> {
-    return mockRequest(() => {
-      const current = getStoredUser();
-      const updated: User = {
-        ...current,
-        level,
-        levelSource: 'placement_test',
-        aiSuggestedLevel: undefined,
-      };
-      setStoredUser(updated);
-      return updated;
-    }, { endpoint: '/api/v1/me/level' });
+    return mockRequest(
+      () => {
+        const current = getStoredUser();
+        const updated: User = {
+          ...current,
+          level,
+          levelSource: 'placement_test',
+          aiSuggestedLevel: undefined,
+        };
+        setStoredUser(updated);
+        return updated;
+      },
+      { endpoint: '/api/v1/me/level' }
+    );
   },
 
   // TODO(backend): GET /api/v1/me/badges
   async getBadges(): Promise<Badge[]> {
-    return mockRequest(() => {
-      return MOCK_BADGES;
-    }, { endpoint: '/api/v1/me/badges' });
+    return mockRequest(
+      () => {
+        return MOCK_BADGES;
+      },
+      { endpoint: '/api/v1/me/badges' }
+    );
   },
 };

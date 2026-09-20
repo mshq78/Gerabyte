@@ -99,7 +99,8 @@ export const ExamScreen: React.FC = () => {
             <div className="flex items-start gap-2.5">
               <Clock className="w-5 h-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
               <span>
-                تعداد سوالات انتخابی تصادفی از بانک سوالات: <strong>{toFa(exam.drawCount)} سوال</strong>
+                تعداد سوالات انتخابی تصادفی از بانک سوالات:{' '}
+                <strong>{toFa(exam.drawCount)} سوال</strong>
               </span>
             </div>
 
@@ -113,7 +114,8 @@ export const ExamScreen: React.FC = () => {
             <div className="flex items-start gap-2.5">
               <ShieldAlert className="w-5 h-5 text-danger shrink-0 mt-0.5" aria-hidden="true" />
               <span>
-                حداکثر دفعات مجاز: <strong>{toFa(exam.maxAttempts)} نوبت</strong> با دوره خنک‌سازی {toFa(exam.cooldownHours)} ساعته
+                حداکثر دفعات مجاز: <strong>{toFa(exam.maxAttempts)} نوبت</strong> با دوره خنک‌سازی{' '}
+                {toFa(exam.cooldownHours)} ساعته
               </span>
             </div>
           </div>
@@ -220,9 +222,7 @@ export const ExamScreen: React.FC = () => {
                   )}
                   <span>سوال {toFa(idx + 1)}</span>
                 </span>
-                <span className="text-meta text-ink/60">
-                  ضریب {toFa(rev.question.weight)}×
-                </span>
+                <span className="text-meta text-ink/60">ضریب {toFa(rev.question.weight)}×</span>
               </div>
               <p className="font-semibold text-ink">{rev.question.prompt}</p>
               <div className="p-2.5 rounded-tile bg-paper text-ink/80 leading-relaxed font-medium text-meta">
@@ -310,9 +310,7 @@ export const ExamScreen: React.FC = () => {
           )}
         </div>
 
-        <h3 className="text-read font-bold text-ink leading-snug">
-          {currentQ.prompt}
-        </h3>
+        <h3 className="text-read font-bold text-ink leading-snug">{currentQ.prompt}</h3>
 
         <div className="space-y-2.5 pt-2">
           {currentQ.options.map((opt) => {
@@ -369,7 +367,9 @@ export const ExamScreen: React.FC = () => {
           }}
           rightIcon={<ChevronLeft className="w-5 h-5 stroke-[2.5]" aria-hidden="true" />}
         >
-          {currentQuestionIndex === totalQuestions - 1 ? 'ارسال پاسخ‌ها و مشاهده نتیجه' : 'سوال بعدی'}
+          {currentQuestionIndex === totalQuestions - 1
+            ? 'ارسال پاسخ‌ها و مشاهده نتیجه'
+            : 'سوال بعدی'}
         </Button>
       </div>
     </div>

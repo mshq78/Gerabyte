@@ -111,7 +111,8 @@ export const PathScreen: React.FC = () => {
               </span>
             </div>
             <span className="text-meta text-ink/70 font-semibold shrink-0">
-              {toFa(activePath.units[0].lessons.filter((l) => l.status === 'done').length)} از {toFa(activePath.units[0].lessons.length)} درس
+              {toFa(activePath.units[0].lessons.filter((l) => l.status === 'done').length)} از{' '}
+              {toFa(activePath.units[0].lessons.length)} درس
             </span>
           </div>
         )}
@@ -128,7 +129,8 @@ export const PathScreen: React.FC = () => {
                   فصل {toFa(unit.order)}: {unit.title}
                 </span>
                 <span className="text-ink/70 font-semibold">
-                  {toFa(unit.lessons.filter((l) => l.status === 'done').length)} از {toFa(unit.lessons.length)} درس
+                  {toFa(unit.lessons.filter((l) => l.status === 'done').length)} از{' '}
+                  {toFa(unit.lessons.length)} درس
                 </span>
               </div>
             )}
@@ -141,8 +143,8 @@ export const PathScreen: React.FC = () => {
                   lIdx % 3 === 0
                     ? 'translate-x-0'
                     : lIdx % 3 === 1
-                    ? '-translate-x-10'
-                    : 'translate-x-10';
+                      ? '-translate-x-10'
+                      : 'translate-x-10';
 
                 // Free vs Paid status
                 const isPaywalled = !lesson.isFree && !entitlements.paidLessonsUnlocked;
@@ -233,14 +235,18 @@ export const PathScreen: React.FC = () => {
       <Sheet
         isOpen={!!selectedLesson}
         onClose={() => setSelectedLesson(null)}
-        title={selectedLesson?.isCertificate ? 'آزمون گواهینامه رسمی' : selectedLesson?.isCheckpoint ? 'ارزیابی فصلی' : 'مشخصات گرابایت'}
+        title={
+          selectedLesson?.isCertificate
+            ? 'آزمون گواهینامه رسمی'
+            : selectedLesson?.isCheckpoint
+              ? 'ارزیابی فصلی'
+              : 'مشخصات گرابایت'
+        }
         subtitle={selectedLesson?.unitTitle}
       >
         {selectedLesson && (
           <div className="space-y-4 text-ink">
-            <h3 className="font-bold text-title leading-snug">
-              {selectedLesson.lesson.title}
-            </h3>
+            <h3 className="font-bold text-title leading-snug">{selectedLesson.lesson.title}</h3>
 
             <div className="grid grid-cols-2 gap-3 py-2">
               <div className="p-3 rounded-tile bg-paper border border-sunken flex flex-col">
@@ -260,7 +266,9 @@ export const PathScreen: React.FC = () => {
             {selectedLesson.lesson.status === 'done' ? (
               <div className="p-3 rounded-tile bg-domain-3-tint border border-success/40 text-success text-meta font-semibold flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 shrink-0" aria-hidden="true" />
-                <span>شما این درس را قبلاً با موفقیت گذرانده‌اید (مرور مجدد شامل امتیاز نخواهد بود).</span>
+                <span>
+                  شما این درس را قبلاً با موفقیت گذرانده‌اید (مرور مجدد شامل امتیاز نخواهد بود).
+                </span>
               </div>
             ) : (
               <p className="text-meta text-ink/80 leading-relaxed">
@@ -297,7 +305,8 @@ export const PathScreen: React.FC = () => {
           </div>
 
           <p className="text-body text-center leading-relaxed font-semibold">
-            با ارتقا به اشتراک کامل، تمام دروس تخصصی، آزمون‌های صدور گواهینامه و دریافت سکه‌های جوایز بازگشایی می‌شوند.
+            با ارتقا به اشتراک کامل، تمام دروس تخصصی، آزمون‌های صدور گواهینامه و دریافت سکه‌های
+            جوایز بازگشایی می‌شوند.
           </p>
 
           <div className="space-y-2 py-1 text-body">
@@ -327,12 +336,7 @@ export const PathScreen: React.FC = () => {
             >
               مشاهده پلن‌ها و ارتقای اشتراک
             </Button>
-            <Button
-              fullWidth
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsUpsellSheetOpen(false)}
-            >
+            <Button fullWidth variant="ghost" size="sm" onClick={() => setIsUpsellSheetOpen(false)}>
               انصراف
             </Button>
           </div>

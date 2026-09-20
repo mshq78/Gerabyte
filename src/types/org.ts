@@ -165,7 +165,16 @@ export interface EffectivenessReport {
   l1: { avgRating: number; responses: number; byDomain: { domainId: string; avg: number }[] };
   l2: { preAvgPct: number; postAvgPct: number; improvementPct: number; sample: number };
   l3: { surveyResponseRatePct: number; items: { text: string; avg: number }[] }; // manager survey, Likert 1–5
-  l4: { kpis: { id: string; name: string; unit: string; before: number; after: number; higherIsBetter: boolean }[] };
+  l4: {
+    kpis: {
+      id: string;
+      name: string;
+      unit: string;
+      before: number;
+      after: number;
+      higherIsBetter: boolean;
+    }[];
+  };
 }
 
 export interface OrgCertificateItem {

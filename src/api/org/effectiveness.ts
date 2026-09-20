@@ -91,7 +91,10 @@ export const effectivenessApi = {
   },
 
   // TODO(backend): POST /api/v1/org/effectiveness/survey
-  async createSurvey(surveyTitle: string, targetDays: number): Promise<{ success: boolean; message: string }> {
+  async createSurvey(
+    surveyTitle: string,
+    targetDays: number
+  ): Promise<{ success: boolean; message: string }> {
     return {
       success: true,
       message: `پرسشنامه ارزیابی رفتار سازمانی ۳۶۰ درجه («${surveyTitle}» - دوره ${targetDays} روزه) برای ۱۲ مدیر شیفت و سرپرست فعال گردید.`,

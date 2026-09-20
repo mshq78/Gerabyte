@@ -59,13 +59,21 @@ export function formatJalaliTime(isoStringOrDate?: string | Date): string {
 /**
  * Calculate countdown string to Friday 23:59 Asia/Tehran
  */
-export function getLeagueCountdownFa(): { days: string; hours: string; minutes: string; text: string } {
+export function getLeagueCountdownFa(): {
+  days: string;
+  hours: string;
+  minutes: string;
+  text: string;
+} {
   const now = new Date();
   // Saturday is start of week (day 6 in JS Sunday=0, Saturday=6)
   const currentDay = now.getDay(); // 0 is Sunday, 5 is Friday, 6 is Saturday
   // Days until Friday (5)
   let daysUntilFriday = (5 - currentDay + 7) % 7;
-  if (daysUntilFriday === 0 && (now.getHours() > 23 || (now.getHours() === 23 && now.getMinutes() >= 59))) {
+  if (
+    daysUntilFriday === 0 &&
+    (now.getHours() > 23 || (now.getHours() === 23 && now.getMinutes() >= 59))
+  ) {
     daysUntilFriday = 7;
   }
 
@@ -79,9 +87,10 @@ export function getLeagueCountdownFa(): { days: string; hours: string; minutes: 
   const remainingHours = diffHours % 24;
   const remainingMinutes = Math.floor((diffMs / (1000 * 60)) % 60);
 
-  const text = diffDays > 0 
-    ? `${toFa(diffDays)} روز و ${toFa(remainingHours)} ساعت تا پایان لیگ`
-    : `${toFa(remainingHours)} ساعت و ${toFa(remainingMinutes)} دقیقه تا پایان لیگ`;
+  const text =
+    diffDays > 0
+      ? `${toFa(diffDays)} روز و ${toFa(remainingHours)} ساعت تا پایان لیگ`
+      : `${toFa(remainingHours)} ساعت و ${toFa(remainingMinutes)} دقیقه تا پایان لیگ`;
 
   return {
     days: toFa(diffDays),

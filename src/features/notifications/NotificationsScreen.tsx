@@ -18,7 +18,9 @@ export const NotificationsScreen: React.FC = () => {
   const navigate = useNavigate();
   const { setUnreadNotifsCount } = useApp();
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'reminder' | 'league' | 'challenge' | 'system'>('all');
+  const [activeFilter, setActiveFilter] = useState<
+    'all' | 'reminder' | 'league' | 'challenge' | 'system'
+  >('all');
 
   useEffect(() => {
     async function load() {
@@ -40,9 +42,7 @@ export const NotificationsScreen: React.FC = () => {
     setUnreadNotifsCount(0);
   };
 
-  const filtered = notifications.filter(
-    (n) => activeFilter === 'all' || n.kind === activeFilter
-  );
+  const filtered = notifications.filter((n) => activeFilter === 'all' || n.kind === activeFilter);
 
   const getIcon = (kind: string) => {
     switch (kind) {
@@ -142,14 +142,10 @@ export const NotificationsScreen: React.FC = () => {
                     {formatJalaliShort(item.at)}
                   </span>
                 </div>
-                <p className="text-meta text-ink/80 leading-relaxed font-normal">
-                  {item.body}
-                </p>
+                <p className="text-meta text-ink/80 leading-relaxed font-normal">{item.body}</p>
               </div>
 
-              {!item.read && (
-                <span className="w-2.5 h-2.5 rounded-pill bg-primary shrink-0 mt-2" />
-              )}
+              {!item.read && <span className="w-2.5 h-2.5 rounded-pill bg-primary shrink-0 mt-2" />}
             </div>
           ))
         )}

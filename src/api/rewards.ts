@@ -44,50 +44,59 @@ export const rewardsApi = {
 
   // TODO(backend): GET /api/v1/rewards/my-redemptions
   async myRedemptions(): Promise<RedeemedReward[]> {
-    return mockRequest(() => getStoredRedemptions(), { endpoint: '/api/v1/rewards/my-redemptions' });
+    return mockRequest(() => getStoredRedemptions(), {
+      endpoint: '/api/v1/rewards/my-redemptions',
+    });
   },
 
   // TODO(backend): POST /api/v1/rewards/:id/redeem
-  async redeem(id: string): Promise<{ success: boolean; redemption: RedeemedReward; remainingCoins: number }> {
-    return mockRequest(() => {
-      const user = getStoredUser();
-      const reward = MOCK_REWARDS.find((r) => r.id === id);
-      if (!reward) {
-        throw new Error('جایزه موردنظر یافت نشد.');
-      }
+  async redeem(
+    id: string
+  ): Promise<{ success: boolean; redemption: RedeemedReward; remainingCoins: number }> {
+    return mockRequest(
+      () => {
+        const user = getStoredUser();
+        const reward = MOCK_REWARDS.find((r) => r.id === id);
+        if (!reward) {
+          throw new Error('جایزه موردنظر یافت نشد.');
+        }
 
-      if (user.coins < reward.costCoins) {
-        throw new Error(`موجودی سکه شما (${user.coins}) برای دریافت این جایزه (${reward.costCoins} سکه) کافی نیست.`);
-      }
+        if (user.coins < reward.costCoins) {
+          throw new Error(
+            `موجودی سکه شما (${user.coins}) برای دریافت این جایزه (${reward.costCoins} سکه) کافی نیست.`
+          );
+        }
 
-      const randomCode = Math.floor(1000 + Math.random() * 9000);
-      const voucherCode = `${reward.provider.toUpperCase()}-GB-${randomCode}`;
+        const randomCode = Math.floor(1000 + Math.random() * 9000);
+        const voucherCode = `${reward.provider.toUpperCase()}-GB-${randomCode}`;
 
-      const newRedemption: RedeemedReward = {
-        id: 'red_' + Date.now(),
-        rewardId: reward.id,
-        title: reward.title,
-        redeemedAt: new Date().toISOString(),
-        voucherCode,
-        costCoins: reward.costCoins,
-        provider: reward.provider,
-        status: 'valid',
-      };
+        const newRedemption: RedeemedReward = {
+          id: 'red_' + Date.now(),
+          rewardId: reward.id,
+          title: reward.title,
+          redeemedAt: new Date().toISOString(),
+          voucherCode,
+          costCoins: reward.costCoins,
+          provider: reward.provider,
+          status: 'valid',
+        };
 
-      const updatedUser = {
-        ...user,
-        coins: user.coins - reward.costCoins,
-      };
-      setStoredUser(updatedUser);
+        const updatedUser = {
+          ...user,
+          coins: user.coins - reward.costCoins,
+        };
+        setStoredUser(updatedUser);
 
-      const redemptions = getStoredRedemptions();
-      saveRedemptions([newRedemption, ...redemptions]);
+        const redemptions = getStoredRedemptions();
+        saveRedemptions([newRedemption, ...redemptions]);
 
-      return {
-        success: true,
-        redemption: newRedemption,
-        remainingCoins: updatedUser.coins,
-      };
-    }, { endpoint: `/api/v1/rewards/${id}/redeem` });
+        return {
+          success: true,
+          redemption: newRedemption,
+          remainingCoins: updatedUser.coins,
+        };
+      },
+      { endpoint: `/api/v1/rewards/${id}/redeem` }
+    );
   },
 };

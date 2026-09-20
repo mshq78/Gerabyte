@@ -67,12 +67,8 @@ export const LeagueScreen: React.FC = () => {
         </div>
 
         <div>
-          <h2 className="text-headline font-black text-ink">
-            {tierInfo.title}
-          </h2>
-          <p className="text-meta text-ink/70 mt-0.5">
-            گروه ۳۰ نفره شما در این هفته
-          </p>
+          <h2 className="text-headline font-black text-ink">{tierInfo.title}</h2>
+          <p className="text-meta text-ink/70 mt-0.5">گروه ۳۰ نفره شما در این هفته</p>
         </div>
 
         {/* Friday Night Countdown Strip */}
@@ -99,9 +95,7 @@ export const LeagueScreen: React.FC = () => {
           <button
             onClick={() => setActiveTab('teams')}
             className={`flex-1 min-h-[48px] py-2 rounded-tile text-meta font-bold transition-all cursor-pointer ${
-              activeTab === 'teams'
-                ? 'bg-surface text-ink shadow-xs'
-                : 'text-ink/70 hover:text-ink'
+              activeTab === 'teams' ? 'bg-surface text-ink shadow-xs' : 'text-ink/70 hover:text-ink'
             }`}
           >
             واحدها و گروه‌ها
@@ -151,10 +145,10 @@ export const LeagueScreen: React.FC = () => {
                       entry.isMe
                         ? 'bg-domain-1-tint font-bold border-l-4 border-l-primary'
                         : isPromoteZone
-                        ? 'hover:bg-domain-3-tint/30'
-                        : isDemoteZone
-                        ? 'hover:bg-danger-tint/30'
-                        : 'hover:bg-canvas'
+                          ? 'hover:bg-domain-3-tint/30'
+                          : isDemoteZone
+                            ? 'hover:bg-danger-tint/30'
+                            : 'hover:bg-canvas'
                     }`}
                   >
                     {/* Rank & Avatar & Name */}
@@ -164,10 +158,10 @@ export const LeagueScreen: React.FC = () => {
                           idx === 0
                             ? 'text-coin text-body'
                             : idx === 1
-                            ? 'text-ink/60 text-meta'
-                            : idx === 2
-                            ? 'text-coin/80 text-meta'
-                            : 'text-ink/60 text-meta'
+                              ? 'text-ink/60 text-meta'
+                              : idx === 2
+                                ? 'text-coin/80 text-meta'
+                                : 'text-ink/60 text-meta'
                         }`}
                       >
                         {toFa(entry.rank)}
@@ -177,9 +171,7 @@ export const LeagueScreen: React.FC = () => {
 
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-body font-bold text-ink">
-                            {entry.displayName}
-                          </span>
+                          <span className="text-body font-bold text-ink">{entry.displayName}</span>
                           {entry.movement === 'up' && (
                             <ArrowUp className="w-3.5 h-3.5 text-success" aria-hidden="true" />
                           )}
@@ -188,9 +180,7 @@ export const LeagueScreen: React.FC = () => {
                           )}
                         </div>
                         {entry.unitLabel && (
-                          <p className="text-meta text-ink/60">
-                            {entry.unitLabel}
-                          </p>
+                          <p className="text-meta text-ink/60">{entry.unitLabel}</p>
                         )}
                       </div>
                     </div>
@@ -229,20 +219,17 @@ export const LeagueScreen: React.FC = () => {
       {activeTab === 'teams' && (
         <div className="space-y-3">
           <div className="p-3.5 rounded-tile bg-surface border border-sunken text-body text-ink/80 leading-relaxed">
-            رتبه‌بندی واحدها بر اساس <strong>میانگین امتیاز هفتگی اعضا</strong> و <strong>درصد مشارکت</strong> محاسبه می‌شود.
+            رتبه‌بندی واحدها بر اساس <strong>میانگین امتیاز هفتگی اعضا</strong> و{' '}
+            <strong>درصد مشارکت</strong> محاسبه می‌شود.
           </div>
 
           <div className="rounded-tile bg-surface border border-sunken overflow-hidden shadow-xs divide-y divide-sunken">
             {teamBoard.map((team) => (
               <div key={team.rank} className="p-4 flex items-center justify-between min-h-[48px]">
                 <div className="flex items-center gap-3">
-                  <span className="w-6 font-bold text-body text-ink/70">
-                    {toFa(team.rank)}
-                  </span>
+                  <span className="w-6 font-bold text-body text-ink/70">{toFa(team.rank)}</span>
                   <div>
-                    <h4 className="font-bold text-body text-ink">
-                      {team.nodeName}
-                    </h4>
+                    <h4 className="font-bold text-body text-ink">{team.nodeName}</h4>
                     <p className="text-meta text-ink/60 mt-0.5">
                       {toFa(team.membersCount)} نفر · مشارکت {toFa(team.participationPct)}٪
                     </p>
@@ -274,25 +261,15 @@ export const LeagueScreen: React.FC = () => {
                 <span className="text-meta font-bold text-coin bg-domain-5-tint px-2.5 py-0.5 rounded-pill border border-coin/30">
                   {ch.origin === 'org_requested' ? 'پویش سازمانی' : 'چالش گرا'}
                 </span>
-                <span className="text-meta text-ink/60">
-                  {toFa(ch.participants)} شرکت‌کننده
-                </span>
+                <span className="text-meta text-ink/60">{toFa(ch.participants)} شرکت‌کننده</span>
               </div>
 
-              <h4 className="font-bold text-body text-ink leading-snug">
-                {ch.title}
-              </h4>
-              <p className="text-meta text-ink/75 line-clamp-2">
-                {ch.description}
-              </p>
+              <h4 className="font-bold text-body text-ink leading-snug">{ch.title}</h4>
+              <p className="text-meta text-ink/75 line-clamp-2">{ch.description}</p>
 
               <div className="pt-1 border-t border-sunken flex items-center justify-between text-meta">
-                <span className="font-bold text-success">
-                  جایزه: {ch.prize.title}
-                </span>
-                <span className="font-bold text-primary">
-                  مشاهده جزئیات
-                </span>
+                <span className="font-bold text-success">جایزه: {ch.prize.title}</span>
+                <span className="font-bold text-primary">مشاهده جزئیات</span>
               </div>
             </div>
           ))}

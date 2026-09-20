@@ -78,7 +78,9 @@ export const OrgOverviewScreen: React.FC = () => {
             <span className="text-meta font-bold text-ink/80">{activeUnitName}</span>
           </div>
           <h2 className="text-title font-black text-ink">
-            {userRole === 'unit_manager' ? 'سامانه نظارت بر پیشرفت واحد' : 'داشبورد جامع یادگیری و توسعه سازمانی'}
+            {userRole === 'unit_manager'
+              ? 'سامانه نظارت بر پیشرفت واحد'
+              : 'داشبورد جامع یادگیری و توسعه سازمانی'}
           </h2>
           <p className="text-body text-ink/70 mt-1">
             وضعیت لحظه‌ای یادگیری خرد (گرابایت)، انطباق مهارتی و شایستگی‌های شغلی همکاران
@@ -116,7 +118,9 @@ export const OrgOverviewScreen: React.FC = () => {
           </div>
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="text-display font-black text-primary">{toFa(kpis.complianceRate)}</span>
+              <span className="text-display font-black text-primary">
+                {toFa(kpis.complianceRate)}
+              </span>
               <span className="text-meta font-bold text-ink/60">٪</span>
             </div>
             <p className="text-meta text-ink/60 mt-1">از کل دروس برنامه‌ریزی‌شده</p>
@@ -134,11 +138,15 @@ export const OrgOverviewScreen: React.FC = () => {
           <div>
             <div className="flex items-baseline gap-1">
               <span className="text-display font-black text-ink">{toFa(kpis.activeThisWeek)}</span>
-              <span className="text-meta font-bold text-ink/60">از {toFa(kpis.totalMembers)} نفر</span>
+              <span className="text-meta font-bold text-ink/60">
+                از {toFa(kpis.totalMembers)} نفر
+              </span>
             </div>
             <p className="text-meta text-success font-bold mt-1 flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>{toFa(Math.round((kpis.activeThisWeek / kpis.totalMembers) * 100))}٪ مشارکت فعال</span>
+              <span>
+                {toFa(Math.round((kpis.activeThisWeek / kpis.totalMembers) * 100))}٪ مشارکت فعال
+              </span>
             </p>
           </div>
         </div>
@@ -187,7 +195,9 @@ export const OrgOverviewScreen: React.FC = () => {
           </div>
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="text-display font-black text-ink">{toFa(kpis.totalCertificatesEarned)}</span>
+              <span className="text-display font-black text-ink">
+                {toFa(kpis.totalCertificatesEarned)}
+              </span>
               <span className="text-meta font-bold text-ink/60">مدرک صادره</span>
             </div>
             <p className="text-meta text-ink/60 mt-1">با قابلیت استعلام دیجیتال QR</p>
@@ -204,7 +214,9 @@ export const OrgOverviewScreen: React.FC = () => {
           </div>
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="text-display font-black text-danger">{toFa(kpis.atRiskLearnersCount)}</span>
+              <span className="text-display font-black text-danger">
+                {toFa(kpis.atRiskLearnersCount)}
+              </span>
               <span className="text-meta font-bold text-ink/60">همکار</span>
             </div>
             <Link
@@ -234,7 +246,10 @@ export const OrgOverviewScreen: React.FC = () => {
 
           <div className="h-64 w-full" dir="ltr">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={kpis.weeklyTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart
+                data={kpis.weeklyTrend}
+                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              >
                 <defs>
                   <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#1E6FA8" stopOpacity={0.4} />
@@ -274,13 +289,19 @@ export const OrgOverviewScreen: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-headline font-black text-ink">پیشرفت در ۵ حوزه شایستگی</h3>
-              <p className="text-meta text-ink/60">درصد اتمام سرفصل‌ها در حوزه‌های مهارتی گرابایت</p>
+              <p className="text-meta text-ink/60">
+                درصد اتمام سرفصل‌ها در حوزه‌های مهارتی گرابایت
+              </p>
             </div>
           </div>
 
           <div className="h-64 w-full" dir="ltr">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={kpis.domainStats} layout="vertical" margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+              <BarChart
+                data={kpis.domainStats}
+                layout="vertical"
+                margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E8E1D5" />
                 <XAxis type="number" domain={[0, 100]} tick={{ fill: '#0D3F6B', fontSize: 12 }} />
                 <YAxis
@@ -314,7 +335,9 @@ export const OrgOverviewScreen: React.FC = () => {
       <div className="p-6 rounded-tile bg-surface border border-sunken shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
           <div>
-            <h3 className="text-headline font-black text-ink">رتبه‌بندی و پیشرفت واحدهای سازمانی</h3>
+            <h3 className="text-headline font-black text-ink">
+              رتبه‌بندی و پیشرفت واحدهای سازمانی
+            </h3>
             <p className="text-meta text-ink/60">مقایسه مشارکت و انطباق مهارتی در بخش‌های مختلف</p>
           </div>
 
@@ -357,7 +380,9 @@ export const OrgOverviewScreen: React.FC = () => {
                             style={{ width: `${unit.completionRate}%` }}
                           />
                         </div>
-                        <span className="text-meta font-bold text-ink">{toFa(unit.completionRate)}٪</span>
+                        <span className="text-meta font-bold text-ink">
+                          {toFa(unit.completionRate)}٪
+                        </span>
                       </div>
                     </td>
                     <td className="py-3.5 px-4 text-center">
@@ -366,8 +391,8 @@ export const OrgOverviewScreen: React.FC = () => {
                           isHigh
                             ? 'bg-domain-3-tint text-secondary'
                             : isMed
-                            ? 'bg-domain-1-tint text-primary'
-                            : 'bg-domain-5-tint text-[#E58A1F]'
+                              ? 'bg-domain-1-tint text-primary'
+                              : 'bg-domain-5-tint text-[#E58A1F]'
                         }`}
                       >
                         {isHigh ? 'پیشرو' : isMed ? 'پویا' : 'نیازمند همراهی'}

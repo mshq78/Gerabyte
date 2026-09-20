@@ -32,28 +32,34 @@ export const challengesApi = {
 
   // TODO(backend): GET /api/v1/challenges/:id
   async get(id: string): Promise<Challenge | null> {
-    return mockRequest(() => {
-      const list = getStoredChallenges();
-      return list.find((c) => c.id === id) || list[0];
-    }, { endpoint: `/api/v1/challenges/${id}` });
+    return mockRequest(
+      () => {
+        const list = getStoredChallenges();
+        return list.find((c) => c.id === id) || list[0];
+      },
+      { endpoint: `/api/v1/challenges/${id}` }
+    );
   },
 
   // TODO(backend): POST /api/v1/challenges/:id/join
   async join(id: string): Promise<Challenge> {
-    return mockRequest(() => {
-      const list = getStoredChallenges();
-      const updated = list.map((c) => {
-        if (c.id === id) {
-          return {
-            ...c,
-            state: 'joined' as const,
-            participants: c.participants + 1,
-          };
-        }
-        return c;
-      });
-      saveChallenges(updated);
-      return updated.find((c) => c.id === id)!;
-    }, { endpoint: `/api/v1/challenges/${id}/join` });
+    return mockRequest(
+      () => {
+        const list = getStoredChallenges();
+        const updated = list.map((c) => {
+          if (c.id === id) {
+            return {
+              ...c,
+              state: 'joined' as const,
+              participants: c.participants + 1,
+            };
+          }
+          return c;
+        });
+        saveChallenges(updated);
+        return updated.find((c) => c.id === id)!;
+      },
+      { endpoint: `/api/v1/challenges/${id}/join` }
+    );
   },
 };

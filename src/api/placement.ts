@@ -26,7 +26,8 @@ export const PLACEMENT_QUESTIONS: Question[] = [
   {
     id: 'pq-2',
     kind: 'scenario',
-    prompt: 'یکی از اعضای تیم از حجم کاری بالا گله‌مند است و احساس فرسودگی می‌کند. واکنش موثر چیست؟',
+    prompt:
+      'یکی از اعضای تیم از حجم کاری بالا گله‌مند است و احساس فرسودگی می‌کند. واکنش موثر چیست؟',
     options: [
       { id: 'po-4', text: 'شنیدن متمرکز دغدغه‌ها و بازنگری اولویت‌ها و توزیع کار با همکاری تیم.' },
       { id: 'po-5', text: 'توصیه به سکوت و تحمل شرایط کاری تا پایان ماه.' },
@@ -53,7 +54,10 @@ export const PLACEMENT_QUESTIONS: Question[] = [
     kind: 'scenario',
     prompt: 'مدیر شما بازخوردی تند و با لحن انتقادی ارائه می‌دهد. پاسخ سنجیده چیست؟',
     options: [
-      { id: 'po-9', text: 'تمرکز بر هسته فنی بازخورد، تفکیک هیجان کلام از نکات قابل بهبود و طرح سوالات شفاف‌ساز.' },
+      {
+        id: 'po-9',
+        text: 'تمرکز بر هسته فنی بازخورد، تفکیک هیجان کلام از نکات قابل بهبود و طرح سوالات شفاف‌ساز.',
+      },
       { id: 'po-10', text: 'ترک فوری جلسه و پاسخ با ایمیل پرخاشگرانه.' },
     ],
     correctIds: ['po-9'],
@@ -63,7 +67,8 @@ export const PLACEMENT_QUESTIONS: Question[] = [
   {
     id: 'pq-5',
     kind: 'true_false',
-    prompt: 'تفکر سیستمی یعنی دیدن کل فرآیند و روابط علت و معلولی چرخه، به جای بررسی جداگانه تک‌تک اجزا.',
+    prompt:
+      'تفکر سیستمی یعنی دیدن کل فرآیند و روابط علت و معلولی چرخه، به جای بررسی جداگانه تک‌تک اجزا.',
     options: [
       { id: 'po-11', text: 'درست' },
       { id: 'po-12', text: 'نادرست' },
@@ -87,7 +92,8 @@ export const PLACEMENT_QUESTIONS: Question[] = [
   {
     id: 'pq-7',
     kind: 'scenario',
-    prompt: 'در جلسه تصمیم‌گیری، دو نفر از همکاران ارشد دچار اختلاف دیدگاه جدی شده‌اند. نقش شما چیست؟',
+    prompt:
+      'در جلسه تصمیم‌گیری، دو نفر از همکاران ارشد دچار اختلاف دیدگاه جدی شده‌اند. نقش شما چیست؟',
     options: [
       { id: 'po-15', text: 'بازگرداندن گفتگو به هدف مشترک سازمانی و داده‌های سنجش‌پذیر.' },
       { id: 'po-16', text: 'طرفداری کامل از یک نفر برای پایان سریع جلسه.' },
@@ -113,84 +119,90 @@ export const PLACEMENT_QUESTIONS: Question[] = [
 export const placementApi = {
   // TODO(backend): GET /api/v1/placement/questions
   async start(): Promise<{ questions: Question[] }> {
-    return mockRequest(() => {
-      return { questions: PLACEMENT_QUESTIONS };
-    }, { endpoint: '/api/v1/placement/questions' });
+    return mockRequest(
+      () => {
+        return { questions: PLACEMENT_QUESTIONS };
+      },
+      { endpoint: '/api/v1/placement/questions' }
+    );
   },
 
   // TODO(backend): POST /api/v1/placement/submit
   async submit(answers: Record<string, string>): Promise<PlacementTestResult> {
-    return mockRequest(() => {
-      let totalWeight = 0;
-      let scoreWeight = 0;
+    return mockRequest(
+      () => {
+        let totalWeight = 0;
+        let scoreWeight = 0;
 
-      PLACEMENT_QUESTIONS.forEach((q) => {
-        const w = q.weight || 1;
-        totalWeight += w;
-        const ans = answers[q.id];
-        if (ans && q.correctIds.includes(ans)) {
-          scoreWeight += w;
+        PLACEMENT_QUESTIONS.forEach((q) => {
+          const w = q.weight || 1;
+          totalWeight += w;
+          const ans = answers[q.id];
+          if (ans && q.correctIds.includes(ans)) {
+            scoreWeight += w;
+          }
+        });
+
+        const scorePct = Math.round((scoreWeight / totalWeight) * 100);
+        let suggestedLevel: Level = 1;
+        let confidence = 0.82;
+        let reasons: string[] = [];
+
+        if (scorePct >= 85) {
+          suggestedLevel = 4;
+          confidence = 0.94;
+          reasons = [
+            'تسلط عالی در سناریوهای حل تعارض و هدایت تیم',
+            'درک عمیق تفکر سیستمی و مدیریت زمان پیشرفته',
+            'نگاه راهبردی به استانداردهای ارتباطی و فرهنگ ایمنی',
+          ];
+        } else if (scorePct >= 65) {
+          suggestedLevel = 3;
+          confidence = 0.88;
+          reasons = [
+            'عملکرد قوی در تفکیک فوریت از اهمیت در محیط کاری',
+            'توانایی مناسب در مدیریت بازخورد و تعاملات سازمانی',
+            'آمادگی برای ورود مستقیم به پروژه‌های کاربردی سطح ماهر',
+          ];
+        } else if (scorePct >= 40) {
+          suggestedLevel = 2;
+          confidence = 0.85;
+          reasons = [
+            'آشنایی مطلوب با پایه‌های ارتباطات اثربخش',
+            'نیاز به تثبیت الگوهای تفکر سیستمی در عمل',
+            'مسیر مشخص برای پیشرفت سریع در واحدهای بنیادین',
+          ];
+        } else {
+          suggestedLevel = 1;
+          confidence = 0.8;
+          reasons = [
+            'بهترین نقطه برای پایه‌ریزی اصول اولیه شایستگی',
+            'شروع آرام و لذت‌بخش با گرابایت‌های بنیادین',
+            'یادگیری گام‌به‌گام مفاهیم پایه‌ای کار تیمی',
+          ];
         }
-      });
 
-      const scorePct = Math.round((scoreWeight / totalWeight) * 100);
-      let suggestedLevel: Level = 1;
-      let confidence = 0.82;
-      let reasons: string[] = [];
-
-      if (scorePct >= 85) {
-        suggestedLevel = 4;
-        confidence = 0.94;
-        reasons = [
-          'تسلط عالی در سناریوهای حل تعارض و هدایت تیم',
-          'درک عمیق تفکر سیستمی و مدیریت زمان پیشرفته',
-          'نگاه راهبردی به استانداردهای ارتباطی و فرهنگ ایمنی',
-        ];
-      } else if (scorePct >= 65) {
-        suggestedLevel = 3;
-        confidence = 0.88;
-        reasons = [
-          'عملکرد قوی در تفکیک فوریت از اهمیت در محیط کاری',
-          'توانایی مناسب در مدیریت بازخورد و تعاملات سازمانی',
-          'آمادگی برای ورود مستقیم به پروژه‌های کاربردی سطح ماهر',
-        ];
-      } else if (scorePct >= 40) {
-        suggestedLevel = 2;
-        confidence = 0.85;
-        reasons = [
-          'آشنایی مطلوب با پایه‌های ارتباطات اثربخش',
-          'نیاز به تثبیت الگوهای تفکر سیستمی در عمل',
-          'مسیر مشخص برای پیشرفت سریع در واحدهای بنیادین',
-        ];
-      } else {
-        suggestedLevel = 1;
-        confidence = 0.8;
-        reasons = [
-          'بهترین نقطه برای پایه‌ریزی اصول اولیه شایستگی',
-          'شروع آرام و لذت‌بخش با گرابایت‌های بنیادین',
-          'یادگیری گام‌به‌گام مفاهیم پایه‌ای کار تیمی',
-        ];
-      }
-
-      const user = getStoredUser();
-      const updatedUser = {
-        ...user,
-        level: suggestedLevel,
-        levelSource: 'placement_test' as const,
-        aiSuggestedLevel: {
+        const user = getStoredUser();
+        const updatedUser = {
+          ...user,
           level: suggestedLevel,
-          reasons,
-          confidence,
-        },
-      };
-      setStoredUser(updatedUser);
+          levelSource: 'placement_test' as const,
+          aiSuggestedLevel: {
+            level: suggestedLevel,
+            reasons,
+            confidence,
+          },
+        };
+        setStoredUser(updatedUser);
 
-      return {
-        suggestedLevel,
-        confidence,
-        reasons,
-        scorePct,
-      };
-    }, { endpoint: '/api/v1/placement/submit' });
+        return {
+          suggestedLevel,
+          confidence,
+          reasons,
+          scorePct,
+        };
+      },
+      { endpoint: '/api/v1/placement/submit' }
+    );
   },
 };

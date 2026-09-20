@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp, Search, BookOpen, ShieldCheck, Award, Zap } from 'lucide-react';
+import {
+  HelpCircle,
+  ChevronDown,
+  ChevronUp,
+  Search,
+  BookOpen,
+  ShieldCheck,
+  Award,
+  Zap,
+} from 'lucide-react';
 import { toFa } from '../../lib/format';
 
 interface FaqItem {
@@ -54,7 +63,9 @@ export const FaqScreen: React.FC = () => {
   const filteredFaqs = FAQ_DATA.filter((item) => {
     const matchesCat = activeCategory === 'all' || item.category === activeCategory;
     const matchesSearch =
-      !search || item.q.toLowerCase().includes(search.toLowerCase()) || item.a.toLowerCase().includes(search.toLowerCase());
+      !search ||
+      item.q.toLowerCase().includes(search.toLowerCase()) ||
+      item.a.toLowerCase().includes(search.toLowerCase());
     return matchesCat && matchesSearch;
   });
 
@@ -66,7 +77,9 @@ export const FaqScreen: React.FC = () => {
           <HelpCircle className="w-6 h-6" />
         </div>
         <h1 className="text-headline font-black text-ink">پرسش‌های متداول</h1>
-        <p className="text-body text-ink/70 mt-1">پاسخ به سوالات پرتکرار یادگیرندگان و مدیران سازمانی گرابایت</p>
+        <p className="text-body text-ink/70 mt-1">
+          پاسخ به سوالات پرتکرار یادگیرندگان و مدیران سازمانی گرابایت
+        </p>
       </div>
 
       {/* Search */}

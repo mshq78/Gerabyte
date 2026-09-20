@@ -9,7 +9,8 @@ export const AdminDashboardScreen: React.FC = () => {
       </div>
       <h2 className="text-headline font-black text-ink mb-2">پنل تیم گرا</h2>
       <p className="text-body text-ink/70 max-w-md">
-        این بخش برای تیم توسعه محتوا، پشتیبانی و مدیران ارشد پردیس نوآوری گرا طراحی شده است و به‌زودی فعال خواهد شد.
+        این بخش برای تیم توسعه محتوا، پشتیبانی و مدیران ارشد پردیس نوآوری گرا طراحی شده است و
+        به‌زودی فعال خواهد شد.
       </p>
     </div>
   );

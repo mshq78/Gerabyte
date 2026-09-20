@@ -54,7 +54,9 @@ export const Sheet: React.FC<SheetProps> = ({
             initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { y: '100%' }}
             animate={{ y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { y: '100%' }}
-            transition={shouldReduceMotion ? { duration: 0 } : { type: 'spring', damping: 28, stiffness: 280 }}
+            transition={
+              shouldReduceMotion ? { duration: 0 } : { type: 'spring', damping: 28, stiffness: 280 }
+            }
             role="dialog"
             aria-modal="true"
           >
@@ -67,7 +69,9 @@ export const Sheet: React.FC<SheetProps> = ({
             {(title || subtitle) && (
               <div className="px-5 py-3 border-b border-sunken flex items-center justify-between shrink-0">
                 <div>
-                  {title && <h3 className="font-bold text-title text-ink leading-tight">{title}</h3>}
+                  {title && (
+                    <h3 className="font-bold text-title text-ink leading-tight">{title}</h3>
+                  )}
                   {subtitle && <p className="text-meta text-ink/70 mt-0.5">{subtitle}</p>}
                 </div>
                 <button
@@ -81,9 +85,7 @@ export const Sheet: React.FC<SheetProps> = ({
             )}
 
             {/* Content area */}
-            <div className="px-5 py-4 overflow-y-auto overscroll-contain flex-1">
-              {children}
-            </div>
+            <div className="px-5 py-4 overflow-y-auto overscroll-contain flex-1">{children}</div>
           </motion.div>
         </div>
       )}

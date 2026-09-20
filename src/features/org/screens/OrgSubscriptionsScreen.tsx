@@ -67,7 +67,8 @@ export const OrgSubscriptionsScreen: React.FC = () => {
         </div>
         <h2 className="text-title font-black text-ink">دسترسی محدود به مدیر کل سازمان</h2>
         <p className="text-body text-ink/70">
-          مشاهده اطلاعات مالی، سهمیه‌ها و صدور درخواست تمدید اشتراک‌های سازمانی تنها در اختیار مدیر کل سازمان است.
+          مشاهده اطلاعات مالی، سهمیه‌ها و صدور درخواست تمدید اشتراک‌های سازمانی تنها در اختیار مدیر
+          کل سازمان است.
         </p>
       </div>
     );
@@ -100,7 +101,11 @@ export const OrgSubscriptionsScreen: React.FC = () => {
   };
 
   if (loading || !summary) {
-    return <div className="text-center py-20 text-ink/60 font-bold text-body">در حال بارگذاری وضعیت اشتراک‌ها...</div>;
+    return (
+      <div className="text-center py-20 text-ink/60 font-bold text-body">
+        در حال بارگذاری وضعیت اشتراک‌ها...
+      </div>
+    );
   }
 
   // Calculate stacked byte row percentages
@@ -117,7 +122,9 @@ export const OrgSubscriptionsScreen: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <CreditCard className="w-7 h-7 text-primary" />
-            <h1 className="text-display font-black text-ink">مدیریت سهمیه‌ها و اشتراک‌های سازمانی</h1>
+            <h1 className="text-display font-black text-ink">
+              مدیریت سهمیه‌ها و اشتراک‌های سازمانی
+            </h1>
           </div>
           <p className="text-body text-ink/70 mt-1">
             پایش وضعیت سهمیه‌های فعال، پیش‌بینی تاریخ‌های انقضا، نرخ وفاداری و تمدید شخصی کارکنان
@@ -220,8 +227,8 @@ export const OrgSubscriptionsScreen: React.FC = () => {
             </div>
             <div className="text-body text-ink/90 font-bold leading-relaxed">
               «از ۵۰۰ نفری که اشتراک سازمانی‌شان تمام شد،{' '}
-              <strong className="text-success">{toFa(summary.convertedPersonal)} نفر</strong> خودشان به‌صورت شخصی
-              تمدید کردند.»
+              <strong className="text-success">{toFa(summary.convertedPersonal)} نفر</strong> خودشان
+              به‌صورت شخصی تمدید کردند.»
             </div>
           </div>
           <p className="text-meta text-ink/50 pt-2 border-t border-success/20">
@@ -269,7 +276,8 @@ export const OrgSubscriptionsScreen: React.FC = () => {
               <span>همکاران در آستانه انقضای اشتراک (کمتر از ۱۴ روز)</span>
             </h3>
             <p className="text-meta text-ink/60 mt-0.5">
-              امکان ارسال پیامک یادآوری تمدید سازمانی با رعایت سقف مجاز (حداکثر ۱ بار در روز برای هر فرد)
+              امکان ارسال پیامک یادآوری تمدید سازمانی با رعایت سقف مجاز (حداکثر ۱ بار در روز برای هر
+              فرد)
             </p>
           </div>
         </div>
@@ -302,7 +310,8 @@ export const OrgSubscriptionsScreen: React.FC = () => {
                   <td className="p-3">
                     {member.remindersCountToday >= 1 ? (
                       <span className="text-meta text-success font-bold flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> ارسال شده ({member.lastReminderSentAt || 'امروز'})
+                        <CheckCircle2 className="w-3.5 h-3.5" /> ارسال شده (
+                        {member.lastReminderSentAt || 'امروز'})
                       </span>
                     ) : (
                       <span className="text-meta text-ink/50">ارسال نشده</span>
@@ -351,7 +360,9 @@ export const OrgSubscriptionsScreen: React.FC = () => {
                 <tr key={req.id} className="hover:bg-canvas">
                   <td className="p-3 font-mono font-bold text-ink">{req.id}</td>
                   <td className="p-3 font-mono">{toFa(req.requestedAt)}</td>
-                  <td className="p-3 font-mono text-primary font-bold">{toFa(req.seatsCount)} سهمیه</td>
+                  <td className="p-3 font-mono text-primary font-bold">
+                    {toFa(req.seatsCount)} سهمیه
+                  </td>
                   <td className="p-3">{toFa(req.durationMonths)} ماهه</td>
                   <td className="p-3 text-ink/80">{req.requestedByName}</td>
                   <td className="p-3">
@@ -360,15 +371,15 @@ export const OrgSubscriptionsScreen: React.FC = () => {
                         req.status === 'approved'
                           ? 'bg-domain-3-tint text-success'
                           : req.status === 'invoiced'
-                          ? 'bg-domain-1-tint text-primary'
-                          : 'bg-domain-5-tint text-coin'
+                            ? 'bg-domain-1-tint text-primary'
+                            : 'bg-domain-5-tint text-coin'
                       }`}
                     >
                       {req.status === 'approved'
                         ? 'تأیید و فعال‌شده'
                         : req.status === 'invoiced'
-                        ? 'پیش‌فاکتور صادرشده'
-                        : 'در حال بررسی توسط گرا'}
+                          ? 'پیش‌فاکتور صادرشده'
+                          : 'در حال بررسی توسط گرا'}
                     </span>
                   </td>
                 </tr>
@@ -394,7 +405,9 @@ export const OrgSubscriptionsScreen: React.FC = () => {
 
             <form onSubmit={handleCreateRenewalRequest} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1.5">تعداد سهمیه مورد نیاز:</label>
+                <label className="block text-meta font-bold text-ink mb-1.5">
+                  تعداد سهمیه مورد نیاز:
+                </label>
                 <select
                   value={renewalSeats}
                   onChange={(e) => setRenewalSeats(Number(e.target.value))}
@@ -424,7 +437,8 @@ export const OrgSubscriptionsScreen: React.FC = () => {
               <div className="p-3.5 rounded-tile bg-paper border border-sunken text-meta text-ink/80 flex items-start gap-2">
                 <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <span>
-                  پس از ثبت، کارشناس سازمانی گرا ظرف ۲ ساعت کاری جهت هماهنگی و صدور پیش‌فاکتور با شما تماس خواهد گرفت.
+                  پس از ثبت، کارشناس سازمانی گرا ظرف ۲ ساعت کاری جهت هماهنگی و صدور پیش‌فاکتور با
+                  شما تماس خواهد گرفت.
                 </span>
               </div>
 

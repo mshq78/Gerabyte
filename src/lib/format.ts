@@ -22,10 +22,34 @@ export const LEAGUE_TIER_INFO: Record<
   { title: string; enTitle: string; color: string; borderTone: string; order: number }
 > = {
   byte: { title: 'لیگ بایت', enTitle: 'Byte', color: '#1E6FA8', borderTone: '#EAF3F9', order: 1 },
-  kilobyte: { title: 'لیگ کیلوبایت', enTitle: 'Kilobyte', color: '#1F9A8A', borderTone: '#EDF8F6', order: 2 },
-  megabyte: { title: 'لیگ مگابایت', enTitle: 'Megabyte', color: '#7A5BD6', borderTone: '#F2EFFF', order: 3 },
-  gigabyte: { title: 'لیگ گیگابایت', enTitle: 'Gigabyte', color: '#F2A93B', borderTone: '#FEF6EC', order: 4 },
-  terabyte: { title: 'لیگ ترابایت', enTitle: 'Terabyte', color: '#E2665A', borderTone: '#FDF2F0', order: 5 },
+  kilobyte: {
+    title: 'لیگ کیلوبایت',
+    enTitle: 'Kilobyte',
+    color: '#1F9A8A',
+    borderTone: '#EDF8F6',
+    order: 2,
+  },
+  megabyte: {
+    title: 'لیگ مگابایت',
+    enTitle: 'Megabyte',
+    color: '#7A5BD6',
+    borderTone: '#F2EFFF',
+    order: 3,
+  },
+  gigabyte: {
+    title: 'لیگ گیگابایت',
+    enTitle: 'Gigabyte',
+    color: '#F2A93B',
+    borderTone: '#FEF6EC',
+    order: 4,
+  },
+  terabyte: {
+    title: 'لیگ ترابایت',
+    enTitle: 'Terabyte',
+    color: '#E2665A',
+    borderTone: '#FDF2F0',
+    order: 5,
+  },
 };
 
 export const CARD_TYPE_NAMES: Record<string, string> = {

@@ -8,12 +8,11 @@ const ScopeContext = createContext<ScopeContextType | null>(null);
 export const ScopeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { user } = useApp();
   const [units, setUnits] = useState<OrgUnit[]>([]);
-  
+
   // Default role: if user has roles, use the highest org role, otherwise default to org_admin for full dashboard exploration
-  const initialRole: OrgRole =
-    user.roles?.includes('org_admin')
-      ? 'org_admin'
-      : user.roles?.includes('unit_manager')
+  const initialRole: OrgRole = user.roles?.includes('org_admin')
+    ? 'org_admin'
+    : user.roles?.includes('unit_manager')
       ? 'unit_manager'
       : 'org_admin';
 

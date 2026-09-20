@@ -77,7 +77,8 @@ export const OrgSettingsScreen: React.FC = () => {
         </div>
         <h2 className="text-title font-black text-ink">دسترسی محدود به مدیر کل سازمان</h2>
         <p className="text-body text-ink/70">
-          ویرایش مشخصات سازمان، ویرایش درخت سلسله‌مراتب و تعیین خط‌مشی‌ها تنها توسط مدیر کل مجاز است.
+          ویرایش مشخصات سازمان، ویرایش درخت سلسله‌مراتب و تعیین خط‌مشی‌ها تنها توسط مدیر کل مجاز
+          است.
         </p>
       </div>
     );
@@ -156,14 +157,15 @@ export const OrgSettingsScreen: React.FC = () => {
 
   // Supervisors and above for manager picker
   const eligibleManagers = members.filter(
-    (m) =>
-      m.rank === 'supervisor' ||
-      m.rank === 'middle_manager' ||
-      m.rank === 'senior_manager'
+    (m) => m.rank === 'supervisor' || m.rank === 'middle_manager' || m.rank === 'senior_manager'
   );
 
   if (loading || !profile || !reminderPolicy) {
-    return <div className="text-center py-20 text-body font-bold text-ink/60">در حال بارگذاری تنظیمات سازمان...</div>;
+    return (
+      <div className="text-center py-20 text-body font-bold text-ink/60">
+        در حال بارگذاری تنظیمات سازمان...
+      </div>
+    );
   }
 
   return (
@@ -232,7 +234,8 @@ export const OrgSettingsScreen: React.FC = () => {
               <span>ساختار درختی و سلسله‌مراتب سازمانی</span>
             </h2>
             <p className="text-meta text-ink/60 mt-0.5">
-              امکان ایجاد زیرمجموعه، تغییر نام، جابجایی والد (با پیشگیری هوشمند از چرخه‌های تودرتو) و انتصاب مدیران
+              امکان ایجاد زیرمجموعه، تغییر نام، جابجایی والد (با پیشگیری هوشمند از چرخه‌های تودرتو)
+              و انتصاب مدیران
             </p>
           </div>
 
@@ -265,9 +268,7 @@ export const OrgSettingsScreen: React.FC = () => {
                     <span className="font-mono text-meta text-ink/50">[{unit.code}]</span>
                     <strong className="text-body text-ink font-black">{unit.name}</strong>
                     {parent && (
-                      <span className="text-meta text-ink/50">
-                        (زیرمجموعه: {parent.name})
-                      </span>
+                      <span className="text-meta text-ink/50">(زیرمجموعه: {parent.name})</span>
                     )}
                   </div>
                   <div className="text-meta text-ink/70 flex items-center gap-3">
@@ -374,7 +375,9 @@ export const OrgSettingsScreen: React.FC = () => {
                     org_admin
                   </span>
                 </td>
-                <td className="p-3 text-ink/70">مدیر کل (دسترسی به تمام واحدها، سهمیه‌ها و تنظیمات)</td>
+                <td className="p-3 text-ink/70">
+                  مدیر کل (دسترسی به تمام واحدها، سهمیه‌ها و تنظیمات)
+                </td>
               </tr>
               {units
                 .filter((u) => u.managerName && u.managerName !== 'تعیین نشده')
@@ -387,7 +390,9 @@ export const OrgSettingsScreen: React.FC = () => {
                         unit_manager
                       </span>
                     </td>
-                    <td className="p-3 text-ink/70">مدیریت اعضا، تکالیف و گواهینامه‌های زیرشاخه {u.name}</td>
+                    <td className="p-3 text-ink/70">
+                      مدیریت اعضا، تکالیف و گواهینامه‌های زیرشاخه {u.name}
+                    </td>
                   </tr>
                 ))}
             </tbody>
@@ -399,12 +404,14 @@ export const OrgSettingsScreen: React.FC = () => {
       <section className="p-6 rounded-sheet bg-surface border border-sunken shadow-xs space-y-4">
         <div className="flex items-center gap-2 text-primary">
           <Shield className="w-6 h-6" />
-          <h2 className="text-title font-black text-ink">چه چیزی برای مدیران قابل مشاهده است؟ (منشور شفافیت)</h2>
+          <h2 className="text-title font-black text-ink">
+            چه چیزی برای مدیران قابل مشاهده است؟ (منشور شفافیت)
+          </h2>
         </div>
 
         <p className="text-body text-ink/80 leading-relaxed">
-          گرابایت داده‌های مربوط به دوره‌ها و تکالیف سازمانی را به مدیران گزارش می‌دهد، اما اطلاعات شخصی و مستقل
-          یادگیرندگان را کاملاً محرمانه نگه می‌دارد:
+          گرابایت داده‌های مربوط به دوره‌ها و تکالیف سازمانی را به مدیران گزارش می‌دهد، اما اطلاعات
+          شخصی و مستقل یادگیرندگان را کاملاً محرمانه نگه می‌دارد:
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-meta">
@@ -418,7 +425,9 @@ export const OrgSettingsScreen: React.FC = () => {
           </div>
 
           <div className="p-4 rounded-tile bg-domain-2-tint/30 border border-danger/30 space-y-2">
-            <strong className="text-danger block text-body">اطلاعات محرمانه و غیرقابل مشاهده:</strong>
+            <strong className="text-danger block text-body">
+              اطلاعات محرمانه و غیرقابل مشاهده:
+            </strong>
             <ul className="space-y-1 text-ink/80 list-disc pr-4">
               <li>گرابایت‌ها، کتاب‌ها و حوزه‌های اختیاری شخصی</li>
               <li>موجودی سکه‌ها، پاداش‌ها و خریدهای فردی</li>
@@ -481,7 +490,9 @@ export const OrgSettingsScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">موقعیت در درخت (واحد والد):</label>
+                <label className="block text-meta font-bold text-ink mb-1">
+                  موقعیت در درخت (واحد والد):
+                </label>
                 <select
                   value={newUnitParentId || ''}
                   onChange={(e) => setNewUnitParentId(e.target.value || null)}
@@ -557,10 +568,14 @@ export const OrgSettingsScreen: React.FC = () => {
       {showMoveModal && selectedUnit && (
         <div className="fixed inset-0 z-50 bg-ink/50 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="w-full max-w-md p-6 rounded-sheet bg-surface border border-sunken shadow-xl space-y-4">
-            <h3 className="text-title font-black text-ink">انتقال واحد «{selectedUnit.name}» در درخت</h3>
+            <h3 className="text-title font-black text-ink">
+              انتقال واحد «{selectedUnit.name}» در درخت
+            </h3>
             <form onSubmit={handleMoveUnit} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">انتخاب واحد والد جدید:</label>
+                <label className="block text-meta font-bold text-ink mb-1">
+                  انتخاب واحد والد جدید:
+                </label>
                 <select
                   value={targetParentId || ''}
                   onChange={(e) => setTargetParentId(e.target.value || null)}
@@ -601,10 +616,14 @@ export const OrgSettingsScreen: React.FC = () => {
       {showAssignManagerModal && selectedUnit && (
         <div className="fixed inset-0 z-50 bg-ink/50 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="w-full max-w-md p-6 rounded-sheet bg-surface border border-sunken shadow-xl space-y-4">
-            <h3 className="text-title font-black text-ink">انتصاب مدیر برای «{selectedUnit.name}»</h3>
+            <h3 className="text-title font-black text-ink">
+              انتصاب مدیر برای «{selectedUnit.name}»
+            </h3>
             <form onSubmit={handleAssignManager} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">انتخاب از میان سرپرستان و مدیران:</label>
+                <label className="block text-meta font-bold text-ink mb-1">
+                  انتخاب از میان سرپرستان و مدیران:
+                </label>
                 <select
                   value={selectedManagerId}
                   onChange={(e) => setSelectedManagerId(e.target.value)}
@@ -614,7 +633,13 @@ export const OrgSettingsScreen: React.FC = () => {
                   <option value="">-- انتخاب همکار --</option>
                   {eligibleManagers.map((m) => (
                     <option key={m.id} value={m.id}>
-                      {m.fullName} ({m.rank === 'supervisor' ? 'سرپرست' : m.rank === 'middle_manager' ? 'مدیر میانی' : 'مدیر ارشد'})
+                      {m.fullName} (
+                      {m.rank === 'supervisor'
+                        ? 'سرپرست'
+                        : m.rank === 'middle_manager'
+                          ? 'مدیر میانی'
+                          : 'مدیر ارشد'}
+                      )
                     </option>
                   ))}
                 </select>
@@ -623,8 +648,8 @@ export const OrgSettingsScreen: React.FC = () => {
               <div className="p-3 rounded-tile bg-domain-1-tint/50 border border-primary/30 text-meta text-ink/80 flex items-start gap-2">
                 <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                 <span>
-                  با این انتخاب، دسترسی نقش <strong>unit_manager</strong> برای مشاهده گزارش‌ها و تکالیف زیرمجموعه این واحد به
-                  ایشان اعطا می‌گردد.
+                  با این انتخاب، دسترسی نقش <strong>unit_manager</strong> برای مشاهده گزارش‌ها و
+                  تکالیف زیرمجموعه این واحد به ایشان اعطا می‌گردد.
                 </span>
               </div>
 

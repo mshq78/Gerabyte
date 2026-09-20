@@ -37,34 +37,50 @@ const OrgPeopleScreen = React.lazy(() =>
   import('./features/org/screens/OrgPeopleScreen').then((m) => ({ default: m.OrgPeopleScreen }))
 );
 const OrgPersonDetailScreen = React.lazy(() =>
-  import('./features/org/screens/OrgPersonDetailScreen').then((m) => ({ default: m.OrgPersonDetailScreen }))
+  import('./features/org/screens/OrgPersonDetailScreen').then((m) => ({
+    default: m.OrgPersonDetailScreen,
+  }))
 );
 const OrgAssignmentsScreen = React.lazy(() =>
-  import('./features/org/screens/OrgAssignmentsScreen').then((m) => ({ default: m.OrgAssignmentsScreen }))
+  import('./features/org/screens/OrgAssignmentsScreen').then((m) => ({
+    default: m.OrgAssignmentsScreen,
+  }))
 );
 const OrgReportsScreen = React.lazy(() =>
   import('./features/org/screens/OrgReportsScreen').then((m) => ({ default: m.OrgReportsScreen }))
 );
 const OrgChallengesScreen = React.lazy(() =>
-  import('./features/org/screens/OrgChallengesScreen').then((m) => ({ default: m.OrgChallengesScreen }))
+  import('./features/org/screens/OrgChallengesScreen').then((m) => ({
+    default: m.OrgChallengesScreen,
+  }))
 );
 const OrgChallengeNewScreen = React.lazy(() =>
-  import('./features/org/screens/OrgChallengeNewScreen').then((m) => ({ default: m.OrgChallengeNewScreen }))
+  import('./features/org/screens/OrgChallengeNewScreen').then((m) => ({
+    default: m.OrgChallengeNewScreen,
+  }))
 );
 const OrgChallengeDetailScreen = React.lazy(() =>
-  import('./features/org/screens/OrgChallengeDetailScreen').then((m) => ({ default: m.OrgChallengeDetailScreen }))
+  import('./features/org/screens/OrgChallengeDetailScreen').then((m) => ({
+    default: m.OrgChallengeDetailScreen,
+  }))
 );
 const OrgImportScreen = React.lazy(() =>
   import('./features/org/screens/OrgImportScreen').then((m) => ({ default: m.OrgImportScreen }))
 );
 const OrgSubscriptionsScreen = React.lazy(() =>
-  import('./features/org/screens/OrgSubscriptionsScreen').then((m) => ({ default: m.OrgSubscriptionsScreen }))
+  import('./features/org/screens/OrgSubscriptionsScreen').then((m) => ({
+    default: m.OrgSubscriptionsScreen,
+  }))
 );
 const OrgCertificatesScreen = React.lazy(() =>
-  import('./features/org/screens/OrgCertificatesScreen').then((m) => ({ default: m.OrgCertificatesScreen }))
+  import('./features/org/screens/OrgCertificatesScreen').then((m) => ({
+    default: m.OrgCertificatesScreen,
+  }))
 );
 const OrgEffectivenessScreen = React.lazy(() =>
-  import('./features/org/screens/OrgEffectivenessScreen').then((m) => ({ default: m.OrgEffectivenessScreen }))
+  import('./features/org/screens/OrgEffectivenessScreen').then((m) => ({
+    default: m.OrgEffectivenessScreen,
+  }))
 );
 const OrgSettingsScreen = React.lazy(() =>
   import('./features/org/screens/OrgSettingsScreen').then((m) => ({ default: m.OrgSettingsScreen }))

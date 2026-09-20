@@ -370,13 +370,32 @@ export function getMockOrgMembers(): OrgMember[] {
     const isAtRisk = index === 8 || index === 13 || index === 17;
     const isInactive = index === 19;
 
-    const streakDays = isInactive ? 0 : isAtRisk ? Math.floor(prng() * 2) : Math.floor(prng() * 18) + 3;
-    const xpTotal = isInactive ? 60 : isHighPerformer ? 800 + Math.floor(prng() * 600) : 250 + Math.floor(prng() * 450);
-    const completedLessonsCount = isInactive ? 2 : isHighPerformer ? 16 + Math.floor(prng() * 8) : 6 + Math.floor(prng() * 10);
+    const streakDays = isInactive
+      ? 0
+      : isAtRisk
+        ? Math.floor(prng() * 2)
+        : Math.floor(prng() * 18) + 3;
+    const xpTotal = isInactive
+      ? 60
+      : isHighPerformer
+        ? 800 + Math.floor(prng() * 600)
+        : 250 + Math.floor(prng() * 450);
+    const completedLessonsCount = isInactive
+      ? 2
+      : isHighPerformer
+        ? 16 + Math.floor(prng() * 8)
+        : 6 + Math.floor(prng() * 10);
     const totalAssignedLessons = 24;
-    const complianceRate = Math.min(100, Math.round((completedLessonsCount / totalAssignedLessons) * 100));
+    const complianceRate = Math.min(
+      100,
+      Math.round((completedLessonsCount / totalAssignedLessons) * 100)
+    );
 
-    const status: 'active' | 'inactive' | 'at_risk' = isInactive ? 'inactive' : isAtRisk ? 'at_risk' : 'active';
+    const status: 'active' | 'inactive' | 'at_risk' = isInactive
+      ? 'inactive'
+      : isAtRisk
+        ? 'at_risk'
+        : 'active';
     const certificatesCount = isHighPerformer ? 2 : completedLessonsCount >= 12 ? 1 : 0;
 
     return {
@@ -486,7 +505,8 @@ export function getMockOrgKpis(unitId: string | 'all' = 'all'): OrgKpiSummary {
 
   const totalCompletedLessons = filtered.reduce((acc, m) => acc + m.completedLessonsCount, 0);
   const totalAssigned = filtered.reduce((acc, m) => acc + m.totalAssignedLessons, 0);
-  const complianceRate = totalAssigned > 0 ? Math.round((totalCompletedLessons / totalAssigned) * 100) : 0;
+  const complianceRate =
+    totalAssigned > 0 ? Math.round((totalCompletedLessons / totalAssigned) * 100) : 0;
 
   const totalStreak = filtered.reduce((acc, m) => acc + m.streakDays, 0);
   const avgStreakDays = totalMembers > 0 ? Number((totalStreak / totalMembers).toFixed(1)) : 0;
@@ -502,28 +522,122 @@ export function getMockOrgKpis(unitId: string | 'all' = 'all'): OrgKpiSummary {
     totalCertificatesEarned: totalCerts,
     atRiskLearnersCount,
     weeklyTrend: [
-      { dayName: 'شنبه', completedLessons: Math.round(totalMembers * 0.72), activeLearners: Math.round(totalMembers * 0.8) },
-      { dayName: 'یکشنبه', completedLessons: Math.round(totalMembers * 0.85), activeLearners: Math.round(totalMembers * 0.88) },
-      { dayName: 'دوشنبه', completedLessons: Math.round(totalMembers * 0.9), activeLearners: Math.round(totalMembers * 0.92) },
-      { dayName: 'سه‌شنبه', completedLessons: Math.round(totalMembers * 0.78), activeLearners: Math.round(totalMembers * 0.82) },
-      { dayName: 'چهارشنبه', completedLessons: Math.round(totalMembers * 0.82), activeLearners: Math.round(totalMembers * 0.85) },
-      { dayName: 'پنج‌شنبه', completedLessons: Math.round(totalMembers * 0.55), activeLearners: Math.round(totalMembers * 0.6) },
-      { dayName: 'جمعه', completedLessons: Math.round(totalMembers * 0.42), activeLearners: Math.round(totalMembers * 0.45) },
+      {
+        dayName: 'شنبه',
+        completedLessons: Math.round(totalMembers * 0.72),
+        activeLearners: Math.round(totalMembers * 0.8),
+      },
+      {
+        dayName: 'یکشنبه',
+        completedLessons: Math.round(totalMembers * 0.85),
+        activeLearners: Math.round(totalMembers * 0.88),
+      },
+      {
+        dayName: 'دوشنبه',
+        completedLessons: Math.round(totalMembers * 0.9),
+        activeLearners: Math.round(totalMembers * 0.92),
+      },
+      {
+        dayName: 'سه‌شنبه',
+        completedLessons: Math.round(totalMembers * 0.78),
+        activeLearners: Math.round(totalMembers * 0.82),
+      },
+      {
+        dayName: 'چهارشنبه',
+        completedLessons: Math.round(totalMembers * 0.82),
+        activeLearners: Math.round(totalMembers * 0.85),
+      },
+      {
+        dayName: 'پنج‌شنبه',
+        completedLessons: Math.round(totalMembers * 0.55),
+        activeLearners: Math.round(totalMembers * 0.6),
+      },
+      {
+        dayName: 'جمعه',
+        completedLessons: Math.round(totalMembers * 0.42),
+        activeLearners: Math.round(totalMembers * 0.45),
+      },
     ],
     domainStats: [
-      { domainId: 'domain-1', domainTitle: 'شایستگی‌های فردی و سازمانی', avgScore: 82, completionRate: 84, colorToken: '#1E6FA8' },
-      { domainId: 'domain-2', domainTitle: 'خانواده و تعادل کار و زندگی', avgScore: 76, completionRate: 71, colorToken: '#E2665A' },
-      { domainId: 'domain-3', domainTitle: 'اخلاق حرفه‌ای و تعهد کاری', avgScore: 89, completionRate: 88, colorToken: '#1F9A8A' },
-      { domainId: 'domain-4', domainTitle: 'توسعه فردی و خودرهبری', avgScore: 78, completionRate: 75, colorToken: '#7A5BD6' },
-      { domainId: 'domain-5', domainTitle: 'فرهنگ ایمنی و سلامت کار', avgScore: 91, completionRate: 93, colorToken: '#E58A1F' },
+      {
+        domainId: 'domain-1',
+        domainTitle: 'شایستگی‌های فردی و سازمانی',
+        avgScore: 82,
+        completionRate: 84,
+        colorToken: '#1E6FA8',
+      },
+      {
+        domainId: 'domain-2',
+        domainTitle: 'خانواده و تعادل کار و زندگی',
+        avgScore: 76,
+        completionRate: 71,
+        colorToken: '#E2665A',
+      },
+      {
+        domainId: 'domain-3',
+        domainTitle: 'اخلاق حرفه‌ای و تعهد کاری',
+        avgScore: 89,
+        completionRate: 88,
+        colorToken: '#1F9A8A',
+      },
+      {
+        domainId: 'domain-4',
+        domainTitle: 'توسعه فردی و خودرهبری',
+        avgScore: 78,
+        completionRate: 75,
+        colorToken: '#7A5BD6',
+      },
+      {
+        domainId: 'domain-5',
+        domainTitle: 'فرهنگ ایمنی و سلامت کار',
+        avgScore: 91,
+        completionRate: 93,
+        colorToken: '#E58A1F',
+      },
     ],
     unitRankings: [
-      { unitId: 'u-hse', unitName: 'واحد بهداشت و ایمنی (HSE)', memberCount: 4, completionRate: 94, avgStreak: 9.2 },
-      { unitId: 'u-lab', unitName: 'آزمایشگاه متالورژی', memberCount: 5, completionRate: 88, avgStreak: 8.4 },
-      { unitId: 'u-hr', unitName: 'منابع انسانی و آموزش', memberCount: 5, completionRate: 82, avgStreak: 7.1 },
-      { unitId: 'u-nord', unitName: 'واحد نورد گرم و مقاطع', memberCount: 8, completionRate: 79, avgStreak: 6.5 },
-      { unitId: 'u-fani', unitName: 'معاونت فنی و مهندسی', memberCount: 9, completionRate: 74, avgStreak: 5.8 },
-      { unitId: 'u-prod', unitName: 'معاونت تولید و عملیات', memberCount: 14, completionRate: 72, avgStreak: 5.2 },
+      {
+        unitId: 'u-hse',
+        unitName: 'واحد بهداشت و ایمنی (HSE)',
+        memberCount: 4,
+        completionRate: 94,
+        avgStreak: 9.2,
+      },
+      {
+        unitId: 'u-lab',
+        unitName: 'آزمایشگاه متالورژی',
+        memberCount: 5,
+        completionRate: 88,
+        avgStreak: 8.4,
+      },
+      {
+        unitId: 'u-hr',
+        unitName: 'منابع انسانی و آموزش',
+        memberCount: 5,
+        completionRate: 82,
+        avgStreak: 7.1,
+      },
+      {
+        unitId: 'u-nord',
+        unitName: 'واحد نورد گرم و مقاطع',
+        memberCount: 8,
+        completionRate: 79,
+        avgStreak: 6.5,
+      },
+      {
+        unitId: 'u-fani',
+        unitName: 'معاونت فنی و مهندسی',
+        memberCount: 9,
+        completionRate: 74,
+        avgStreak: 5.8,
+      },
+      {
+        unitId: 'u-prod',
+        unitName: 'معاونت تولید و عملیات',
+        memberCount: 14,
+        completionRate: 72,
+        avgStreak: 5.2,
+      },
     ],
   };
 }

@@ -37,9 +37,12 @@ export const pathsApi = {
 
   // TODO(backend): GET /api/v1/paths/:id
   async get(id: string): Promise<LearningPath | null> {
-    return mockRequest(() => {
-      const paths = getStoredPaths();
-      return paths.find((p) => p.id === id || p.domainId === id) || paths[0];
-    }, { endpoint: `/api/v1/paths/${id}` });
+    return mockRequest(
+      () => {
+        const paths = getStoredPaths();
+        return paths.find((p) => p.id === id || p.domainId === id) || paths[0];
+      },
+      { endpoint: `/api/v1/paths/${id}` }
+    );
   },
 };

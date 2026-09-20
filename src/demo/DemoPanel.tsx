@@ -168,9 +168,7 @@ export const DemoPanel: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <p className="text-meta text-ink/70 mt-1 leading-relaxed font-normal">
-                    {p.desc}
-                  </p>
+                  <p className="text-meta text-ink/70 mt-1 leading-relaxed font-normal">{p.desc}</p>
                 </button>
               ))}
             </div>

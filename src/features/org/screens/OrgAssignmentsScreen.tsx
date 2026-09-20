@@ -32,7 +32,9 @@ export const OrgAssignmentsScreen: React.FC = () => {
   const [newDesc, setNewDesc] = useState('');
   const [newDomainId, setNewDomainId] = useState('domain-5');
   const [newTargetType, setNewTargetType] = useState<'all' | 'unit'>('all');
-  const [newTargetId, setNewTargetId] = useState(effectiveUnitId === 'all' ? 'u-top' : effectiveUnitId);
+  const [newTargetId, setNewTargetId] = useState(
+    effectiveUnitId === 'all' ? 'u-top' : effectiveUnitId
+  );
   const [newMandatory, setNewMandatory] = useState(true);
   const [newDueDate, setNewDueDate] = useState('۱۴۰۳/۰۸/۱۵');
 
@@ -98,7 +100,8 @@ export const OrgAssignmentsScreen: React.FC = () => {
         <div>
           <h2 className="text-title font-black text-ink">مأموریت‌ها و مسیرهای یادگیری هدفمند</h2>
           <p className="text-body text-ink/70 mt-1">
-            تعریف سرفصل‌های اجباری یا اختیاری، تعیین مهلت انجام و پایش نرخ پیشرفت دوره‌ها در {currentOrg.name}
+            تعریف سرفصل‌های اجباری یا اختیاری، تعیین مهلت انجام و پایش نرخ پیشرفت دوره‌ها در{' '}
+            {currentOrg.name}
           </p>
         </div>
 
@@ -116,7 +119,9 @@ export const OrgAssignmentsScreen: React.FC = () => {
         <button
           onClick={() => setFilterStatus('all')}
           className={`min-h-[40px] px-4 py-1.5 rounded-pill text-meta font-bold transition-all cursor-pointer ${
-            filterStatus === 'all' ? 'bg-primary text-white' : 'bg-canvas text-ink/70 hover:bg-sunken'
+            filterStatus === 'all'
+              ? 'bg-primary text-white'
+              : 'bg-canvas text-ink/70 hover:bg-sunken'
           }`}
         >
           تمام دوره‌ها ({toFa(assignments.length)})
@@ -124,7 +129,9 @@ export const OrgAssignmentsScreen: React.FC = () => {
         <button
           onClick={() => setFilterStatus('active')}
           className={`min-h-[40px] px-4 py-1.5 rounded-pill text-meta font-bold transition-all cursor-pointer ${
-            filterStatus === 'active' ? 'bg-primary text-white' : 'bg-canvas text-ink/70 hover:bg-sunken'
+            filterStatus === 'active'
+              ? 'bg-primary text-white'
+              : 'bg-canvas text-ink/70 hover:bg-sunken'
           }`}
         >
           دوره‌های در جریان
@@ -133,17 +140,23 @@ export const OrgAssignmentsScreen: React.FC = () => {
 
       {/* Assignment Cards List */}
       {loading ? (
-        <div className="p-12 text-center text-ink/60 font-bold">در حال بارگذاری دوره‌های سازمان...</div>
+        <div className="p-12 text-center text-ink/60 font-bold">
+          در حال بارگذاری دوره‌های سازمان...
+        </div>
       ) : filteredAssignments.length === 0 ? (
         <div className="p-12 text-center bg-surface rounded-tile border border-sunken">
           <GraduationCap className="w-12 h-12 text-ink/30 mx-auto mb-3" />
-          <p className="text-body font-bold text-ink/70">هیچ مأموریت یادگیری فعالی تعریف نشده است.</p>
+          <p className="text-body font-bold text-ink/70">
+            هیچ مأموریت یادگیری فعالی تعریف نشده است.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredAssignments.map((asg) => {
             const progressPercent =
-              asg.totalAssigned > 0 ? Math.round((asg.completedCount / asg.totalAssigned) * 100) : 0;
+              asg.totalAssigned > 0
+                ? Math.round((asg.completedCount / asg.totalAssigned) * 100)
+                : 0;
 
             return (
               <div
@@ -220,7 +233,9 @@ export const OrgAssignmentsScreen: React.FC = () => {
 
             <form onSubmit={handleCreateAssignment} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">عنوان دوره یا مأموریت *</label>
+                <label className="block text-meta font-bold text-ink mb-1">
+                  عنوان دوره یا مأموریت *
+                </label>
                 <input
                   type="text"
                   required
@@ -232,7 +247,9 @@ export const OrgAssignmentsScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">توضیحات و اهداف یادگیری</label>
+                <label className="block text-meta font-bold text-ink mb-1">
+                  توضیحات و اهداف یادگیری
+                </label>
                 <textarea
                   rows={3}
                   value={newDesc}
@@ -243,7 +260,9 @@ export const OrgAssignmentsScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">حوزه مهارتی گرابایت</label>
+                <label className="block text-meta font-bold text-ink mb-1">
+                  حوزه مهارتی گرابایت
+                </label>
                 <select
                   value={newDomainId}
                   onChange={(e) => setNewDomainId(e.target.value)}
@@ -290,7 +309,9 @@ export const OrgAssignmentsScreen: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
-                  <label className="block text-meta font-bold text-ink mb-1">مهلت انجام (سررسید)</label>
+                  <label className="block text-meta font-bold text-ink mb-1">
+                    مهلت انجام (سررسید)
+                  </label>
                   <input
                     type="text"
                     value={newDueDate}
@@ -308,7 +329,10 @@ export const OrgAssignmentsScreen: React.FC = () => {
                     onChange={(e) => setNewMandatory(e.target.checked)}
                     className="w-5 h-5 rounded border-sunken text-primary focus:ring-primary cursor-pointer"
                   />
-                  <label htmlFor="mandatorySwitch" className="text-meta font-bold text-ink cursor-pointer">
+                  <label
+                    htmlFor="mandatorySwitch"
+                    className="text-meta font-bold text-ink cursor-pointer"
+                  >
                     الزامی برای انطباق سالانه
                   </label>
                 </div>

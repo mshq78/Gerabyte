@@ -49,7 +49,9 @@ export const VerifyCertificateScreen: React.FC = () => {
       <div className="min-h-screen bg-surface flex items-center justify-center p-6 text-ink">
         <div className="text-center space-y-3">
           <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-pill animate-spin mx-auto" />
-          <p className="text-meta font-bold">در حال استعلام اصالت گواهینامه از سامانه مرکزی گرا...</p>
+          <p className="text-meta font-bold">
+            در حال استعلام اصالت گواهینامه از سامانه مرکزی گرا...
+          </p>
         </div>
       </div>
     );
@@ -115,7 +117,8 @@ export const VerifyCertificateScreen: React.FC = () => {
 
           {!isValid && (
             <p className="text-meta text-danger leading-relaxed">
-              شماره سریال وارد شده در سامانه مرکزی گواهینامه‌های رسمی پردیس نوآوری گرا یافت نشد یا باطل شده است.
+              شماره سریال وارد شده در سامانه مرکزی گواهینامه‌های رسمی پردیس نوآوری گرا یافت نشد یا
+              باطل شده است.
             </p>
           )}
         </div>

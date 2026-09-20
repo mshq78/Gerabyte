@@ -27,7 +27,9 @@ export const HomeScreen: React.FC = () => {
       try {
         const paths = await pathsApi.list();
         const firstUnit = paths[0]?.units[0];
-        const nextAvail = firstUnit?.lessons.find((l) => l.status === 'available' || l.status === 'in_progress') || firstUnit?.lessons[0];
+        const nextAvail =
+          firstUnit?.lessons.find((l) => l.status === 'available' || l.status === 'in_progress') ||
+          firstUnit?.lessons[0];
         if (nextAvail) setNextLesson(nextAvail);
 
         const chs = await challengesApi.list();
@@ -101,9 +103,7 @@ export const HomeScreen: React.FC = () => {
             <div className="w-5 h-5 rounded-pill bg-coin flex items-center justify-center text-surface text-meta font-black">
               G
             </div>
-            <span className="font-bold text-body text-ink">
-              {toFa(user.coins)}
-            </span>
+            <span className="font-bold text-body text-ink">{toFa(user.coins)}</span>
           </button>
         </div>
       </header>
@@ -117,7 +117,8 @@ export const HomeScreen: React.FC = () => {
               تنها {toFa(subscription.remainingDays)} روز تا پایان اشتراک سازمانی
             </h4>
             <p className="text-meta text-ink/80 mt-1 leading-relaxed">
-              دستاوردهای شما همواره محفوظ است. برای تداوم دسترسی نامحدود، می‌توانید با اشتراک فردی ادامه دهید.
+              دستاوردهای شما همواره محفوظ است. برای تداوم دسترسی نامحدود، می‌توانید با اشتراک فردی
+              ادامه دهید.
             </p>
             <button
               onClick={() => navigate('/subscription')}
@@ -219,9 +220,7 @@ export const HomeScreen: React.FC = () => {
           <span className="px-2.5 py-0.5 rounded-pill bg-domain-1-tint text-primary text-meta font-bold">
             ادامه مسیر یادگیری
           </span>
-          <span className="text-meta text-ink/60 font-semibold">
-            فصل اول · درس دوم
-          </span>
+          <span className="text-meta text-ink/60 font-semibold">فصل اول · درس دوم</span>
         </div>
 
         <h3 className="text-read font-bold text-ink mt-2 mb-1.5 leading-snug">
@@ -258,7 +257,9 @@ export const HomeScreen: React.FC = () => {
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-meta font-bold text-domain-5 bg-domain-5-tint px-2 py-0.5 rounded-tile">
-              {activeChallenge.origin === 'org_requested' ? 'پویش سازمانی فولاد نمونه' : 'چالش رسمی گرا'}
+              {activeChallenge.origin === 'org_requested'
+                ? 'پویش سازمانی فولاد نمونه'
+                : 'چالش رسمی گرا'}
             </span>
             <span className="text-meta text-ink/60 font-semibold">
               {toFa(activeChallenge.progress)} از {toFa(activeChallenge.goal.target)} روز
@@ -300,9 +301,7 @@ export const HomeScreen: React.FC = () => {
                 رتبه {toFa(12)} از {toFa(30)}
               </span>
             </div>
-            <p className="text-meta text-ink/70 mt-0.5">
-              ۴۸ امتیاز تا منطقه صعود به مگابایت
-            </p>
+            <p className="text-meta text-ink/70 mt-0.5">۴۸ امتیاز تا منطقه صعود به مگابایت</p>
           </div>
         </div>
 

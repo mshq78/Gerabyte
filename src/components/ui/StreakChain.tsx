@@ -21,8 +21,8 @@ export const StreakChain: React.FC<StreakChainProps> = ({
   const chainColor = isZero
     ? 'var(--color-sunken-darker)'
     : isActiveToday
-    ? 'var(--color-coin)'
-    : 'var(--color-domain-5)';
+      ? 'var(--color-coin)'
+      : 'var(--color-domain-5)';
   const badgeBg = isZero ? 'bg-sunken/40' : 'bg-domain-5-tint border border-coin/30';
 
   return (
@@ -67,18 +67,17 @@ export const StreakChain: React.FC<StreakChainProps> = ({
           fillOpacity={isZero ? 0 : 0.8}
         />
         {/* Center Interlock Dot */}
-        <circle cx="11" cy="11" r="1.2" fill={isZero ? 'var(--color-sunken-darker)' : 'var(--color-ink)'} />
+        <circle
+          cx="11"
+          cy="11"
+          r="1.2"
+          fill={isZero ? 'var(--color-sunken-darker)' : 'var(--color-ink)'}
+        />
       </svg>
 
-      <span className="font-bold text-body tracking-tight text-ink">
-        {toFa(count)}
-      </span>
+      <span className="font-bold text-body tracking-tight text-ink">{toFa(count)}</span>
 
-      {showLabel && (
-        <span className="text-meta text-ink/70 font-medium">
-          روز زنجیره
-        </span>
-      )}
+      {showLabel && <span className="text-meta text-ink/70 font-medium">روز زنجیره</span>}
     </div>
   );
 };

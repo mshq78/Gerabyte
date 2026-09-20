@@ -1,12 +1,7 @@
 import React from 'react';
 
 export const Skeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
-  return (
-    <div
-      className={`animate-pulse bg-sunken rounded-tile ${className}`}
-      aria-hidden="true"
-    />
-  );
+  return <div className={`animate-pulse bg-sunken rounded-tile ${className}`} aria-hidden="true" />;
 };
 
 export const LessonCardSkeleton: React.FC = () => {

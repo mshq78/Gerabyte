@@ -37,32 +37,39 @@ export const certificatesApi = {
   },
 
   // TODO(backend): GET /api/v1/certificates/verify/:serial
-  async verify(serial: string): Promise<{ valid: boolean; certificate?: Certificate; maskedHolder?: string }> {
-    return mockRequest(() => {
-      const certs = getStoredCerts();
-      const normalized = serial.replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).toLowerCase();
+  async verify(
+    serial: string
+  ): Promise<{ valid: boolean; certificate?: Certificate; maskedHolder?: string }> {
+    return mockRequest(
+      () => {
+        const certs = getStoredCerts();
+        const normalized = serial
+          .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+          .toLowerCase();
 
-      const found = certs.find((c) => {
-        const cNorm = c.serial.replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).toLowerCase();
-        return cNorm === normalized || c.serial === serial;
-      });
+        const found = certs.find((c) => {
+          const cNorm = c.serial
+            .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+            .toLowerCase();
+          return cNorm === normalized || c.serial === serial;
+        });
 
-      if (!found) {
-        return { valid: false };
-      }
+        if (!found) {
+          return { valid: false };
+        }
 
-      // Mask holder name e.g. ع*** ر*****
-      const parts = found.holderName.split(' ');
-      const masked = parts
-        .map((p) => (p.length > 1 ? p[0] + '***' : p))
-        .join(' ');
+        // Mask holder name e.g. ع*** ر*****
+        const parts = found.holderName.split(' ');
+        const masked = parts.map((p) => (p.length > 1 ? p[0] + '***' : p)).join(' ');
 
-      return {
-        valid: true,
-        certificate: found,
-        maskedHolder: masked,
-      };
-    }, { endpoint: `/api/v1/certificates/verify/${serial}` });
+        return {
+          valid: true,
+          certificate: found,
+          maskedHolder: masked,
+        };
+      },
+      { endpoint: `/api/v1/certificates/verify/${serial}` }
+    );
   },
 
   // Internal issuance helper

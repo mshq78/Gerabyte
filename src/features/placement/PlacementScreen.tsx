@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Sparkles,
-  CheckCircle2,
-  ChevronLeft,
-} from 'lucide-react';
+import { Sparkles, CheckCircle2, ChevronLeft } from 'lucide-react';
 import { placementApi, PlacementTestResult } from '../../api/placement';
 import { Question, Level } from '../../types/domain';
 import { Button } from '../../components/ui/Button';
@@ -121,7 +117,10 @@ export const PlacementScreen: React.FC = () => {
               </span>
               {result.reasons.map((r: string, idx: number) => (
                 <div key={idx} className="flex items-start gap-2 text-ink/85">
-                  <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" aria-hidden="true" />
+                  <CheckCircle2
+                    className="w-4 h-4 text-success shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  />
                   <span>{r}</span>
                 </div>
               ))}
@@ -130,16 +129,16 @@ export const PlacementScreen: React.FC = () => {
             {/* Manual Level Selection Option */}
             {isChoosingManual && (
               <div className="pt-2 border-t border-sunken space-y-2 text-right">
-                <span className="text-meta font-bold block">
-                  انتخاب سطح دیگر به سلیقه خودتان:
-                </span>
+                <span className="text-meta font-bold block">انتخاب سطح دیگر به سلیقه خودتان:</span>
                 {([1, 2, 3, 4, 5] as const).map((lvl) => (
                   <button
                     key={lvl}
                     onClick={() => handleAcceptLevel(lvl)}
                     className="w-full min-h-[48px] p-3 rounded-tile border border-sunken hover:bg-domain-1-tint text-meta font-bold flex items-center justify-between transition-colors cursor-pointer"
                   >
-                    <span>سطح {toFa(lvl)}: {LEVEL_NAMES[lvl].title}</span>
+                    <span>
+                      سطح {toFa(lvl)}: {LEVEL_NAMES[lvl].title}
+                    </span>
                     <ChevronLeft className="w-4 h-4 text-primary" aria-hidden="true" />
                   </button>
                 ))}
@@ -161,12 +160,7 @@ export const PlacementScreen: React.FC = () => {
           </Button>
 
           {!isChoosingManual && (
-            <Button
-              fullWidth
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsChoosingManual(true)}
-            >
+            <Button fullWidth variant="ghost" size="sm" onClick={() => setIsChoosingManual(true)}>
               انتخاب سطح دیگر
             </Button>
           )}
@@ -182,7 +176,9 @@ export const PlacementScreen: React.FC = () => {
       <header className="py-2 space-y-2">
         <div className="flex items-center justify-between text-meta font-bold text-ink/70">
           <span>آزمون تطبیقی تعیین سطح گرا</span>
-          <span>سوال {toFa(currentIndex + 1)} از {toFa(questions.length)}</span>
+          <span>
+            سوال {toFa(currentIndex + 1)} از {toFa(questions.length)}
+          </span>
         </div>
         <div className="h-2 bg-sunken-dark rounded-pill overflow-hidden">
           <div
@@ -199,9 +195,7 @@ export const PlacementScreen: React.FC = () => {
             شایستگی‌های شغلی و فردی
           </span>
 
-          <h3 className="text-read font-bold text-ink leading-snug">
-            {currentQ.prompt}
-          </h3>
+          <h3 className="text-read font-bold text-ink leading-snug">{currentQ.prompt}</h3>
 
           <div className="space-y-2.5 pt-2">
             {currentQ.options.map((opt) => {

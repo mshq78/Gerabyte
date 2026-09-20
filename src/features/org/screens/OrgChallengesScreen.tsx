@@ -29,12 +29,42 @@ const STATUS_LABELS: Record<
 > = {
   all: { label: 'همه وضعیت‌ها', bg: 'bg-canvas', text: 'text-ink', border: 'border-sunken' },
   draft: { label: 'پیش‌نویس', bg: 'bg-paper', text: 'text-ink/70', border: 'border-sunken' },
-  submitted: { label: 'ارسال‌شده', bg: 'bg-domain-1-tint', text: 'text-primary', border: 'border-primary/30' },
-  in_review: { label: 'در بررسی گرا', bg: 'bg-domain-4-tint', text: 'text-domain-4', border: 'border-domain-4/30' },
-  needs_changes: { label: 'نیاز به اصلاح', bg: 'bg-domain-5-tint', text: 'text-coin', border: 'border-coin/40' },
-  approved: { label: 'تأیید شده', bg: 'bg-domain-3-tint', text: 'text-success', border: 'border-success/30' },
-  rejected: { label: 'رد شده', bg: 'bg-domain-2-tint', text: 'text-danger', border: 'border-danger/30' },
-  active: { label: 'در حال برگزاری (فعال)', bg: 'bg-domain-3-tint', text: 'text-success', border: 'border-success/40' },
+  submitted: {
+    label: 'ارسال‌شده',
+    bg: 'bg-domain-1-tint',
+    text: 'text-primary',
+    border: 'border-primary/30',
+  },
+  in_review: {
+    label: 'در بررسی گرا',
+    bg: 'bg-domain-4-tint',
+    text: 'text-domain-4',
+    border: 'border-domain-4/30',
+  },
+  needs_changes: {
+    label: 'نیاز به اصلاح',
+    bg: 'bg-domain-5-tint',
+    text: 'text-coin',
+    border: 'border-coin/40',
+  },
+  approved: {
+    label: 'تأیید شده',
+    bg: 'bg-domain-3-tint',
+    text: 'text-success',
+    border: 'border-success/30',
+  },
+  rejected: {
+    label: 'رد شده',
+    bg: 'bg-domain-2-tint',
+    text: 'text-danger',
+    border: 'border-danger/30',
+  },
+  active: {
+    label: 'در حال برگزاری (فعال)',
+    bg: 'bg-domain-3-tint',
+    text: 'text-success',
+    border: 'border-success/40',
+  },
   ended: { label: 'پایان‌یافته', bg: 'bg-sunken', text: 'text-ink/60', border: 'border-sunken' },
 };
 
@@ -84,7 +114,8 @@ export const OrgChallengesScreen: React.FC = () => {
             <h1 className="text-display font-black text-ink">چالش‌های سازمانی</h1>
           </div>
           <p className="text-body text-ink/70 mt-1">
-            تعریف و پیشنهاد رویدادها و ماراتن‌های رقابتی مهارتی برای پرسنل؛ با تأمین و نظارت جوایز توسط گرا
+            تعریف و پیشنهاد رویدادها و ماراتن‌های رقابتی مهارتی برای پرسنل؛ با تأمین و نظارت جوایز
+            توسط گرا
           </p>
         </div>
 
@@ -101,8 +132,10 @@ export const OrgChallengesScreen: React.FC = () => {
       <div className="p-4 rounded-sheet bg-domain-1-tint/50 border border-primary/20 flex items-start gap-3">
         <Sparkles className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div className="text-meta text-ink/90 leading-relaxed">
-          <strong>سازوکار جوایز و داوری گرا:</strong> مدیران سازمان اهداف و مأموریت‌های چالش را بر اساس نیازهای عملیاتی پیشنهاد می‌دهند. 
-          تیم آموزشی گرا درخواست را ارزیابی کرده و <strong>جوایز فیزیکی یا معنوی نهایی را رأساً تأمین و تضمین می‌نماید</strong> تا حداکثر اشتیاق سازمانی ایجاد گردد.
+          <strong>سازوکار جوایز و داوری گرا:</strong> مدیران سازمان اهداف و مأموریت‌های چالش را بر
+          اساس نیازهای عملیاتی پیشنهاد می‌دهند. تیم آموزشی گرا درخواست را ارزیابی کرده و{' '}
+          <strong>جوایز فیزیکی یا معنوی نهایی را رأساً تأمین و تضمین می‌نماید</strong> تا حداکثر
+          اشتیاق سازمانی ایجاد گردد.
         </div>
       </div>
 
@@ -155,12 +188,16 @@ export const OrgChallengesScreen: React.FC = () => {
 
       {/* Challenges List Grid */}
       {loading ? (
-        <div className="text-center py-16 text-ink/60 font-bold text-body">در حال بارگذاری چالش‌ها...</div>
+        <div className="text-center py-16 text-ink/60 font-bold text-body">
+          در حال بارگذاری چالش‌ها...
+        </div>
       ) : filteredRequests.length === 0 ? (
         <div className="text-center py-16 p-6 rounded-sheet bg-surface border border-sunken space-y-3">
           <Trophy className="w-12 h-12 text-ink/30 mx-auto" />
           <h3 className="text-title font-black text-ink">چالشی با این مشخصات یافت نشد</h3>
-          <p className="text-meta text-ink/60">می‌توانید با فیلتر دیگری جستجو کنید یا چالش جدیدی ثبت نمایید.</p>
+          <p className="text-meta text-ink/60">
+            می‌توانید با فیلتر دیگری جستجو کنید یا چالش جدیدی ثبت نمایید.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -193,7 +230,9 @@ export const OrgChallengesScreen: React.FC = () => {
                   </div>
 
                   <h3 className="text-title font-black text-ink line-clamp-1">{req.title}</h3>
-                  <p className="text-meta text-ink/70 line-clamp-2 leading-relaxed">{req.objective}</p>
+                  <p className="text-meta text-ink/70 line-clamp-2 leading-relaxed">
+                    {req.objective}
+                  </p>
                 </div>
 
                 {/* Metrics & Scope */}
@@ -208,14 +247,16 @@ export const OrgChallengesScreen: React.FC = () => {
                       {req.goal.type === 'xp'
                         ? `${toFa(req.goal.target)} امتیاز`
                         : req.goal.type === 'lessons'
-                        ? `${toFa(req.goal.target)} گرابایت`
-                        : `${toFa(req.goal.target)} روز زنجیره`}
+                          ? `${toFa(req.goal.target)} گرابایت`
+                          : `${toFa(req.goal.target)} روز زنجیره`}
                     </strong>
                   </div>
                   <div>
                     <span className="text-ink/50 text-meta block">مشارکت‌کنندگان:</span>
                     <strong className="text-ink block">
-                      {req.live ? `${toFa(req.live.joined)} نفر` : `${toFa(req.estimatedParticipants)} نفر (تخمین)`}
+                      {req.live
+                        ? `${toFa(req.live.joined)} نفر`
+                        : `${toFa(req.estimatedParticipants)} نفر (تخمین)`}
                     </strong>
                   </div>
                 </div>
@@ -225,14 +266,18 @@ export const OrgChallengesScreen: React.FC = () => {
                   <div className="flex items-center gap-1.5 text-coin font-bold">
                     <Award className="w-4 h-4 shrink-0" />
                     <span className="truncate">
-                      {req.approvedPrize ? `جایزه مصوب گرا: ${req.approvedPrize.title}` : `پیشنهاد جایزه: ${req.suggestedPrize || 'تعیین نشده'}`}
+                      {req.approvedPrize
+                        ? `جایزه مصوب گرا: ${req.approvedPrize.title}`
+                        : `پیشنهاد جایزه: ${req.suggestedPrize || 'تعیین نشده'}`}
                     </span>
                   </div>
 
                   {req.timeline.length > 0 && req.timeline[req.timeline.length - 1].comment && (
                     <div className="p-2 rounded-tile bg-canvas border border-sunken text-meta text-ink/80 flex items-start gap-1.5">
                       <AlertCircle className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                      <span className="line-clamp-1">{req.timeline[req.timeline.length - 1].comment}</span>
+                      <span className="line-clamp-1">
+                        {req.timeline[req.timeline.length - 1].comment}
+                      </span>
                     </div>
                   )}
                 </div>

@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from 'react';
 import { User, Subscription, Entitlements } from '../types/domain';
 import { getStoredUser, setStoredUser } from '../api/auth';
 import { getStoredSubscription, saveSubscription } from '../api/subscription';

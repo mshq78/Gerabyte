@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
-import {
-  ArrowRight,
-  Download,
-  Share2,
-  Award,
-  ShieldCheck,
-} from 'lucide-react';
+import { ArrowRight, Download, Share2, Award, ShieldCheck } from 'lucide-react';
 import { certificatesApi } from '../../api/certificates';
 import { Certificate } from '../../types/domain';
 import { Button } from '../../components/ui/Button';
@@ -101,9 +95,7 @@ export const CertificateDetailScreen: React.FC = () => {
             <span className="text-meta font-bold text-ink/60">
               پردیس نوآوری گرا · سامانه اعتبارسنجی شایستگی
             </span>
-            <h2 className="text-title font-black text-ink">
-              گواهینامه رسمی شایستگی تخصصی
-            </h2>
+            <h2 className="text-title font-black text-ink">گواهینامه رسمی شایستگی تخصصی</h2>
           </div>
 
           {/* Candidate Name & Title */}
@@ -137,12 +129,7 @@ export const CertificateDetailScreen: React.FC = () => {
 
             {/* Real Offline QR Code rendered with SVG */}
             <div className="p-2 rounded-tile bg-surface border border-sunken shadow-xs shrink-0 flex flex-col items-center">
-              <QRCodeSVG
-                value={verifyUrl}
-                size={84}
-                level="M"
-                fgColor="#0D3F6B"
-              />
+              <QRCodeSVG value={verifyUrl} size={84} level="M" fgColor="#0D3F6B" />
               <span className="text-meta text-ink/50 mt-1 font-mono">اسکن اصالت</span>
             </div>
           </div>
@@ -201,7 +188,8 @@ export const CertificatesScreen: React.FC = () => {
       <div className="space-y-3">
         {certs.length === 0 ? (
           <div className="p-8 text-center text-meta text-ink/60 bg-surface rounded-tile border border-sunken">
-            شما هنوز گواهینامه‌ای دریافت نکرده‌اید. با گذراندن دروس و قبولی در آزمون‌های جامع فصول، گواهینامه معتبر کسب کنید.
+            شما هنوز گواهینامه‌ای دریافت نکرده‌اید. با گذراندن دروس و قبولی در آزمون‌های جامع فصول،
+            گواهینامه معتبر کسب کنید.
           </div>
         ) : (
           certs.map((c) => (
@@ -215,9 +203,7 @@ export const CertificatesScreen: React.FC = () => {
                   <Award className="w-6 h-6 stroke-[2.2]" aria-hidden="true" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-body text-ink leading-snug">
-                    {c.title}
-                  </h4>
+                  <h4 className="font-bold text-body text-ink leading-snug">{c.title}</h4>
                   <div className="flex items-center gap-2 mt-1 text-meta text-ink/60">
                     <span className="font-mono">{c.serial}</span>
                     <span>·</span>

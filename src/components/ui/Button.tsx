@@ -40,24 +40,22 @@ export const Button: React.FC<ButtonProps> = ({
       'bg-success text-surface border-b-4 border-success-dark active:border-b-0 active:translate-y-1 hover:bg-success-dark',
     danger:
       'bg-danger text-surface border-b-4 border-danger-dark active:border-b-0 active:translate-y-1 hover:bg-danger-dark',
-    ghost:
-      'bg-transparent text-ink hover:bg-sunken/60 active:bg-sunken transition-colors',
+    ghost: 'bg-transparent text-ink hover:bg-sunken/60 active:bg-sunken transition-colors',
     outline:
       'bg-transparent border-2 border-primary text-primary hover:bg-primary/10 active:bg-primary/20 transition-colors',
   };
 
-  const disabledClasses = disabled || isLoading
-    ? 'opacity-50 cursor-not-allowed pointer-events-none active:translate-y-0 active:border-b-4'
-    : 'cursor-pointer transition-all duration-75';
+  const disabledClasses =
+    disabled || isLoading
+      ? 'opacity-50 cursor-not-allowed pointer-events-none active:translate-y-0 active:border-b-4'
+      : 'cursor-pointer transition-all duration-75';
 
   return (
     <button
       disabled={disabled || isLoading}
       className={`relative inline-flex items-center justify-center gap-2.5 rounded-tile select-none text-center whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
         sizeClasses[size]
-      } ${variantClasses[variant]} ${disabledClasses} ${
-        fullWidth ? 'w-full' : ''
-      } ${className}`}
+      } ${variantClasses[variant]} ${disabledClasses} ${fullWidth ? 'w-full' : ''} ${className}`}
       {...props}
     >
       {isLoading ? (
@@ -77,19 +75,23 @@ export const Button: React.FC<ButtonProps> = ({
               stroke="currentColor"
               strokeWidth="4"
             />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v8H4z"
-            />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
           </svg>
           <span className="text-action">لطفاً منتظر بمانید...</span>
         </span>
       ) : (
         <>
-          {leftIcon && <span className="shrink-0" aria-hidden="true">{leftIcon}</span>}
+          {leftIcon && (
+            <span className="shrink-0" aria-hidden="true">
+              {leftIcon}
+            </span>
+          )}
           <span>{children}</span>
-          {rightIcon && <span className="shrink-0" aria-hidden="true">{rightIcon}</span>}
+          {rightIcon && (
+            <span className="shrink-0" aria-hidden="true">
+              {rightIcon}
+            </span>
+          )}
         </>
       )}
     </button>

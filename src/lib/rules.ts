@@ -65,7 +65,7 @@ export function getLevelProgress(user: User): {
 } {
   const current = user.level;
   const currentInfo = LEVEL_NAMES[current];
-  const nextLevel = (current < 5 ? (current + 1) as Level : null);
+  const nextLevel = current < 5 ? ((current + 1) as Level) : null;
 
   if (!nextLevel) {
     return {

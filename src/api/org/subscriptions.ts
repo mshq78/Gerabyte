@@ -31,11 +31,57 @@ export interface ExpiringMemberItem {
 }
 
 export const INITIAL_EXPIRING_MEMBERS: ExpiringMemberItem[] = [
-  { id: 'exp-1', fullName: 'مهرداد صالحی', phone: '۰۹۱۲۱۱۱۱۱۱۱', unitName: 'واحد نورد گرم و مقاطع', rank: 'کارشناس', daysRemaining: 3, sponsorshipEndsAt: '۱۴۰۳/۰۷/۰۵', remindersCountToday: 0 },
-  { id: 'exp-2', fullName: 'ندا افشار', phone: '۰۹۱۹۲۲۲۲۲۲۲', unitName: 'آزمایشگاه متالورژی', rank: 'کارشناس', daysRemaining: 5, sponsorshipEndsAt: '۱۴۰۳/۰۷/۰۷', remindersCountToday: 1, lastReminderSentAt: 'دیروز' },
-  { id: 'exp-3', fullName: 'سیاوش یزدانی', phone: '۰۹۳۵۳۳۳۳۳۳۳', unitName: 'معاونت فنی و مهندسی', rank: 'سرپرست', daysRemaining: 7, sponsorshipEndsAt: '۱۴۰۳/۰۷/۰۹', remindersCountToday: 0 },
-  { id: 'exp-4', fullName: 'لیلا حسینی', phone: '۰۹۱۲۴۴۴۴۴۴۴', unitName: 'واحد بهداشت و ایمنی (HSE)', rank: 'کارشناس', daysRemaining: 9, sponsorshipEndsAt: '۱۴۰۳/۰۷/۱۱', remindersCountToday: 0 },
-  { id: 'exp-5', fullName: 'کامبیز توکلی', phone: '۰۹۱۲۵۵۵۵۵۵۵', unitName: 'توسعه سرمایه انسانی', rank: 'اپراتور', daysRemaining: 12, sponsorshipEndsAt: '۱۴۰۳/۰۷/۱۴', remindersCountToday: 0 },
+  {
+    id: 'exp-1',
+    fullName: 'مهرداد صالحی',
+    phone: '۰۹۱۲۱۱۱۱۱۱۱',
+    unitName: 'واحد نورد گرم و مقاطع',
+    rank: 'کارشناس',
+    daysRemaining: 3,
+    sponsorshipEndsAt: '۱۴۰۳/۰۷/۰۵',
+    remindersCountToday: 0,
+  },
+  {
+    id: 'exp-2',
+    fullName: 'ندا افشار',
+    phone: '۰۹۱۹۲۲۲۲۲۲۲',
+    unitName: 'آزمایشگاه متالورژی',
+    rank: 'کارشناس',
+    daysRemaining: 5,
+    sponsorshipEndsAt: '۱۴۰۳/۰۷/۰۷',
+    remindersCountToday: 1,
+    lastReminderSentAt: 'دیروز',
+  },
+  {
+    id: 'exp-3',
+    fullName: 'سیاوش یزدانی',
+    phone: '۰۹۳۵۳۳۳۳۳۳۳',
+    unitName: 'معاونت فنی و مهندسی',
+    rank: 'سرپرست',
+    daysRemaining: 7,
+    sponsorshipEndsAt: '۱۴۰۳/۰۷/۰۹',
+    remindersCountToday: 0,
+  },
+  {
+    id: 'exp-4',
+    fullName: 'لیلا حسینی',
+    phone: '۰۹۱۲۴۴۴۴۴۴۴',
+    unitName: 'واحد بهداشت و ایمنی (HSE)',
+    rank: 'کارشناس',
+    daysRemaining: 9,
+    sponsorshipEndsAt: '۱۴۰۳/۰۷/۱۱',
+    remindersCountToday: 0,
+  },
+  {
+    id: 'exp-5',
+    fullName: 'کامبیز توکلی',
+    phone: '۰۹۱۲۵۵۵۵۵۵۵',
+    unitName: 'توسعه سرمایه انسانی',
+    rank: 'اپراتور',
+    daysRemaining: 12,
+    sponsorshipEndsAt: '۱۴۰۳/۰۷/۱۴',
+    remindersCountToday: 0,
+  },
 ];
 
 export const subscriptionsApi = {
@@ -94,11 +140,17 @@ export const subscriptionsApi = {
     const member = INITIAL_EXPIRING_MEMBERS.find((m) => m.id === memberId);
     if (!member) throw new Error('کاربر یافت نشد.');
     if (member.remindersCountToday >= 1) {
-      return { success: false, message: 'سقف ارسال روزانه یادآوری (۱ بار در روز) برای این همکار پر شده است.' };
+      return {
+        success: false,
+        message: 'سقف ارسال روزانه یادآوری (۱ بار در روز) برای این همکار پر شده است.',
+      };
     }
     member.remindersCountToday += 1;
     member.lastReminderSentAt = 'هم‌اکنون';
-    return { success: true, message: `پیامک یادآوری تمدید سازمانی به شماره ${member.phone} با موفقیت ارسال شد.` };
+    return {
+      success: true,
+      message: `پیامک یادآوری تمدید سازمانی به شماره ${member.phone} با موفقیت ارسال شد.`,
+    };
   },
 
   // TODO(backend): GET /api/v1/org/subscriptions/renewal-requests
@@ -132,7 +184,11 @@ export const subscriptionsApi = {
   },
 
   // TODO(backend): POST /api/v1/org/subscriptions/renewal-requests
-  async createRenewalRequest(data: { seatsCount: number; durationMonths: number; requestedByName: string }): Promise<OrgRenewalRequest> {
+  async createRenewalRequest(data: {
+    seatsCount: number;
+    durationMonths: number;
+    requestedByName: string;
+  }): Promise<OrgRenewalRequest> {
     const list = await this.getRenewalRequests();
     const newReq: OrgRenewalRequest = {
       id: `ren-${Date.now()}`,

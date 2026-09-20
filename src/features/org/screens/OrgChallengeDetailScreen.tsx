@@ -47,7 +47,11 @@ export const OrgChallengeDetailScreen: React.FC = () => {
   }, [id]);
 
   if (loading) {
-    return <div className="text-center py-20 text-body font-bold text-ink/60">در حال بارگذاری جزئیات چالش...</div>;
+    return (
+      <div className="text-center py-20 text-body font-bold text-ink/60">
+        در حال بارگذاری جزئیات چالش...
+      </div>
+    );
   }
 
   if (!request) {
@@ -168,8 +172,8 @@ export const OrgChallengeDetailScreen: React.FC = () => {
                   {request.goal.type === 'xp'
                     ? `${toFa(request.goal.target)} امتیاز`
                     : request.goal.type === 'lessons'
-                    ? `${toFa(request.goal.target)} گرابایت`
-                    : `${toFa(request.goal.target)} روز زنجیره`}
+                      ? `${toFa(request.goal.target)} گرابایت`
+                      : `${toFa(request.goal.target)} روز زنجیره`}
                 </strong>
               </div>
               <div>
@@ -196,7 +200,9 @@ export const OrgChallengeDetailScreen: React.FC = () => {
               </div>
               <div className="space-y-1.5 text-meta">
                 <div className="text-body font-black text-ink">{request.approvedPrize.title}</div>
-                <div className="text-ink/80 leading-relaxed">{request.approvedPrize.description}</div>
+                <div className="text-ink/80 leading-relaxed">
+                  {request.approvedPrize.description}
+                </div>
                 {request.approvedPrize.valueTag && (
                   <span className="inline-block px-2.5 py-0.5 rounded-tile bg-coin/20 text-coin font-black text-meta">
                     {request.approvedPrize.valueTag}
@@ -312,9 +318,7 @@ export const OrgChallengeDetailScreen: React.FC = () => {
                   {/* Timeline dot */}
                   <div className="absolute -right-[23px] top-1 w-3.5 h-3.5 rounded-full bg-primary border-2 border-surface" />
                   <div className="text-meta font-mono text-ink/50">{toFa(step.at)}</div>
-                  <div className="text-meta font-bold text-ink mt-0.5">
-                    {step.byName}
-                  </div>
+                  <div className="text-meta font-bold text-ink mt-0.5">{step.byName}</div>
                   {step.comment && (
                     <div className="p-2.5 rounded-tile bg-canvas border border-sunken text-meta text-ink/80 mt-1.5 leading-relaxed">
                       {step.comment}

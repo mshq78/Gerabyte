@@ -29,9 +29,7 @@ export const BottomNav: React.FC = () => {
             end={item.to === '/'}
             className={({ isActive }) =>
               `relative flex flex-col items-center justify-center flex-1 h-full min-h-[48px] py-1 text-meta font-semibold select-none transition-all duration-150 ${
-                isActive
-                  ? 'text-primary'
-                  : 'text-ink/60 hover:text-ink'
+                isActive ? 'text-primary' : 'text-ink/60 hover:text-ink'
               }`
             }
           >
@@ -52,7 +50,9 @@ export const BottomNav: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <span className={`mt-0.5 tracking-tight text-meta whitespace-nowrap ${isActive ? 'font-bold' : 'font-normal'}`}>
+                  <span
+                    className={`mt-0.5 tracking-tight text-meta whitespace-nowrap ${isActive ? 'font-bold' : 'font-normal'}`}
+                  >
                     {item.label}
                   </span>
                   {isActive && (

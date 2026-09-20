@@ -20,10 +20,30 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
     requestedByName: 'مهندس علیرضا رضایی',
     estimatedParticipants: 48,
     timeline: [
-      { at: '۱۴۰۳/۰۶/۲۵', status: 'submitted', byName: 'مهندس علیرضا رضایی', comment: 'درخواست چالش برای پرسنل نورد ارسال شد.' },
-      { at: '۱۴۰۳/۰۶/۲۶', status: 'in_review', byName: 'تیم آموزش گرا', comment: 'بررسی اهداف آموزشی و تطابق با کاتالوگ مهارت‌ها.' },
-      { at: '۱۴۰۳/۰۶/۲۷', status: 'approved', byName: 'تیم آموزش گرا', comment: 'چالش تأیید شد و جوایز پستی تخصیص یافت.' },
-      { at: '۱۴۰۳/۰۷/۰۱', status: 'active', byName: 'سیستم هوشمند گرا', comment: 'چالش در اپلیکیشن کارکنان فعال گردید.' },
+      {
+        at: '۱۴۰۳/۰۶/۲۵',
+        status: 'submitted',
+        byName: 'مهندس علیرضا رضایی',
+        comment: 'درخواست چالش برای پرسنل نورد ارسال شد.',
+      },
+      {
+        at: '۱۴۰۳/۰۶/۲۶',
+        status: 'in_review',
+        byName: 'تیم آموزش گرا',
+        comment: 'بررسی اهداف آموزشی و تطابق با کاتالوگ مهارت‌ها.',
+      },
+      {
+        at: '۱۴۰۳/۰۶/۲۷',
+        status: 'approved',
+        byName: 'تیم آموزش گرا',
+        comment: 'چالش تأیید شد و جوایز پستی تخصیص یافت.',
+      },
+      {
+        at: '۱۴۰۳/۰۷/۰۱',
+        status: 'active',
+        byName: 'سیستم هوشمند گرا',
+        comment: 'چالش در اپلیکیشن کارکنان فعال گردید.',
+      },
     ],
     approvedPrize: {
       title: 'پک ویژه ایمنی و سلامت گرا + ماگ هوشمند حرارتی',
@@ -53,8 +73,18 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
     requestedByName: 'دکتر سپیده رهنما',
     estimatedParticipants: 18,
     timeline: [
-      { at: '۱۴۰۳/۰۷/۰۱', status: 'submitted', byName: 'دکتر سپیده رهنما', comment: 'ثبت طرح اولیه برای کارشناسان آزمایشگاه' },
-      { at: '۱۴۰۳/۰۷/۰۲', status: 'in_review', byName: 'تیم آموزش گرا', comment: 'در حال بررسی توسط منتور ارشد صنعتی گرا' },
+      {
+        at: '۱۴۰۳/۰۷/۰۱',
+        status: 'submitted',
+        byName: 'دکتر سپیده رهنما',
+        comment: 'ثبت طرح اولیه برای کارشناسان آزمایشگاه',
+      },
+      {
+        at: '۱۴۰۳/۰۷/۰۲',
+        status: 'in_review',
+        byName: 'تیم آموزش گرا',
+        comment: 'در حال بررسی توسط منتور ارشد صنعتی گرا',
+      },
     ],
   },
   {
@@ -77,7 +107,8 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
         at: '۱۴۰۳/۰۶/۲۲',
         status: 'needs_changes',
         byName: 'تیم آموزش گرا',
-        comment: 'هدف‌گذاری زنجیره ۷ روزه برای شیفت‌های چرخشی سخت‌گیرانه است؛ پیشنهاد می‌شود نوع هدف به تعداد ۵ گرابایت تغییر یابد.',
+        comment:
+          'هدف‌گذاری زنجیره ۷ روزه برای شیفت‌های چرخشی سخت‌گیرانه است؛ پیشنهاد می‌شود نوع هدف به تعداد ۵ گرابایت تغییر یابد.',
       },
     ],
   },
@@ -104,7 +135,12 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
       { at: '۱۴۰۳/۰۴/۲۰', status: 'submitted', byName: 'سرکار خانم فریبا رادمنش' },
       { at: '۱۴۰۳/۰۴/۲۴', status: 'approved', byName: 'تیم آموزش گرا' },
       { at: '۱۴۰۳/۰۵/۰۱', status: 'active', byName: 'سیستم گرا' },
-      { at: '۱۴۰۳/۰۵/۲۵', status: 'ended', byName: 'سیستم گرا', comment: 'چالش به پایان رسید و نتایج نهایی استخراج شد.' },
+      {
+        at: '۱۴۰۳/۰۵/۲۵',
+        status: 'ended',
+        byName: 'سیستم گرا',
+        comment: 'چالش به پایان رسید و نتایج نهایی استخراج شد.',
+      },
     ],
     result: {
       participants: 124,
@@ -126,7 +162,10 @@ function getStoredRequests(): ChallengeRequest[] {
     // fallback
   }
   try {
-    localStorage.setItem(STORAGE_KEY_CHALLENGE_REQUESTS, JSON.stringify(INITIAL_MOCK_CHALLENGE_REQUESTS));
+    localStorage.setItem(
+      STORAGE_KEY_CHALLENGE_REQUESTS,
+      JSON.stringify(INITIAL_MOCK_CHALLENGE_REQUESTS)
+    );
   } catch {
     // fallback
   }
@@ -176,9 +215,36 @@ function syncWithLearnerChallenges(req: ChallengeRequest): void {
       progress: 0,
       participants: req.live?.joined || 12,
       top: [
-        { rank: 1, userId: 'p-2', displayName: 'زهرا کریمی', unitLabel: 'آزمایشگاه', avatarSeed: 'karimi', weeklyXp: 420, isMe: false, movement: 'up' },
-        { rank: 2, userId: 'p-1', displayName: 'علیرضا رضایی', unitLabel: 'نورد گرم', avatarSeed: 'rezaei', weeklyXp: 380, isMe: true, movement: 'same' },
-        { rank: 3, userId: 'p-7', displayName: 'مهدی حسینی', unitLabel: 'HSE', avatarSeed: 'hoseini', weeklyXp: 350, isMe: false, movement: 'down' },
+        {
+          rank: 1,
+          userId: 'p-2',
+          displayName: 'زهرا کریمی',
+          unitLabel: 'آزمایشگاه',
+          avatarSeed: 'karimi',
+          weeklyXp: 420,
+          isMe: false,
+          movement: 'up',
+        },
+        {
+          rank: 2,
+          userId: 'p-1',
+          displayName: 'علیرضا رضایی',
+          unitLabel: 'نورد گرم',
+          avatarSeed: 'rezaei',
+          weeklyXp: 380,
+          isMe: true,
+          movement: 'same',
+        },
+        {
+          rank: 3,
+          userId: 'p-7',
+          displayName: 'مهدی حسینی',
+          unitLabel: 'HSE',
+          avatarSeed: 'hoseini',
+          weeklyXp: 350,
+          isMe: false,
+          movement: 'down',
+        },
       ],
       requiresFullPlan: false,
     };
@@ -196,7 +262,11 @@ function syncWithLearnerChallenges(req: ChallengeRequest): void {
 
 export const challengeRequestsApi = {
   // TODO(backend): GET /api/v1/org/challenge-requests
-  async list(filters?: { status?: string; role?: string; managerName?: string }): Promise<ChallengeRequest[]> {
+  async list(filters?: {
+    status?: string;
+    role?: string;
+    managerName?: string;
+  }): Promise<ChallengeRequest[]> {
     let list = getStoredRequests();
     if (filters?.status && filters.status !== 'all') {
       list = list.filter((r) => r.status === filters.status);
@@ -241,7 +311,8 @@ export const challengeRequestsApi = {
           at: 'امروز',
           status: data.status,
           byName: data.requestedByName,
-          comment: data.status === 'submitted' ? 'درخواست به گرا ارسال شد.' : 'پیش‌نویس ذخیره گردید.',
+          comment:
+            data.status === 'submitted' ? 'درخواست به گرا ارسال شد.' : 'پیش‌نویس ذخیره گردید.',
         },
       ],
     };
@@ -322,7 +393,8 @@ export const challengeRequestsApi = {
       at: 'امروز',
       status: 'approved',
       byName: 'تیم پشتیبانی گرا',
-      comment: 'درخواست چالش تأیید شد و جوایز گرا رزرو گردید. این چالش در اپلیکیشن یادگیرندگان منتشر شد.',
+      comment:
+        'درخواست چالش تأیید شد و جوایز گرا رزرو گردید. این چالش در اپلیکیشن یادگیرندگان منتشر شد.',
     });
 
     saveStoredRequests(list);
@@ -342,7 +414,9 @@ export const challengeRequestsApi = {
       at: 'امروز',
       status: 'needs_changes',
       byName: 'تیم پشتیبانی گرا',
-      comment: comment || 'لطفاً بازه زمانی چالش را حداقل به ۱۰ روز افزایش دهید تا امکان رسیدن به تارگت وجود داشته باشد.',
+      comment:
+        comment ||
+        'لطفاً بازه زمانی چالش را حداقل به ۱۰ روز افزایش دهید تا امکان رسیدن به تارگت وجود داشته باشد.',
     });
     saveStoredRequests(list);
     return list[idx];
@@ -359,7 +433,9 @@ export const challengeRequestsApi = {
       at: 'امروز',
       status: 'rejected',
       byName: 'تیم پشتیبانی گرا',
-      comment: comment || 'با توجه به هم‌پوشانی با چالش سازمانی سراسری دیگر، در این بازه زمانی امکان برگزاری میسر نیست.',
+      comment:
+        comment ||
+        'با توجه به هم‌پوشانی با چالش سازمانی سراسری دیگر، در این بازه زمانی امکان برگزاری میسر نیست.',
     });
     saveStoredRequests(list);
     return list[idx];

@@ -9,7 +9,8 @@ export const OrgDashboardScreen: React.FC = () => {
       </div>
       <h2 className="text-headline font-black text-ink mb-2">داشبورد سازمان</h2>
       <p className="text-body text-ink/70 max-w-md">
-        این بخش برای مدیران منابع انسانی و آموزش سازمان‌ها طراحی شده است و به‌زودی در نسخه‌های آتی فعال خواهد شد.
+        این بخش برای مدیران منابع انسانی و آموزش سازمان‌ها طراحی شده است و به‌زودی در نسخه‌های آتی
+        فعال خواهد شد.
       </p>
     </div>
   );

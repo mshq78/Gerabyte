@@ -73,66 +73,76 @@ export const subscriptionApi = {
   },
 
   // TODO(backend): POST /api/v1/subscription/redeem-code
-  async redeemActivationCode(code: string): Promise<{ success: boolean; subscription: Subscription; message: string }> {
-    return mockRequest(() => {
-      const trimmed = code.trim().toUpperCase();
-      if (!trimmed) {
-        throw new Error('لطفاً کد فعال‌سازی را وارد نمایید.');
-      }
+  async redeemActivationCode(
+    code: string
+  ): Promise<{ success: boolean; subscription: Subscription; message: string }> {
+    return mockRequest(
+      () => {
+        const trimmed = code.trim().toUpperCase();
+        if (!trimmed) {
+          throw new Error('لطفاً کد فعال‌سازی را وارد نمایید.');
+        }
 
-      let newSub: Subscription;
-      let message = '';
+        let newSub: Subscription;
+        let message = '';
 
-      if (trimmed.startsWith('FOOLAD') || trimmed.startsWith('GERA-ORG')) {
-        newSub = {
-          tier: 'full',
-          source: 'org_sponsored',
-          sponsorOrgName: 'مجتمع فولاد نمونه',
-          startsAt: new Date().toISOString(),
-          endsAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'active',
-          remainingDays: 90,
-        };
-        message = 'اشتراک سازمانی فولاد نمونه با موفقیت به مدت ۹۰ روز برای شما فعال شد.';
-      } else {
-        newSub = {
-          tier: 'full',
-          source: 'personal',
-          startsAt: new Date().toISOString(),
-          endsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'active',
-          remainingDays: 30,
-        };
-        message = 'کد هدیه اشتراک کامل با موفقیت اعمال گردید (اعتبار ۳۰ روز).';
-      }
+        if (trimmed.startsWith('FOOLAD') || trimmed.startsWith('GERA-ORG')) {
+          newSub = {
+            tier: 'full',
+            source: 'org_sponsored',
+            sponsorOrgName: 'مجتمع فولاد نمونه',
+            startsAt: new Date().toISOString(),
+            endsAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
+            status: 'active',
+            remainingDays: 90,
+          };
+          message = 'اشتراک سازمانی فولاد نمونه با موفقیت به مدت ۹۰ روز برای شما فعال شد.';
+        } else {
+          newSub = {
+            tier: 'full',
+            source: 'personal',
+            startsAt: new Date().toISOString(),
+            endsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            status: 'active',
+            remainingDays: 30,
+          };
+          message = 'کد هدیه اشتراک کامل با موفقیت اعمال گردید (اعتبار ۳۰ روز).';
+        }
 
-      saveSubscription(newSub);
-      return { success: true, subscription: newSub, message };
-    }, { endpoint: '/api/v1/subscription/redeem-code' });
+        saveSubscription(newSub);
+        return { success: true, subscription: newSub, message };
+      },
+      { endpoint: '/api/v1/subscription/redeem-code' }
+    );
   },
 
   // TODO(backend): POST /api/v1/subscription/checkout
-  async checkout(planId: string): Promise<{ success: boolean; subscription: Subscription; referenceId: string }> {
-    return mockRequest(() => {
-      const plan = SUBSCRIPTION_PLANS.find((p) => p.id === planId) || SUBSCRIPTION_PLANS[1];
-      const days = plan.durationMonths * 30;
+  async checkout(
+    planId: string
+  ): Promise<{ success: boolean; subscription: Subscription; referenceId: string }> {
+    return mockRequest(
+      () => {
+        const plan = SUBSCRIPTION_PLANS.find((p) => p.id === planId) || SUBSCRIPTION_PLANS[1];
+        const days = plan.durationMonths * 30;
 
-      const newSub: Subscription = {
-        tier: 'full',
-        source: 'personal',
-        startsAt: new Date().toISOString(),
-        endsAt: new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString(),
-        status: 'active',
-        remainingDays: days,
-      };
+        const newSub: Subscription = {
+          tier: 'full',
+          source: 'personal',
+          startsAt: new Date().toISOString(),
+          endsAt: new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'active',
+          remainingDays: days,
+        };
 
-      saveSubscription(newSub);
+        saveSubscription(newSub);
 
-      return {
-        success: true,
-        subscription: newSub,
-        referenceId: 'GB-PAY-' + Math.floor(10000000 + Math.random() * 90000000),
-      };
-    }, { endpoint: '/api/v1/subscription/checkout' });
+        return {
+          success: true,
+          subscription: newSub,
+          referenceId: 'GB-PAY-' + Math.floor(10000000 + Math.random() * 90000000),
+        };
+      },
+      { endpoint: '/api/v1/subscription/checkout' }
+    );
   },
 };

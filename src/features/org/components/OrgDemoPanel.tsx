@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, CheckCircle2, AlertTriangle, XCircle, Sliders, ChevronDown, ChevronUp, RefreshCw, Layers } from 'lucide-react';
+import {
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle,
+  Sliders,
+  ChevronDown,
+  ChevronUp,
+  RefreshCw,
+  Layers,
+} from 'lucide-react';
 import { challengeRequestsApi } from '../../../api/org/challengeRequests';
 import { subscriptionsApi } from '../../../api/org/subscriptions';
 import { ChallengeRequest, SeatSummary } from '../../../types/org';
@@ -15,7 +25,11 @@ export const OrgDemoPanel: React.FC<{ onRequestChanged?: () => void }> = ({ onRe
   const loadData = async () => {
     try {
       const requests = await challengeRequestsApi.list();
-      const pendingOrActive = requests.find((r) => r.status === 'submitted' || r.status === 'in_review' || r.status === 'needs_changes') || requests[0];
+      const pendingOrActive =
+        requests.find(
+          (r) =>
+            r.status === 'submitted' || r.status === 'in_review' || r.status === 'needs_changes'
+        ) || requests[0];
       setLatestRequest(pendingOrActive || null);
       const summary = await subscriptionsApi.getSummary();
       setSeatSummary(summary);
@@ -33,7 +47,9 @@ export const OrgDemoPanel: React.FC<{ onRequestChanged?: () => void }> = ({ onRe
     setLoading(true);
     try {
       await challengeRequestsApi.approveByGera(latestRequest.id);
-      setActionMessage(`چالش «${latestRequest.title}» توسط گرا تأیید شد و در اپلیکیشن یادگیرندگان منتشر گردید!`);
+      setActionMessage(
+        `چالش «${latestRequest.title}» توسط گرا تأیید شد و در اپلیکیشن یادگیرندگان منتشر گردید!`
+      );
       await loadData();
       onRequestChanged?.();
     } catch (err: any) {

@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Check,
-  CreditCard,
-  ArrowRight,
-  Gift,
-  CheckCircle2,
-} from 'lucide-react';
+import { Check, CreditCard, ArrowRight, Gift, CheckCircle2 } from 'lucide-react';
 import { subscriptionApi, SubscriptionPlan } from '../../api/subscription';
 import { Subscription } from '../../types/domain';
 import { Button } from '../../components/ui/Button';
@@ -145,23 +139,23 @@ export const SubscriptionScreen: React.FC = () => {
             {subscription.source === 'org_sponsored'
               ? `اشتراک هدیه سازمان (${subscription.sponsorOrgName || 'فولاد نمونه'})`
               : subscription.tier === 'full'
-              ? 'اشتراک کامل فردی'
-              : 'طرح پایه و رایگان'}
+                ? 'اشتراک کامل فردی'
+                : 'طرح پایه و رایگان'}
           </h3>
           <span
             className={`text-meta font-bold px-2.5 py-0.5 rounded-pill ${
               subscription.status === 'active'
                 ? 'bg-domain-3-tint text-success'
                 : subscription.status === 'expiring'
-                ? 'bg-domain-5-tint text-coin'
-                : 'bg-sunken text-ink'
+                  ? 'bg-domain-5-tint text-coin'
+                  : 'bg-sunken text-ink'
             }`}
           >
             {subscription.status === 'active' && subscription.remainingDays
               ? `${toFa(subscription.remainingDays)} روز مانده`
               : subscription.status === 'expiring' && subscription.remainingDays
-              ? `تنها ${toFa(subscription.remainingDays)} روز مانده`
-              : 'منقضی شده'}
+                ? `تنها ${toFa(subscription.remainingDays)} روز مانده`
+                : 'منقضی شده'}
           </span>
         </div>
         {subscription.source === 'org_sponsored' && (
@@ -173,9 +167,7 @@ export const SubscriptionScreen: React.FC = () => {
 
       {/* 2. Compare Free vs Full Table */}
       <div className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-3">
-        <h3 className="font-bold text-body text-ink">
-          مقایسه امکانات طرح «رایگان» و طرح «کامل»:
-        </h3>
+        <h3 className="font-bold text-body text-ink">مقایسه امکانات طرح «رایگان» و طرح «کامل»:</h3>
 
         <div className="overflow-hidden rounded-tile border border-sunken text-meta">
           <table className="w-full text-right divide-y divide-sunken">
@@ -221,9 +213,7 @@ export const SubscriptionScreen: React.FC = () => {
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-body text-ink">تعرفه‌ها و طرح‌های اشتراک:</h3>
-          <span className="text-meta text-ink/50 font-bold">
-            (قیمت‌ها نمایشی آزمایشی)
-          </span>
+          <span className="text-meta text-ink/50 font-bold">(قیمت‌ها نمایشی آزمایشی)</span>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
@@ -287,7 +277,8 @@ export const SubscriptionScreen: React.FC = () => {
           <span>کد فعال‌سازی سازمانی یا کارت هدیه:</span>
         </div>
         <p className="text-meta text-ink/70 leading-relaxed">
-          اگر از طرف سازمان خود کد فعال‌سازی دریافت کرده‌اید، آن را وارد نمایید (نمونه: FOOLAD-2026):
+          اگر از طرف سازمان خود کد فعال‌سازی دریافت کرده‌اید، آن را وارد نمایید (نمونه:
+          FOOLAD-2026):
         </p>
 
         <div className="flex items-center gap-2 pt-1">
@@ -298,12 +289,7 @@ export const SubscriptionScreen: React.FC = () => {
             placeholder="مثال: FOOLAD-2026"
             className="flex-1 min-h-[48px] h-12 px-3 rounded-tile border border-sunken text-meta font-mono font-bold text-center outline-none focus:border-primary text-ink bg-surface"
           />
-          <Button
-            size="sm"
-            variant="secondary"
-            isLoading={isActivating}
-            onClick={handleApplyCode}
-          >
+          <Button size="sm" variant="secondary" isLoading={isActivating} onClick={handleApplyCode}>
             اعمال کد
           </Button>
         </div>

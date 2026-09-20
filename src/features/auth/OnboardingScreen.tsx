@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Target,
-  Clock,
-  Bell,
-  Compass,
-  CheckCircle2,
-  ChevronLeft,
-  Check,
-} from 'lucide-react';
+import { Target, Clock, Bell, Compass, CheckCircle2, ChevronLeft, Check } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { ByteRow } from '../../components/ui/ByteRow';
 import { useApp } from '../../state/AppContext';
@@ -58,7 +50,9 @@ export const OnboardingScreen: React.FC = () => {
       <header className="py-2 space-y-2">
         <div className="flex items-center justify-between text-meta font-bold text-ink/70">
           <span>شخصی‌سازی تجربه گرابایت</span>
-          <span>گام {toFa(step)} از {toFa(totalSteps)}</span>
+          <span>
+            گام {toFa(step)} از {toFa(totalSteps)}
+          </span>
         </div>
         <div className="flex items-center gap-1.5 h-1.5 bg-sunken-dark rounded-pill overflow-hidden">
           {Array.from({ length: totalSteps }).map((_, idx) => (
@@ -81,18 +75,19 @@ export const OnboardingScreen: React.FC = () => {
               <Target className="w-7 h-7 stroke-[2.2]" aria-hidden="true" />
             </div>
             <div>
-              <h2 className="text-headline font-black text-ink">
-                هدف مطالعه روزانه شما
-              </h2>
-              <p className="text-meta text-ink/70 mt-1">
-                هر گرابایت تنها ۳ دقیقه زمان نیاز دارد:
-              </p>
+              <h2 className="text-headline font-black text-ink">هدف مطالعه روزانه شما</h2>
+              <p className="text-meta text-ink/70 mt-1">هر گرابایت تنها ۳ دقیقه زمان نیاز دارد:</p>
             </div>
 
             <div className="space-y-3 pt-2">
               {[
                 { count: 1, title: '۱ گرابایت در روز (۳ دقیقه)', desc: 'آهسته و پیوسته' },
-                { count: 2, title: '۲ گرابایت در روز (۶ دقیقه)', desc: 'استاندارد و توصیه‌شده', popular: true },
+                {
+                  count: 2,
+                  title: '۲ گرابایت در روز (۶ دقیقه)',
+                  desc: 'استاندارد و توصیه‌شده',
+                  popular: true,
+                },
                 { count: 3, title: '۳ گرابایت در روز (۹ دقیقه)', desc: 'پیشرفت پرشتاب' },
               ].map((opt) => (
                 <div
@@ -129,9 +124,7 @@ export const OnboardingScreen: React.FC = () => {
               <Clock className="w-7 h-7 stroke-[2.2]" aria-hidden="true" />
             </div>
             <div>
-              <h2 className="text-headline font-black text-ink">
-                زمان یادآوری مطالعه
-              </h2>
+              <h2 className="text-headline font-black text-ink">زمان یادآوری مطالعه</h2>
               <p className="text-meta text-ink/70 mt-1">
                 بهترین زمان روز برای ۳ دقیقه یادگیری متمرکز شما چه ساعتی است؟
               </p>
@@ -168,12 +161,8 @@ export const OnboardingScreen: React.FC = () => {
               <Bell className="w-7 h-7 stroke-[2.2]" aria-hidden="true" />
             </div>
             <div>
-              <h2 className="text-headline font-black text-ink">
-                یادآوری‌های هوشمند و محترمانه
-              </h2>
-              <p className="text-meta text-ink/70 mt-1">
-                سیاست ارتباطی گرابایت:
-              </p>
+              <h2 className="text-headline font-black text-ink">یادآوری‌های هوشمند و محترمانه</h2>
+              <p className="text-meta text-ink/70 mt-1">سیاست ارتباطی گرابایت:</p>
             </div>
 
             <div className="p-4 rounded-tile bg-paper border border-sunken text-right space-y-2.5 text-body text-ink/85">
@@ -200,12 +189,8 @@ export const OnboardingScreen: React.FC = () => {
               <Compass className="w-7 h-7 stroke-[2.2]" aria-hidden="true" />
             </div>
             <div>
-              <h2 className="text-headline font-black text-ink">
-                حوزه‌های مورد علاقه
-              </h2>
-              <p className="text-meta text-ink/70 mt-1">
-                علاقه‌مندی‌های اصلی خود را انتخاب کنید:
-              </p>
+              <h2 className="text-headline font-black text-ink">حوزه‌های مورد علاقه</h2>
+              <p className="text-meta text-ink/70 mt-1">علاقه‌مندی‌های اصلی خود را انتخاب کنید:</p>
             </div>
 
             <div className="space-y-2 text-right pt-1">
@@ -216,9 +201,7 @@ export const OnboardingScreen: React.FC = () => {
                     key={dom}
                     onClick={() => {
                       setSelectedDomains((prev) =>
-                        isSelected
-                          ? prev.filter((d) => d !== dom)
-                          : [...prev, dom]
+                        isSelected ? prev.filter((d) => d !== dom) : [...prev, dom]
                       );
                     }}
                     className={`w-full min-h-[48px] p-3 rounded-tile border text-meta font-bold transition-all flex items-center justify-between cursor-pointer ${

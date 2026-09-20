@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  ArrowRight,
-  Clock,
-  Moon,
-  Shield,
-} from 'lucide-react';
+import { ArrowRight, Clock, Moon, Shield } from 'lucide-react';
 import { meApi } from '../../api/me';
 import { NotificationPrefs } from '../../types/domain';
 import { Button } from '../../components/ui/Button';
@@ -70,7 +65,11 @@ export const NotificationSettingsScreen: React.FC = () => {
     }
   };
 
-  const channelsList: Array<{ key: keyof NotificationPrefs['channels']; label: string; note: string }> = [
+  const channelsList: Array<{
+    key: keyof NotificationPrefs['channels'];
+    label: string;
+    note: string;
+  }> = [
     { key: 'push', label: 'نوتیفیکیشن مرورگر و گوشی (Push)', note: 'مسیر اول و سریع' },
     { key: 'bale', label: 'پیام‌رسان بله (Bale)', note: 'ارسال از طریق بات رسمی گرا' },
     { key: 'eitaa', label: 'پیام‌رسان ایتا (Eitaa)', note: 'ارسال شناسه درس' },
@@ -104,7 +103,8 @@ export const NotificationSettingsScreen: React.FC = () => {
           <span>سیاست جایگزینی خودکار (Fallback Policy):</span>
         </div>
         <p className="text-meta leading-relaxed">
-          «اگر یک مسیر به هر دلیل در دسترس یا پاسخگو نبود، سامانه به ترتیب اولویت از مسیر فعال بعدی استفاده می‌کند تا پیوستگی یادگیری شما حفظ شود.»
+          «اگر یک مسیر به هر دلیل در دسترس یا پاسخگو نبود، سامانه به ترتیب اولویت از مسیر فعال بعدی
+          استفاده می‌کند تا پیوستگی یادگیری شما حفظ شود.»
         </p>
       </div>
 
@@ -207,13 +207,7 @@ export const NotificationSettingsScreen: React.FC = () => {
 
       {/* Save Button */}
       <div className="pt-2">
-        <Button
-          fullWidth
-          size="lg"
-          variant="primary"
-          isLoading={isSaving}
-          onClick={handleSave}
-        >
+        <Button fullWidth size="lg" variant="primary" isLoading={isSaving} onClick={handleSave}>
           ذخیره تنظیمات اعلان
         </Button>
       </div>

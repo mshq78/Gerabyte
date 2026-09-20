@@ -210,12 +210,8 @@ export const LessonPlayerScreen: React.FC = () => {
             <span className="px-3 py-1 rounded-pill bg-domain-3-tint text-success text-meta font-black border border-success/30">
               گرابایت با موفقیت تکمیل شد
             </span>
-            <h2 className="text-headline font-black mt-2 text-ink">
-              خسته نباشید!
-            </h2>
-            <p className="text-meta text-ink/70 mt-1 max-w-xs">
-              {lesson.title}
-            </p>
+            <h2 className="text-headline font-black mt-2 text-ink">خسته نباشید!</h2>
+            <p className="text-meta text-ink/70 mt-1 max-w-xs">{lesson.title}</p>
           </div>
 
           {/* XP & Coins Countup Box */}
@@ -242,7 +238,8 @@ export const LessonPlayerScreen: React.FC = () => {
             <div className="flex items-center justify-between text-meta">
               <span className="font-bold text-ink">پیشرفت هدف امروز</span>
               <span className="font-bold text-primary">
-                {toFa(completeResult.user.todayCompletedCount)} از {toFa(completeResult.user.dailyGoal)}
+                {toFa(completeResult.user.todayCompletedCount)} از{' '}
+                {toFa(completeResult.user.dailyGoal)}
               </span>
             </div>
             <div className="flex justify-center py-1">
@@ -261,9 +258,7 @@ export const LessonPlayerScreen: React.FC = () => {
             <span>زنجیره یادگیری:</span>
             <StreakChain count={completeResult.user.streakDays} size="sm" showLabel={false} />
             {completeResult.streakIncremented && (
-              <span className="text-success text-meta">
-                (+۱ پیوند جدید!)
-              </span>
+              <span className="text-success text-meta">(+۱ پیوند جدید!)</span>
             )}
           </div>
         </div>
@@ -279,12 +274,7 @@ export const LessonPlayerScreen: React.FC = () => {
           >
             ادامه مسیر یادگیری
           </Button>
-          <Button
-            fullWidth
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/')}
-          >
+          <Button fullWidth variant="ghost" size="sm" onClick={() => navigate('/')}>
             بازگشت به خانه
           </Button>
         </div>
@@ -298,9 +288,7 @@ export const LessonPlayerScreen: React.FC = () => {
       case 'text':
         return (
           <div className="space-y-4">
-            <h3 className="text-headline font-black text-ink leading-snug">
-              {card.headline}
-            </h3>
+            <h3 className="text-headline font-black text-ink leading-snug">{card.headline}</h3>
             <div className="space-y-3 text-read leading-[1.8] text-ink/90 font-medium">
               {card.content.map((p, idx) => (
                 <p key={idx}>{p}</p>
@@ -312,9 +300,7 @@ export const LessonPlayerScreen: React.FC = () => {
                   <Sparkles className="w-4 h-4" aria-hidden="true" />
                   <span>نکته کلیدی</span>
                 </span>
-                <p className="text-body font-semibold leading-relaxed">
-                  {card.keyTakeaway}
-                </p>
+                <p className="text-body font-semibold leading-relaxed">{card.keyTakeaway}</p>
               </div>
             )}
           </div>
@@ -357,16 +343,17 @@ export const LessonPlayerScreen: React.FC = () => {
               </div>
             </div>
 
-            <p className="text-meta text-ink/80 leading-relaxed">
-              {card.description}
-            </p>
+            <p className="text-meta text-ink/80 leading-relaxed">{card.description}</p>
 
             <div className="p-3.5 rounded-tile bg-surface border border-sunken space-y-2">
               <h4 className="text-meta font-bold text-ink">محورهای کلیدی ویدیو:</h4>
               <ul className="space-y-1.5 text-body text-ink/85">
                 {card.keyPoints.map((pt, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" aria-hidden="true" />
+                    <CheckCircle2
+                      className="w-4 h-4 text-success shrink-0 mt-0.5"
+                      aria-hidden="true"
+                    />
                     <span>{pt}</span>
                   </li>
                 ))}
@@ -404,9 +391,15 @@ export const LessonPlayerScreen: React.FC = () => {
                     <motion.div
                       key={idx}
                       className="w-1.5 rounded-pill bg-primary"
-                      animate={shouldReduceMotion ? false : {
-                        height: isAudioPlaying ? [height * 0.4, height, height * 0.4] : height * 0.5,
-                      }}
+                      animate={
+                        shouldReduceMotion
+                          ? false
+                          : {
+                              height: isAudioPlaying
+                                ? [height * 0.4, height, height * 0.4]
+                                : height * 0.5,
+                            }
+                      }
                       transition={{
                         repeat: isAudioPlaying ? Infinity : 0,
                         duration: 0.8 + (idx % 4) * 0.2,
@@ -428,9 +421,7 @@ export const LessonPlayerScreen: React.FC = () => {
                 <Volume2 className="w-4 h-4" aria-hidden="true" />
                 <span>متن کوتاه پادکست:</span>
               </span>
-              <p className="text-body text-ink leading-relaxed italic">
-                «{card.transcript}»
-              </p>
+              <p className="text-body text-ink leading-relaxed italic">«{card.transcript}»</p>
             </div>
           </div>
         );
@@ -451,18 +442,18 @@ export const LessonPlayerScreen: React.FC = () => {
                     key={idx}
                     className="p-3.5 rounded-tile bg-surface border border-sunken shadow-xs flex items-start gap-3"
                   >
-                    <div
-                      className="w-12 h-12 rounded-tile flex items-center justify-center shrink-0 text-surface font-bold text-body shadow-xs bg-primary"
-                    >
-                      {idx === 0 ? <Target className="w-6 h-6" aria-hidden="true" /> : idx === 1 ? <Clock className="w-6 h-6" aria-hidden="true" /> : <UserCheck className="w-6 h-6" aria-hidden="true" />}
+                    <div className="w-12 h-12 rounded-tile flex items-center justify-center shrink-0 text-surface font-bold text-body shadow-xs bg-primary">
+                      {idx === 0 ? (
+                        <Target className="w-6 h-6" aria-hidden="true" />
+                      ) : idx === 1 ? (
+                        <Clock className="w-6 h-6" aria-hidden="true" />
+                      ) : (
+                        <UserCheck className="w-6 h-6" aria-hidden="true" />
+                      )}
                     </div>
                     <div>
-                      <h4 className="font-bold text-body text-ink">
-                        {item.title}
-                      </h4>
-                      <p className="text-meta text-ink/80 mt-1 leading-relaxed">
-                        {item.desc}
-                      </p>
+                      <h4 className="font-bold text-body text-ink">{item.title}</h4>
+                      <p className="text-meta text-ink/80 mt-1 leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 );
@@ -503,14 +494,14 @@ export const LessonPlayerScreen: React.FC = () => {
                     </div>
 
                     <div className="my-2">
-                      <p className={`text-body font-bold leading-relaxed ${isFlipped ? 'text-primary' : 'text-ink'}`}>
+                      <p
+                        className={`text-body font-bold leading-relaxed ${isFlipped ? 'text-primary' : 'text-ink'}`}
+                      >
                         {isFlipped ? fc.back : fc.front}
                       </p>
                     </div>
 
-                    <span className="text-meta text-ink/40">
-                      ضربه برای وارونه کردن
-                    </span>
+                    <span className="text-meta text-ink/40">ضربه برای وارونه کردن</span>
                   </div>
                 );
               })}
@@ -529,9 +520,7 @@ export const LessonPlayerScreen: React.FC = () => {
             {/* Situation Card */}
             <div className="p-4 rounded-tile bg-surface border border-sunken shadow-xs space-y-2">
               <h3 className="font-bold text-body text-ink">صورت مسئله:</h3>
-              <p className="text-body text-ink/85 leading-relaxed">
-                {sc.situation}
-              </p>
+              <p className="text-body text-ink/85 leading-relaxed">{sc.situation}</p>
               <div className="pt-2 border-t border-sunken text-meta text-ink/70 font-semibold">
                 نقش شما: {sc.roleContext}
               </div>
@@ -539,9 +528,7 @@ export const LessonPlayerScreen: React.FC = () => {
 
             {/* Options */}
             <div className="space-y-2 pt-1">
-              <span className="text-meta font-bold text-ink">
-                بهترین واکنش در این شرایط چیست؟
-              </span>
+              <span className="text-meta font-bold text-ink">بهترین واکنش در این شرایط چیست؟</span>
               {sc.options.map((opt) => {
                 const isSelected = selectedScenarioOption === opt.id;
                 return (
@@ -556,7 +543,9 @@ export const LessonPlayerScreen: React.FC = () => {
                   >
                     <span
                       className={`w-4 h-4 rounded-pill border flex items-center justify-center shrink-0 mt-0.5 ${
-                        isSelected ? 'border-primary bg-primary text-surface' : 'border-sunken-darker'
+                        isSelected
+                          ? 'border-primary bg-primary text-surface'
+                          : 'border-sunken-darker'
                       }`}
                     >
                       {isSelected && <span className="w-1.5 h-1.5 rounded-pill bg-surface" />}
@@ -579,9 +568,7 @@ export const LessonPlayerScreen: React.FC = () => {
               ارزیابی مفهومی درس
             </span>
 
-            <h3 className="text-read font-bold text-ink leading-snug">
-              {q.prompt}
-            </h3>
+            <h3 className="text-read font-bold text-ink leading-snug">{q.prompt}</h3>
 
             <div className="space-y-2.5 pt-2">
               {q.options.map((opt) => {
@@ -617,7 +604,9 @@ export const LessonPlayerScreen: React.FC = () => {
                       className={`w-4 h-4 ${
                         q.kind === 'multi' ? 'rounded-tile' : 'rounded-pill'
                       } border flex items-center justify-center shrink-0 mt-0.5 ${
-                        isSelected ? 'border-primary bg-primary text-surface' : 'border-sunken-darker'
+                        isSelected
+                          ? 'border-primary bg-primary text-surface'
+                          : 'border-sunken-darker'
                       }`}
                     >
                       {isSelected && <Check className="w-3 h-3 stroke-[3]" aria-hidden="true" />}
@@ -709,9 +698,7 @@ export const LessonPlayerScreen: React.FC = () => {
                   </>
                 )}
               </div>
-              <p className="text-meta text-ink/80 leading-relaxed font-medium">
-                {explanationText}
-              </p>
+              <p className="text-meta text-ink/80 leading-relaxed font-medium">{explanationText}</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -727,8 +714,8 @@ export const LessonPlayerScreen: React.FC = () => {
             {currentCardIndex === totalCards - 1 && !showExplanation && currentCard.type !== 'quiz'
               ? 'تکمیل گرابایت'
               : showExplanation || (currentCard.type !== 'quiz' && currentCard.type !== 'scenario')
-              ? 'ادامه'
-              : 'بررسی پاسخ'}
+                ? 'ادامه'
+                : 'بررسی پاسخ'}
           </Button>
         </div>
       </div>

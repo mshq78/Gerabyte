@@ -13,7 +13,11 @@ export const EXCEL_SCHEMA = [
     column: 'نقش سامانه',
     type: String,
     value: (m: OrgMember) =>
-      m.role === 'org_admin' ? 'مدیر ارشد سازمان' : m.role === 'unit_manager' ? 'مدیر واحد' : 'یادگیرنده',
+      m.role === 'org_admin'
+        ? 'مدیر ارشد سازمان'
+        : m.role === 'unit_manager'
+          ? 'مدیر واحد'
+          : 'یادگیرنده',
     width: 18,
   },
   {
@@ -32,27 +36,39 @@ export const EXCEL_SCHEMA = [
   { column: 'آخرین فعالیت', type: String, value: (m: OrgMember) => m.lastActiveAt, width: 16 },
 ];
 
-export async function exportMembersToXlsx(members: OrgMember[], fileName = 'گزارش_پرسنل_گرابایت.xlsx'): Promise<void> {
+export async function exportMembersToXlsx(
+  members: OrgMember[],
+  fileName = 'گزارش_پرسنل_گرابایت.xlsx'
+): Promise<void> {
   await (writeXlsx as any)(members, {
     schema: EXCEL_SCHEMA,
     fileName,
   });
 }
 
-export function exportMembersToCsv(members: OrgMember[], fileName = 'گزارش_پرسنل_گرابایت.csv'): void {
+export function exportMembersToCsv(
+  members: OrgMember[],
+  fileName = 'گزارش_پرسنل_گرابایت.csv'
+): void {
   const rows = members.map((m) => ({
     'شناسه پرسنلی': m.id,
     'نام و نام خانوادگی': m.fullName,
     'واحد سازمانی': m.unitName,
     'سطح مهارت': `سطح ${m.level}`,
-    'نقش سامانه': m.role === 'org_admin' ? 'مدیر ارشد سازمان' : m.role === 'unit_manager' ? 'مدیر واحد' : 'یادگیرنده',
-    'وضعیت فعالیت': m.status === 'active' ? 'فعال' : m.status === 'at_risk' ? 'نیازمند توجه' : 'غیرفعال',
+    'نقش سامانه':
+      m.role === 'org_admin'
+        ? 'مدیر ارشد سازمان'
+        : m.role === 'unit_manager'
+          ? 'مدیر واحد'
+          : 'یادگیرنده',
+    'وضعیت فعالیت':
+      m.status === 'active' ? 'فعال' : m.status === 'at_risk' ? 'نیازمند توجه' : 'غیرفعال',
     'امتیاز کل (XP)': m.xpTotal,
     'زنجیره (روز)': m.streakDays,
     'نرخ انطباق (٪)': m.complianceRate,
     'تعداد گواهینامه': m.certificatesCount,
     'شماره تماس': m.phone,
-    'رایانامه': m.email,
+    رایانامه: m.email,
     'آخرین فعالیت': m.lastActiveAt,
   }));
 

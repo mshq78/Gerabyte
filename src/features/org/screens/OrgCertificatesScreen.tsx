@@ -57,7 +57,15 @@ export const OrgCertificatesScreen: React.FC = () => {
   // Export to CSV
   const handleExportCsv = () => {
     const bom = '\uFEFF';
-    const headers = ['سریال گواهینامه', 'عنوان گواهینامه', 'مسیر آموزشی', 'نام دارنده', 'واحد سازمانی', 'نمره آزمون', 'تاریخ صدور'];
+    const headers = [
+      'سریال گواهینامه',
+      'عنوان گواهینامه',
+      'مسیر آموزشی',
+      'نام دارنده',
+      'واحد سازمانی',
+      'نمره آزمون',
+      'تاریخ صدور',
+    ];
     const rows = certificates.map((c) =>
       [
         `"${c.serial}"`,
@@ -104,7 +112,10 @@ export const OrgCertificatesScreen: React.FC = () => {
       {/* Path Totals Badges */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {Object.entries(totalsByPath).map(([name, count]) => (
-          <div key={name} className="p-3.5 rounded-tile bg-surface border border-sunken shadow-xs space-y-1">
+          <div
+            key={name}
+            className="p-3.5 rounded-tile bg-surface border border-sunken shadow-xs space-y-1"
+          >
             <span className="text-meta text-ink/60 line-clamp-1 block">{name}</span>
             <div className="text-title font-black text-primary">{toFa(count)} گواهینامه</div>
           </div>
@@ -177,7 +188,9 @@ export const OrgCertificatesScreen: React.FC = () => {
       {/* Certificates Table */}
       <div className="rounded-sheet bg-surface border border-sunken shadow-xs overflow-hidden">
         {loading ? (
-          <div className="text-center py-16 text-body font-bold text-ink/60">در حال بارگذاری گواهینامه‌ها...</div>
+          <div className="text-center py-16 text-body font-bold text-ink/60">
+            در حال بارگذاری گواهینامه‌ها...
+          </div>
         ) : certificates.length === 0 ? (
           <div className="text-center py-16 text-ink/60 font-bold space-y-2">
             <Award className="w-12 h-12 text-ink/30 mx-auto" />
@@ -205,7 +218,9 @@ export const OrgCertificatesScreen: React.FC = () => {
                     <td className="p-3.5 font-medium text-ink">{cert.title}</td>
                     <td className="p-3.5 text-ink/70">{cert.pathName}</td>
                     <td className="p-3.5 text-ink/70">{cert.unitName}</td>
-                    <td className="p-3.5 font-mono font-bold text-success">{toFa(cert.scorePct)}٪</td>
+                    <td className="p-3.5 font-mono font-bold text-success">
+                      {toFa(cert.scorePct)}٪
+                    </td>
                     <td className="p-3.5 font-mono text-ink/80 text-meta">{cert.serial}</td>
                     <td className="p-3.5 font-mono text-ink/60">{toFa(cert.issuedAt)}</td>
                     <td className="p-3.5 text-center">

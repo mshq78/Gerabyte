@@ -32,21 +32,27 @@ export const notificationsApi = {
 
   // TODO(backend): PATCH /api/v1/notifications/:id/read
   async markRead(id: string): Promise<AppNotification[]> {
-    return mockRequest(() => {
-      const items = getStoredNotifications();
-      const updated = items.map((n) => (n.id === id ? { ...n, read: true } : n));
-      saveNotifications(updated);
-      return updated;
-    }, { endpoint: `/api/v1/notifications/${id}/read` });
+    return mockRequest(
+      () => {
+        const items = getStoredNotifications();
+        const updated = items.map((n) => (n.id === id ? { ...n, read: true } : n));
+        saveNotifications(updated);
+        return updated;
+      },
+      { endpoint: `/api/v1/notifications/${id}/read` }
+    );
   },
 
   // TODO(backend): POST /api/v1/notifications/mark-all-read
   async markAllRead(): Promise<AppNotification[]> {
-    return mockRequest(() => {
-      const items = getStoredNotifications();
-      const updated = items.map((n) => ({ ...n, read: true }));
-      saveNotifications(updated);
-      return updated;
-    }, { endpoint: '/api/v1/notifications/mark-all-read' });
+    return mockRequest(
+      () => {
+        const items = getStoredNotifications();
+        const updated = items.map((n) => ({ ...n, read: true }));
+        saveNotifications(updated);
+        return updated;
+      },
+      { endpoint: '/api/v1/notifications/mark-all-read' }
+    );
   },
 };

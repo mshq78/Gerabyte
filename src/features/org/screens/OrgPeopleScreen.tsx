@@ -89,7 +89,9 @@ export const OrgPeopleScreen: React.FC = () => {
   };
 
   const handleToggleSelect = (id: string) => {
-    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
   };
 
   // Bulk actions
@@ -126,7 +128,10 @@ export const OrgPeopleScreen: React.FC = () => {
 
   const handleConfirmImport = () => {
     if (!importFile) return;
-    showToast(`فایل با موفقیت بررسی شد و اطلاعات ${toFa(importPreview.length || 10)} همکار همگام‌سازی گردید.`, 'success');
+    showToast(
+      `فایل با موفقیت بررسی شد و اطلاعات ${toFa(importPreview.length || 10)} همکار همگام‌سازی گردید.`,
+      'success'
+    );
     setIsImportModalOpen(false);
     setImportFile(null);
     setImportPreview([]);
@@ -294,7 +299,9 @@ export const OrgPeopleScreen: React.FC = () => {
       {/* Employees Table */}
       <div className="p-4 sm:p-6 rounded-tile bg-surface border border-sunken shadow-xs overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-ink/60 font-bold">در حال بارگذاری لیست پرسنل...</div>
+          <div className="p-12 text-center text-ink/60 font-bold">
+            در حال بارگذاری لیست پرسنل...
+          </div>
         ) : filteredMembers.length === 0 ? (
           <div className="p-12 text-center">
             <p className="text-body font-bold text-ink/70">هیچ همکاری با این مشخصات یافت نشد.</p>
@@ -307,7 +314,9 @@ export const OrgPeopleScreen: React.FC = () => {
                   <th className="py-3 px-3 w-10">
                     <input
                       type="checkbox"
-                      checked={selectedIds.length > 0 && selectedIds.length === filteredMembers.length}
+                      checked={
+                        selectedIds.length > 0 && selectedIds.length === filteredMembers.length
+                      }
                       onChange={handleSelectAll}
                       className="w-4 h-4 rounded border-sunken text-primary focus:ring-primary cursor-pointer"
                       aria-label="انتخاب همه"
@@ -360,7 +369,9 @@ export const OrgPeopleScreen: React.FC = () => {
                                 </span>
                               )}
                             </div>
-                            <span className="text-meta text-ink/60 font-medium">{member.phone}</span>
+                            <span className="text-meta text-ink/60 font-medium">
+                              {member.phone}
+                            </span>
                           </div>
                         </div>
                       </td>
@@ -381,11 +392,15 @@ export const OrgPeopleScreen: React.FC = () => {
                               style={{ width: `${member.complianceRate}%` }}
                             />
                           </div>
-                          <span className="text-meta font-bold text-ink">{toFa(member.complianceRate)}٪</span>
+                          <span className="text-meta font-bold text-ink">
+                            {toFa(member.complianceRate)}٪
+                          </span>
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-4 text-ink font-bold">{toFa(member.streakDays)} روز</td>
+                      <td className="py-3.5 px-4 text-ink font-bold">
+                        {toFa(member.streakDays)} روز
+                      </td>
 
                       <td className="py-3.5 px-4 text-center">
                         <span
@@ -393,15 +408,15 @@ export const OrgPeopleScreen: React.FC = () => {
                             member.status === 'active'
                               ? 'bg-domain-3-tint text-secondary'
                               : member.status === 'at_risk'
-                              ? 'bg-domain-5-tint text-[#E58A1F]'
-                              : 'bg-canvas text-ink/60 border border-sunken'
+                                ? 'bg-domain-5-tint text-[#E58A1F]'
+                                : 'bg-canvas text-ink/60 border border-sunken'
                           }`}
                         >
                           {member.status === 'active'
                             ? 'فعال'
                             : member.status === 'at_risk'
-                            ? 'نیازمند توجه'
-                            : 'غیرفعال'}
+                              ? 'نیازمند توجه'
+                              : 'غیرفعال'}
                         </span>
                       </td>
 
@@ -438,7 +453,8 @@ export const OrgPeopleScreen: React.FC = () => {
             </div>
 
             <p className="text-body text-ink/70">
-              فایل اکسل (.xlsx) یا CSV حاوی ستون‌های «شناسه پرسنلی»، «نام»، «واحد»، «شماره تماس» را انتخاب نمایید.
+              فایل اکسل (.xlsx) یا CSV حاوی ستون‌های «شناسه پرسنلی»، «نام»، «واحد»، «شماره تماس» را
+              انتخاب نمایید.
             </p>
 
             <div
@@ -447,7 +463,9 @@ export const OrgPeopleScreen: React.FC = () => {
             >
               <Upload className="w-8 h-8 text-primary mx-auto mb-2" />
               <span className="text-body font-bold text-ink">برای انتخاب فایل کلیک کنید</span>
-              <p className="text-meta text-ink/50 mt-1">پشتیبانی از فایل‌های اکسل و CSV با فونت فارسی</p>
+              <p className="text-meta text-ink/50 mt-1">
+                پشتیبانی از فایل‌های اکسل و CSV با فونت فارسی
+              </p>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -460,7 +478,9 @@ export const OrgPeopleScreen: React.FC = () => {
             {importFile && (
               <div className="p-3 rounded-tile bg-domain-1-tint border border-primary/20 text-meta font-bold text-primary flex items-center justify-between">
                 <span>فایل انتخاب‌شده: {importFile.name}</span>
-                <span className="text-meta text-ink/60">{toFa(Math.round(importFile.size / 1024))} کیلوبایت</span>
+                <span className="text-meta text-ink/60">
+                  {toFa(Math.round(importFile.size / 1024))} کیلوبایت
+                </span>
               </div>
             )}
 

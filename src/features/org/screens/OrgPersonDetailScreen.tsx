@@ -61,7 +61,10 @@ export const OrgPersonDetailScreen: React.FC = () => {
     try {
       const updated = await orgApi.updateMemberRole(member.id, newRole);
       setMember(updated);
-      showToast(`نقش کاربری به «${newRole === 'org_admin' ? 'مدیر ارشد' : newRole === 'unit_manager' ? 'مدیر واحد' : 'یادگیرنده'}» تغییر یافت.`, 'success');
+      showToast(
+        `نقش کاربری به «${newRole === 'org_admin' ? 'مدیر ارشد' : newRole === 'unit_manager' ? 'مدیر واحد' : 'یادگیرنده'}» تغییر یافت.`,
+        'success'
+      );
     } catch {
       showToast('خطا در تغییر نقش کاربر', 'error');
     }
@@ -94,7 +97,9 @@ export const OrgPersonDetailScreen: React.FC = () => {
     return (
       <div className="p-8 text-center bg-surface rounded-tile border border-sunken">
         <h3 className="text-title font-black text-ink mb-2">همکار مورد نظر یافت نشد</h3>
-        <p className="text-body text-ink/70 mb-4">ممکن است شناسه پرسنلی تغییر کرده یا حذف شده باشد.</p>
+        <p className="text-body text-ink/70 mb-4">
+          ممکن است شناسه پرسنلی تغییر کرده یا حذف شده باشد.
+        </p>
         <Link
           to="/org/people"
           className="min-h-[48px] px-5 py-2.5 rounded-tile bg-primary text-white text-meta font-bold inline-flex items-center gap-2"
@@ -141,7 +146,9 @@ export const OrgPersonDetailScreen: React.FC = () => {
       <div className="hidden print:block border-b-2 border-ink pb-4 mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-black text-ink">سامانه ارزیابی و آموزش پیوسته سازمانی گرابایت</h1>
+            <h1 className="text-xl font-black text-ink">
+              سامانه ارزیابی و آموزش پیوسته سازمانی گرابایت
+            </h1>
             <p className="text-sm text-ink/70">کارنامه رسمی پیشرفت و انطباق شایستگی‌های شغلی</p>
           </div>
           <div className="text-left text-xs text-ink/80 space-y-1">
@@ -167,11 +174,15 @@ export const OrgPersonDetailScreen: React.FC = () => {
                   member.status === 'active'
                     ? 'bg-domain-3-tint text-secondary'
                     : member.status === 'at_risk'
-                    ? 'bg-domain-5-tint text-[#E58A1F]'
-                    : 'bg-canvas text-ink/60 border border-sunken'
+                      ? 'bg-domain-5-tint text-[#E58A1F]'
+                      : 'bg-canvas text-ink/60 border border-sunken'
                 }`}
               >
-                {member.status === 'active' ? 'فعال' : member.status === 'at_risk' ? 'نیازمند همراهی' : 'غیرفعال'}
+                {member.status === 'active'
+                  ? 'فعال'
+                  : member.status === 'at_risk'
+                    ? 'نیازمند همراهی'
+                    : 'غیرفعال'}
               </span>
             </div>
 
@@ -232,7 +243,9 @@ export const OrgPersonDetailScreen: React.FC = () => {
             <span>نرخ انطباق مهارتی</span>
           </span>
           <div className="flex items-baseline gap-1">
-            <span className="text-headline font-black text-primary">{toFa(member.complianceRate)}</span>
+            <span className="text-headline font-black text-primary">
+              {toFa(member.complianceRate)}
+            </span>
             <span className="text-meta font-bold text-ink/60">٪</span>
           </div>
           <p className="text-meta text-ink/50 mt-1">
@@ -258,7 +271,9 @@ export const OrgPersonDetailScreen: React.FC = () => {
             <span>گواهینامه‌های رسمی</span>
           </span>
           <div className="flex items-baseline gap-1">
-            <span className="text-headline font-black text-ink">{toFa(member.certificatesCount)}</span>
+            <span className="text-headline font-black text-ink">
+              {toFa(member.certificatesCount)}
+            </span>
             <span className="text-meta font-bold text-ink/60">گواهینامه</span>
           </div>
           <p className="text-meta text-ink/50 mt-1">دارای کد اعتبارسنجی</p>
@@ -289,7 +304,11 @@ export const OrgPersonDetailScreen: React.FC = () => {
               <RadarChart data={domainRadarData}>
                 <PolarGrid stroke="#E8E1D5" />
                 <PolarAngleAxis dataKey="domain" tick={{ fill: '#0D3F6B', fontSize: 11 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#0D3F6B', fontSize: 10 }} />
+                <PolarRadiusAxis
+                  angle={30}
+                  domain={[0, 100]}
+                  tick={{ fill: '#0D3F6B', fontSize: 10 }}
+                />
                 <Radar
                   name="میزان تسلط"
                   dataKey="score"
@@ -331,7 +350,8 @@ export const OrgPersonDetailScreen: React.FC = () => {
             <span className="font-bold text-ink">
               {toFa(
                 Math.round(
-                  domainRadarData.reduce((acc, curr) => acc + curr.score, 0) / domainRadarData.length
+                  domainRadarData.reduce((acc, curr) => acc + curr.score, 0) /
+                    domainRadarData.length
                 )
               )}
               ٪
