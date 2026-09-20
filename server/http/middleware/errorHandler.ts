@@ -9,6 +9,32 @@ function body(code: ErrorCode, requestId: string, details?: unknown): ApiErrorBo
   return { error };
 }
 
+/**
+ * body-parser rejects a request before any handler sees it, and throws an
+ * http-errors object rather than one of ours. Left unclassified these came
+ * back as 500 INTERNAL and were logged at error level with a stack — a client
+ * mistake reported as a server fault, and noise in the error budget.
+ */
+function classifyBodyError(
+  err: unknown
+): { status: number; code: ErrorCode; length: number | undefined } | null {
+  if (typeof err !== 'object' || err === null || !('type' in err)) return null;
+  const candidate = err as { type?: unknown; length?: unknown };
+  const length = typeof candidate.length === 'number' ? candidate.length : undefined;
+
+  switch (candidate.type) {
+    case 'entity.too.large':
+      return { status: 413, code: 'PAYLOAD_TOO_LARGE', length };
+    case 'entity.parse.failed':
+    case 'entity.verify.failed':
+    case 'encoding.unsupported':
+    case 'charset.unsupported':
+      return { status: 400, code: 'MALFORMED_JSON', length };
+    default:
+      return null;
+  }
+}
+
 /** 404 for anything that fell through the router. */
 export function notFoundHandler() {
   return (req: Request, res: Response) => {
@@ -36,6 +62,19 @@ export function errorHandler() {
         logger.error({ requestId: req.requestId, code: err.code }, 'request failed');
       }
       res.status(err.status).json(body(err.code, req.requestId, err.details));
+      return;
+    }
+
+    const bodyError = classifyBodyError(err);
+    if (bodyError) {
+      // A body we refused to parse is a client mistake, not a server fault:
+      // warn, and never log the body itself — an oversized or malformed
+      // request is exactly the kind that carries a password or a code.
+      logger.warn(
+        { requestId: req.requestId, code: bodyError.code, bytes: bodyError.length },
+        'request body refused'
+      );
+      res.status(bodyError.status).json(body(bodyError.code, req.requestId));
       return;
     }
 

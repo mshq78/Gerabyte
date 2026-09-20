@@ -4,16 +4,22 @@
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { parseEnv } from 'node:util';
 
+/**
+ * Node's own .env parser, not a regex of ours.
+ *
+ * The hand-written one kept everything after the `=`, so a documented line
+ * like `PORT=4000  # plain Node entry only` became the literal string
+ * "4000  # plain Node entry only" — which meant the documented first run,
+ * `cp .env.example .env`, failed the entire server suite on a comment.
+ */
 function loadDotEnv(): void {
   try {
-    const raw = readFileSync(resolve(process.cwd(), '.env'), 'utf8');
-    for (const line of raw.split('\n')) {
-      const match = /^([A-Z0-9_]+)=(.*)$/.exec(line.trim());
-      if (!match) continue;
-      const [, key, value] = match;
-      if (key && process.env[key] === undefined) {
-        process.env[key] = value?.replace(/^["']|["']$/g, '') ?? '';
+    const parsed = parseEnv(readFileSync(resolve(process.cwd(), '.env'), 'utf8'));
+    for (const [key, value] of Object.entries(parsed)) {
+      if (typeof value === 'string' && process.env[key] === undefined) {
+        process.env[key] = value;
       }
     }
   } catch {

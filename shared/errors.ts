@@ -11,6 +11,8 @@ export const ERROR_MESSAGES = {
   BAD_REQUEST: 'درخواست نامعتبر است.',
   NOT_FOUND: 'موردی یافت نشد.',
   VALIDATION_FAILED: 'اطلاعات واردشده معتبر نیست.',
+  MALFORMED_JSON: 'ساختار درخواست معتبر نیست.',
+  PAYLOAD_TOO_LARGE: 'حجم درخواست بیش از حد مجاز است.',
 
   // Auth / session
   UNAUTHENTICATED: 'برای ادامه باید وارد حساب کاربری شوید.',

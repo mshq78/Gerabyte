@@ -17,19 +17,27 @@ You need Node 22+ and a PostgreSQL 16 database.
 
 ```bash
 npm install
-cp .env.example .env          # then fill in the secrets, see below
+cp .env.example .env          # works as-is for local development
 docker compose up -d          # Postgres on :5432, plus a gerabyte_test database
 npm run db:migrate
 npm run db:seed               # development data; refuses to run in production
 npm run dev                   # API on :4000, web on :3000
+npm run test:server           # the suite the example file is checked against
 ```
 
 Open http://localhost:3000. Vite proxies `/api` to the API server, so the
 browser only ever sees one origin — the same as in production, which is what
 makes the cookie and CSRF rules behave identically in both.
 
-Generate the three secrets with `openssl rand -base64 48` each. The app refuses
-to start if any of them is missing or too short.
+The copied `.env` needs no editing to work locally: its database credentials
+are the ones `docker-compose.yml` creates, and its placeholder secrets are
+long enough to satisfy the schema. `server/config/envExample.test.ts` parses
+`.env.example` through that same schema on every run, so the instruction above
+cannot quietly stop being true.
+
+For anything deployed, replace the three secrets with
+`openssl rand -base64 48` each. The app refuses to start if any of them is
+missing or too short.
 
 ### Commands
 
