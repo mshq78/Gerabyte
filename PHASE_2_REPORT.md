@@ -238,10 +238,16 @@ project, which is defensible only behind Vercel Authentication and cannot
 reach production by accident: the server refuses to boot with
 `DEPLOY_ENV=production` and that flag set.
 
-Two things the brief allowed that I did **not** do: argon2id runs natively on
+One thing the brief allowed that I did **not** need: argon2id runs natively on
 Vercel, so the scrypt fallback stayed a fallback (it is still implemented and
-`/api/health` reports which one is live); and `ALLOW_DEV_OTP` is not set on any
-deployment.
+`/api/health` reports which one is live).
+
+> **Corrected in Phase 2.5.** This paragraph originally also claimed
+> `ALLOW_DEV_OTP` was not set on any deployment. That was true when it was
+> written and false by the time the report was committed — the flag was added
+> later in the same session so the staging demo could be signed into, and this
+> sentence was not updated. It **is** set, on Production and Preview. The
+> verified state is in `PHASE_2_5_REPORT.md`.
 
 ---
 

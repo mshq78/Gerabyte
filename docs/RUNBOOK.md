@@ -82,9 +82,27 @@ Strip `channel_binding=require` from the Neon URL. Neon's console adds it, but
 it is a libpq parameter and postgres.js does not implement `SCRAM-SHA-256-PLUS`.
 Keep `sslmode=require`.
 
-Two variables predate this project and are unused: `GEMINI_API_KEY` and
-`APP_URL`, both left over from the AI Studio scaffold. Delete them when
-convenient — nothing reads them.
+### Two leftovers to delete by hand
+
+`GEMINI_API_KEY` and `APP_URL` predate this project — they came from the AI
+Studio scaffold, nothing in the codebase reads either, and both are marked
+sensitive so their values cannot be read back to check. They should go.
+
+They are still there because the Vercel MCP surface available to this project
+exposes `create`, `edit`, `filter` and `get` for project environment
+variables, but no delete. Either of these removes them:
+
+```bash
+vercel env rm GEMINI_API_KEY production --yes
+vercel env rm GEMINI_API_KEY preview    --yes
+vercel env rm APP_URL        production --yes
+vercel env rm APP_URL        preview    --yes
+```
+
+or in the dashboard: **Project → Settings → Environment Variables**, the `…`
+menu on each row → **Remove**.
+
+Deleting them changes nothing at runtime, so no redeploy is needed.
 
 ### Preview deployments
 
