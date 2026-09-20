@@ -20,7 +20,7 @@ export const LoginScreen: React.FC = () => {
   const { refreshMe, updateMe, showToast } = useApp();
 
   const [activeTab, setActiveTab] = useState<'otp' | 'password'>('otp');
-  const [mobile, setMobile] = useState('09123456789');
+  const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [otpStep, setOtpStep] = useState<'request' | 'verify'>('request');
   const [otpDigits, setOtpDigits] = useState<string[]>(() => Array(OTP_LENGTH).fill(''));
@@ -204,6 +204,8 @@ export const LoginScreen: React.FC = () => {
                       <input
                         id="login-f1"
                         type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
                         value={mobile}
                         onChange={(e) => setMobile(e.target.value)}
                         placeholder="۰۹۱۲۳۴۵۶۷۸۹"
@@ -295,6 +297,8 @@ export const LoginScreen: React.FC = () => {
                   <input
                     id="login-f2"
                     type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
                     value={mobile}
                     onChange={(e) => setMobile(e.target.value)}
                     dir="ltr"
