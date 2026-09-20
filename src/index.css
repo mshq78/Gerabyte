@@ -13,6 +13,9 @@
   --color-primary: #1e6fa8;
   --color-primary-dark: #1a6295;
   --color-accent: #009bec;
+  /* Referenced across the dashboard; without these the classes silently no-op. */
+  --color-primary-hover: #1a6295;
+  --color-secondary: #1f9a8a;
 
   --color-coin: #f2a93b;
   --color-coin-dark: #c7821b;
@@ -33,6 +36,15 @@
   --color-domain-4-tint: #f2efff;
   --color-domain-5: #e58a1f;
   --color-domain-5-tint: #fef6ec;
+
+  /* Chart series colors: the five domain hues plus the coin accent, so charts
+     stay inside the product palette and never carry raw hex in .tsx. */
+  --color-chart-1: #1e6fa8;
+  --color-chart-2: #e2665a;
+  --color-chart-3: #1f9a8a;
+  --color-chart-4: #7a5bd6;
+  --color-chart-5: #e58a1f;
+  --color-chart-6: #f2a93b;
 
   --radius-tile: 14px;
   --radius-sheet: 24px;
@@ -128,4 +140,44 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/*
+ * Touch-target floor. Unlayered on purpose: plain rules outrank anything in
+ * Tailwind's layers, so a dense `min-h-[36px]` desktop control still grows to a
+ * thumb-sized target on a phone without changing the desktop layout at all.
+ * Inline anchors become inline-flex so the minimum can apply to them too.
+ */
+@media (max-width: 768px) {
+  button,
+  a[href],
+  [role='button'],
+  summary,
+  label[for],
+  input:not([type='hidden']),
+  select,
+  textarea {
+    min-height: 44px;
+  }
+
+  button,
+  a[href],
+  [role='button'],
+  summary,
+  input[type='checkbox'],
+  input[type='radio'] {
+    min-width: 44px;
+  }
+
+  /* Inline anchors and buttons need a block-ish box for a minimum to apply at
+     all; anything that already declares its own layout keeps it untouched. */
+  a[href]:not([class*='flex']):not([class*='grid']):not([class*='block']):not([class*='hidden']),
+  button:not([class*='flex']):not([class*='grid']):not([class*='block']):not([class*='hidden']),
+  [role='button']:not([class*='flex']):not([class*='grid']):not([class*='block']):not(
+      [class*='hidden']
+    ) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

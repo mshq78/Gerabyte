@@ -16,6 +16,14 @@ import { OrgKpiSummary, OrgMember } from '../../../types/org';
 import { toFa } from '../../../lib/format';
 import { exportMembersToXlsx } from '../utils/export';
 import { formatJalaliDate } from '../../../lib/jalali';
+import { ChartFrame } from '../../../components/charts/ChartFrame';
+import { RtlTooltip } from '../../../components/charts/RtlTooltip';
+import {
+  CHART_AXIS_TICK,
+  CHART_COLORS,
+  CHART_GRID_STROKE,
+  faTick,
+} from '../../../components/charts/chartTheme';
 
 export const OrgReportsScreen: React.FC = () => {
   const { currentOrg, effectiveUnitId } = useOrgScope();
@@ -87,12 +95,14 @@ export const OrgReportsScreen: React.FC = () => {
       <div className="hidden print:block border-b-2 border-ink pb-4 mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-black text-ink">
+            <h1 className="text-headline font-black text-ink">
               گزارش رسمی تحلیلی آموزش و شایستگی‌های سازمان
             </h1>
-            <p className="text-sm text-ink/70">سامانه یادگیری پیوسته گرابایت · {currentOrg.name}</p>
+            <p className="text-meta text-ink/70">
+              سامانه یادگیری پیوسته گرابایت · {currentOrg.name}
+            </p>
           </div>
-          <div className="text-left text-xs text-ink/80 space-y-1">
+          <div className="text-left text-meta text-ink/80 space-y-1">
             <div>تاریخ تنظیم گزارش: {formatJalaliDate(new Date())}</div>
             <div>جامعه آماری: {toFa(members.length)} نفر</div>
           </div>
@@ -146,43 +156,53 @@ export const OrgReportsScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* Domain Coverage Bar Chart */}
-      <div className="p-6 rounded-tile bg-surface border border-sunken shadow-xs">
-        <h3 className="text-headline font-black text-ink mb-1">
-          میانگین امتیازات آزمون‌ها در حوزه‌های ۵گانه
-        </h3>
-        <p className="text-meta text-ink/60 mb-6">
-          تحلیل تسلط دانش تخصصی پرسنل بر اساس نتایج آزمون‌های چک‌پوینت
-        </p>
-
-        <div className="h-64 w-full" dir="ltr">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={kpis.domainStats}
-              margin={{ top: 10, right: 20, left: -10, bottom: 20 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E8E1D5" />
-              <XAxis dataKey="domainTitle" tick={{ fill: '#0D3F6B', fontSize: 11 }} interval={0} />
-              <YAxis domain={[0, 100]} tick={{ fill: '#0D3F6B', fontSize: 12 }} />
-              <Tooltip
-                formatter={(val) => [`${toFa(String(val ?? 0))} از ۱۰۰`, 'میانگین نمره']}
-                contentStyle={{
-                  backgroundColor: '#FFFFFF',
-                  borderColor: '#E8E1D5',
-                  borderRadius: '12px',
-                  fontFamily: 'Vazirmatn',
-                  direction: 'rtl',
-                }}
-              />
-              <Bar dataKey="avgScore" radius={[6, 6, 0, 0]}>
-                {kpis.domainStats.map((entry, index) => (
-                  <Cell key={`cell-domain-${index}`} fill={entry.colorToken} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+      {/* Domain Coverage — horizontal bars, the domain titles are long */}
+      <ChartFrame
+        title="میانگین امتیازات آزمون‌ها در حوزه‌های ۵گانه"
+        subtitle="تحلیل تسلط دانش تخصصی پرسنل بر اساس نتایج آزمون‌های چک‌پوینت"
+        heightClass="h-80"
+        table={{
+          columns: ['حوزه شایستگی', 'میانگین نمره', 'نرخ انطباق'],
+          rows: kpis.domainStats.map((d) => [
+            d.domainTitle,
+            `${toFa(d.avgScore)} از ۱۰۰`,
+            `${toFa(d.completionRate)}٪`,
+          ]),
+        }}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={kpis.domainStats}
+            layout="vertical"
+            margin={{ top: 10, right: 16, left: 16, bottom: 10 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={CHART_GRID_STROKE} />
+            <XAxis type="number" domain={[0, 100]} tickFormatter={faTick} tick={CHART_AXIS_TICK} />
+            <YAxis
+              type="category"
+              dataKey="domainTitle"
+              orientation="right"
+              width={170}
+              interval={0}
+              tick={{ ...CHART_AXIS_TICK, textAnchor: 'start' }}
+            />
+            <Tooltip
+              cursor={{ fill: 'var(--color-canvas)' }}
+              content={
+                <RtlTooltip
+                  seriesName="میانگین نمره"
+                  formatValue={(value) => `${toFa(String(value ?? 0))} از ۱۰۰`}
+                />
+              }
+            />
+            <Bar dataKey="avgScore" radius={[0, 6, 6, 0]}>
+              {kpis.domainStats.map((entry, index) => (
+                <Cell key={entry.domainId} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartFrame>
 
       {/* At-Risk Cohort Analysis Table */}
       {atRiskMembers.length > 0 && (

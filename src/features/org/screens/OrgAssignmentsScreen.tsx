@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { PlusCircle, GraduationCap, Calendar, Users, X } from 'lucide-react';
+import { PlusCircle, GraduationCap, Calendar, Users, X, SlidersHorizontal } from 'lucide-react';
 import { useOrgScope } from '../context/ScopeContext';
 import { orgApi } from '../../../api/org/client';
 import { PathAssignment } from '../../../types/org';
@@ -11,6 +11,7 @@ import {
   isoDaysFromToday,
   parseJalaliNumeric,
 } from '../../../lib/jalali';
+import { Sheet } from '../../../components/ui/Sheet';
 
 export const OrgAssignmentsScreen: React.FC = () => {
   const { currentOrg, effectiveUnitId, units } = useOrgScope();
@@ -19,6 +20,7 @@ export const OrgAssignmentsScreen: React.FC = () => {
   const [assignments, setAssignments] = useState<PathAssignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -108,8 +110,55 @@ export const OrgAssignmentsScreen: React.FC = () => {
         </button>
       </div>
 
+      {/* Filters: inline from md up, in a bottom sheet below that */}
+      <div className="md:hidden">
+        <button
+          type="button"
+          onClick={() => setIsFilterSheetOpen(true)}
+          className="w-full min-h-[44px] px-4 rounded-tile bg-surface border border-sunken text-ink text-meta font-bold flex items-center justify-between gap-2 cursor-pointer"
+        >
+          <span className="flex items-center gap-2">
+            <SlidersHorizontal className="w-4 h-4 text-primary" aria-hidden="true" />
+            <span>فیلترها</span>
+          </span>
+          <span className="text-ink/60">
+            {filterStatus === 'all' ? 'تمام دوره‌ها' : 'دوره‌های در جریان'}
+          </span>
+        </button>
+      </div>
+
+      <Sheet
+        isOpen={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        title="فیلتر مأموریت‌ها"
+        subtitle="نتایج بلافاصله به‌روز می‌شوند"
+      >
+        <div className="flex flex-col gap-2">
+          <button
+            onClick={() => setFilterStatus('all')}
+            className={`min-h-[40px] px-4 py-1.5 rounded-pill text-meta font-bold transition-all cursor-pointer ${
+              filterStatus === 'all'
+                ? 'bg-primary text-white'
+                : 'bg-canvas text-ink/70 hover:bg-sunken'
+            }`}
+          >
+            تمام دوره‌ها ({toFa(assignments.length)})
+          </button>
+          <button
+            onClick={() => setFilterStatus('active')}
+            className={`min-h-[40px] px-4 py-1.5 rounded-pill text-meta font-bold transition-all cursor-pointer ${
+              filterStatus === 'active'
+                ? 'bg-primary text-white'
+                : 'bg-canvas text-ink/70 hover:bg-sunken'
+            }`}
+          >
+            دوره‌های در جریان
+          </button>
+        </div>
+      </Sheet>
+
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-sunken pb-3">
+      <div className="hidden md:flex items-center gap-2 border-b border-sunken pb-3">
         <button
           onClick={() => setFilterStatus('all')}
           className={`min-h-[40px] px-4 py-1.5 rounded-pill text-meta font-bold transition-all cursor-pointer ${
@@ -145,70 +194,125 @@ export const OrgAssignmentsScreen: React.FC = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredAssignments.map((asg) => {
-            const progressPercent =
-              asg.totalAssigned > 0
-                ? Math.round((asg.completedCount / asg.totalAssigned) * 100)
-                : 0;
+        <>
+          {/* Stacked rows below md; the card grid takes over from md up */}
+          <ul className="md:hidden rounded-tile bg-surface border border-sunken divide-y divide-sunken px-4">
+            {filteredAssignments.map((asg) => {
+              const progressPercent =
+                asg.totalAssigned > 0
+                  ? Math.round((asg.completedCount / asg.totalAssigned) * 100)
+                  : 0;
 
-            return (
-              <div
-                key={asg.id}
-                className="p-6 rounded-tile bg-surface border border-sunken shadow-xs flex flex-col justify-between space-y-4 hover:border-primary/40 transition-colors"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-meta px-2.5 py-0.5 rounded-pill bg-domain-1-tint text-primary font-bold">
-                      {asg.domainTitle}
-                    </span>
+              return (
+                <li key={asg.id} className="py-3 flex flex-col gap-2">
+                  <div className="flex items-start gap-3">
+                    <div className="min-w-0 flex-1">
+                      <span className="block font-bold text-ink truncate">{asg.title}</span>
+                      <span className="block text-meta text-ink/60 truncate">
+                        {asg.targetName} · مهلت {formatJalaliDate(asg.dueDate)}
+                      </span>
+                    </div>
                     <span
-                      className={`text-meta px-2.5 py-0.5 rounded-pill font-bold ${
-                        asg.mandatory
+                      className={`shrink-0 px-3 py-1 rounded-pill text-meta font-bold ${
+                        asg.status === 'overdue'
                           ? 'bg-domain-2-tint text-danger'
-                          : 'bg-canvas border border-sunken text-ink/70'
+                          : asg.status === 'completed'
+                            ? 'bg-domain-3-tint text-secondary'
+                            : 'bg-domain-1-tint text-primary'
                       }`}
                     >
-                      {asg.mandatory ? 'الزامی سازمانی' : 'اختیاری'}
+                      {asg.status === 'overdue'
+                        ? 'گذشته از مهلت'
+                        : asg.status === 'completed'
+                          ? 'تکمیل‌شده'
+                          : 'در جریان'}
                     </span>
                   </div>
 
-                  <h3 className="text-headline font-black text-ink mb-1">{asg.title}</h3>
-                  <p className="text-body text-ink/70 line-clamp-2">{asg.description}</p>
-                </div>
-
-                <div className="space-y-3 pt-2 border-t border-sunken">
-                  <div className="flex items-center justify-between text-meta text-ink/70">
-                    <span className="flex items-center gap-1.5">
-                      <Users className="w-4 h-4 text-ink/40" />
-                      <span>جامعه هدف: {asg.targetName}</span>
-                    </span>
-                    <span className="flex items-center gap-1.5 font-bold">
-                      <Calendar className="w-4 h-4 text-ink/40" />
-                      <span>مهلت: {formatJalaliDate(asg.dueDate)}</span>
-                    </span>
-                  </div>
-
-                  {/* Progress bar */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-meta font-bold">
-                      <span className="text-ink/80">
-                        {toFa(asg.completedCount)} از {toFa(asg.totalAssigned)} نفر تکمیل کرده‌اند
-                      </span>
-                      <span className="text-primary">{toFa(progressPercent)}٪</span>
-                    </div>
-                    <div className="w-full h-2.5 rounded-full bg-sunken overflow-hidden">
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-2 rounded-full bg-sunken overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-primary transition-all duration-500"
+                        className="h-full rounded-full bg-primary"
                         style={{ width: `${progressPercent}%` }}
                       />
                     </div>
+                    <span className="text-meta font-bold text-ink shrink-0">
+                      {toFa(progressPercent)}٪
+                    </span>
+                    <span className="text-meta text-ink/60 shrink-0">
+                      {toFa(asg.completedCount)} از {toFa(asg.totalAssigned)}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredAssignments.map((asg) => {
+              const progressPercent =
+                asg.totalAssigned > 0
+                  ? Math.round((asg.completedCount / asg.totalAssigned) * 100)
+                  : 0;
+
+              return (
+                <div
+                  key={asg.id}
+                  className="p-6 rounded-tile bg-surface border border-sunken shadow-xs flex flex-col justify-between space-y-4 hover:border-primary/40 transition-colors"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-meta px-2.5 py-0.5 rounded-pill bg-domain-1-tint text-primary font-bold">
+                        {asg.domainTitle}
+                      </span>
+                      <span
+                        className={`text-meta px-2.5 py-0.5 rounded-pill font-bold ${
+                          asg.mandatory
+                            ? 'bg-domain-2-tint text-danger'
+                            : 'bg-canvas border border-sunken text-ink/70'
+                        }`}
+                      >
+                        {asg.mandatory ? 'الزامی سازمانی' : 'اختیاری'}
+                      </span>
+                    </div>
+
+                    <h3 className="text-headline font-black text-ink mb-1">{asg.title}</h3>
+                    <p className="text-body text-ink/70 line-clamp-2">{asg.description}</p>
+                  </div>
+
+                  <div className="space-y-3 pt-2 border-t border-sunken">
+                    <div className="flex items-center justify-between text-meta text-ink/70">
+                      <span className="flex items-center gap-1.5">
+                        <Users className="w-4 h-4 text-ink/40" />
+                        <span>جامعه هدف: {asg.targetName}</span>
+                      </span>
+                      <span className="flex items-center gap-1.5 font-bold">
+                        <Calendar className="w-4 h-4 text-ink/40" />
+                        <span>مهلت: {formatJalaliDate(asg.dueDate)}</span>
+                      </span>
+                    </div>
+
+                    {/* Progress bar */}
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-meta font-bold">
+                        <span className="text-ink/80">
+                          {toFa(asg.completedCount)} از {toFa(asg.totalAssigned)} نفر تکمیل کرده‌اند
+                        </span>
+                        <span className="text-primary">{toFa(progressPercent)}٪</span>
+                      </div>
+                      <div className="w-full h-2.5 rounded-full bg-sunken overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-primary transition-all duration-500"
+                          style={{ width: `${progressPercent}%` }}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </>
       )}
 
       {/* Modal: Create Assignment */}

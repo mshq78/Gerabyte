@@ -30,6 +30,14 @@ import { orgApi } from '../../../api/org/client';
 import { OrgKpiSummary } from '../../../types/org';
 import { toFa } from '../../../lib/format';
 import { exportMembersToXlsx } from '../utils/export';
+import { ChartFrame } from '../../../components/charts/ChartFrame';
+import { RtlTooltip } from '../../../components/charts/RtlTooltip';
+import {
+  CHART_AXIS_TICK,
+  CHART_COLORS,
+  CHART_GRID_STROKE,
+  faTick,
+} from '../../../components/charts/chartTheme';
 
 export const OrgOverviewScreen: React.FC = () => {
   const { currentOrg, userRole, effectiveUnitId, units } = useOrgScope();
@@ -155,7 +163,7 @@ export const OrgOverviewScreen: React.FC = () => {
         <div className="p-5 rounded-tile bg-surface border border-sunken shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-ink/70 mb-3">
             <span className="text-meta font-bold">مطالعه روزانه</span>
-            <div className="w-8 h-8 rounded-pill bg-domain-4-tint text-[#7A5BD6] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-pill bg-domain-4-tint text-domain-4 flex items-center justify-center">
               <Clock className="w-4 h-4" aria-hidden="true" />
             </div>
           </div>
@@ -172,7 +180,7 @@ export const OrgOverviewScreen: React.FC = () => {
         <div className="p-5 rounded-tile bg-surface border border-sunken shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-ink/70 mb-3">
             <span className="text-meta font-bold">پیوستگی زنجیره</span>
-            <div className="w-8 h-8 rounded-pill bg-domain-5-tint text-[#E58A1F] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-pill bg-domain-5-tint text-domain-5 flex items-center justify-center">
               <Flame className="w-4 h-4" aria-hidden="true" />
             </div>
           </div>
@@ -233,102 +241,110 @@ export const OrgOverviewScreen: React.FC = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weekly Trend Chart */}
-        <div className="p-6 rounded-tile bg-surface border border-sunken shadow-xs flex flex-col">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-headline font-black text-ink">روند فعالیت هفتگی</h3>
-              <p className="text-meta text-ink/60">تعداد دروس تکمیل شده در طول ایام هفته</p>
-            </div>
+        <ChartFrame
+          title="روند فعالیت هفتگی"
+          subtitle="تعداد دروس تکمیل شده در طول ایام هفته"
+          badge={
             <span className="text-meta font-bold px-3 py-1 rounded-pill bg-canvas border border-sunken text-ink/70">
               هفته جاری
             </span>
-          </div>
+          }
+          table={{
+            columns: ['روز', 'دروس تکمیل‌شده', 'یادگیرندگان فعال'],
+            rows: kpis.weeklyTrend.map((d) => [
+              d.dayName,
+              toFa(d.completedLessons),
+              toFa(d.activeLearners),
+            ]),
+          }}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={kpis.weeklyTrend}
+              margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-chart-1)" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="var(--color-chart-1)" stopOpacity={0.0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={CHART_GRID_STROKE} />
+              {/* Time runs right-to-left: the oldest day sits on the right. */}
+              <XAxis dataKey="dayName" reversed tick={CHART_AXIS_TICK} />
+              <YAxis orientation="right" tickFormatter={faTick} tick={CHART_AXIS_TICK} />
+              <Tooltip
+                cursor={{ stroke: CHART_GRID_STROKE }}
+                content={
+                  <RtlTooltip
+                    seriesName="دروس تکمیل شده"
+                    formatLabel={(label) => `روز ${label ?? ''}`}
+                    formatValue={(value) => `${toFa(String(value ?? 0))} گرابایت`}
+                  />
+                }
+              />
+              <Area
+                type="monotone"
+                dataKey="completedLessons"
+                stroke="var(--color-chart-1)"
+                strokeWidth={3}
+                fillOpacity={1}
+                fill="url(#colorTrend)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </ChartFrame>
 
-          <div className="h-64 w-full" dir="ltr">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={kpis.weeklyTrend}
-                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-              >
-                <defs>
-                  <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1E6FA8" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#1E6FA8" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E8E1D5" />
-                <XAxis dataKey="dayName" tick={{ fill: '#0D3F6B', fontSize: 13 }} />
-                <YAxis tick={{ fill: '#0D3F6B', fontSize: 13 }} />
-                <Tooltip
-                  formatter={(val) => [`${toFa(String(val ?? 0))} گرابایت`, 'دروس تکمیل شده']}
-                  labelFormatter={(label) => `روز ${label}`}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E8E1D5',
-                    borderRadius: '12px',
-                    fontFamily: 'Vazirmatn',
-                    direction: 'rtl',
-                    textAlign: 'right',
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="completedLessons"
-                  stroke="#1E6FA8"
-                  strokeWidth={3}
-                  fillOpacity={1}
-                  fill="url(#colorTrend)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* 5 Domains Mastery Breakdown */}
-        <div className="p-6 rounded-tile bg-surface border border-sunken shadow-xs flex flex-col">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-headline font-black text-ink">پیشرفت در ۵ حوزه شایستگی</h3>
-              <p className="text-meta text-ink/60">
-                درصد اتمام سرفصل‌ها در حوزه‌های مهارتی گرابایت
-              </p>
-            </div>
-          </div>
-
-          <div className="h-64 w-full" dir="ltr">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={kpis.domainStats}
-                layout="vertical"
-                margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E8E1D5" />
-                <XAxis type="number" domain={[0, 100]} tick={{ fill: '#0D3F6B', fontSize: 12 }} />
-                <YAxis
-                  type="category"
-                  dataKey="domainTitle"
-                  width={110}
-                  tick={{ fill: '#0D3F6B', fontSize: 11, textAnchor: 'end' }}
-                />
-                <Tooltip
-                  formatter={(val) => [`${toFa(String(val ?? 0))}٪`, 'نرخ انطباق']}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E8E1D5',
-                    borderRadius: '12px',
-                    fontFamily: 'Vazirmatn',
-                    direction: 'rtl',
-                  }}
-                />
-                <Bar dataKey="completionRate" radius={[0, 6, 6, 0]}>
-                  {kpis.domainStats.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.colorToken} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        {/* 5 Domains Mastery Breakdown — horizontal bars, the titles are long */}
+        <ChartFrame
+          title="پیشرفت در ۵ حوزه شایستگی"
+          subtitle="درصد اتمام سرفصل‌ها در حوزه‌های مهارتی گرابایت"
+          table={{
+            columns: ['حوزه شایستگی', 'نرخ انطباق', 'میانگین نمره'],
+            rows: kpis.domainStats.map((d) => [
+              d.domainTitle,
+              `${toFa(d.completionRate)}٪`,
+              toFa(d.avgScore),
+            ]),
+          }}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={kpis.domainStats}
+              layout="vertical"
+              margin={{ top: 5, right: 16, left: 16, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={CHART_GRID_STROKE} />
+              <XAxis
+                type="number"
+                domain={[0, 100]}
+                tickFormatter={faTick}
+                tick={CHART_AXIS_TICK}
+              />
+              <YAxis
+                type="category"
+                dataKey="domainTitle"
+                orientation="right"
+                width={150}
+                tick={{ ...CHART_AXIS_TICK, textAnchor: 'start' }}
+              />
+              <Tooltip
+                cursor={{ fill: 'var(--color-canvas)' }}
+                content={
+                  <RtlTooltip
+                    seriesName="نرخ انطباق"
+                    formatValue={(value) => `${toFa(String(value ?? 0))}٪`}
+                  />
+                }
+              />
+              <Bar dataKey="completionRate" radius={[0, 6, 6, 0]}>
+                {kpis.domainStats.map((entry, index) => (
+                  <Cell key={entry.domainId} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartFrame>
       </div>
 
       {/* Unit Ranking & Comparison Table */}
@@ -392,7 +408,7 @@ export const OrgOverviewScreen: React.FC = () => {
                             ? 'bg-domain-3-tint text-secondary'
                             : isMed
                               ? 'bg-domain-1-tint text-primary'
-                              : 'bg-domain-5-tint text-[#E58A1F]'
+                              : 'bg-domain-5-tint text-domain-5'
                         }`}
                       >
                         {isHigh ? 'پیشرو' : isMed ? 'پویا' : 'نیازمند همراهی'}

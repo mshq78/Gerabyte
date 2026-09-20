@@ -131,6 +131,8 @@ export const CertificateDetailScreen: React.FC = () => {
 
             {/* Real Offline QR Code rendered with SVG */}
             <div className="p-2 rounded-tile bg-surface border border-sunken shadow-xs shrink-0 flex flex-col items-center">
+              {/* The only raw hex allowed in .tsx: QR encoders need a literal color,
+                  they cannot resolve a CSS variable. Matches --color-ink. */}
               <QRCodeSVG value={verifyUrl} size={84} level="M" fgColor="#0D3F6B" />
               <span className="text-meta text-ink/50 mt-1 font-mono">اسکن اصالت</span>
             </div>

@@ -10,14 +10,6 @@ import {
   Briefcase,
   Phone,
 } from 'lucide-react';
-import {
-  ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-} from 'recharts';
 import { QRCodeSVG } from 'qrcode.react';
 import { orgApi } from '../../../api/org/client';
 import { OrgMember, OrgRole } from '../../../types/org';
@@ -99,8 +91,8 @@ export const OrgPersonDetailScreen: React.FC = () => {
     );
   }
 
-  // Domain radar data
-  const domainRadarData = [
+  // Per-domain mastery, shown as bars
+  const domainScores = [
     { domain: 'شایستگی‌های فردی', score: member.domainMastery['domain-1'] || 75 },
     { domain: 'خانواده و تعادل', score: member.domainMastery['domain-2'] || 70 },
     { domain: 'اخلاق حرفه‌ای', score: member.domainMastery['domain-3'] || 85 },
@@ -135,12 +127,12 @@ export const OrgPersonDetailScreen: React.FC = () => {
       <div className="hidden print:block border-b-2 border-ink pb-4 mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-black text-ink">
+            <h1 className="text-headline font-black text-ink">
               سامانه ارزیابی و آموزش پیوسته سازمانی گرابایت
             </h1>
-            <p className="text-sm text-ink/70">کارنامه رسمی پیشرفت و انطباق شایستگی‌های شغلی</p>
+            <p className="text-meta text-ink/70">کارنامه رسمی پیشرفت و انطباق شایستگی‌های شغلی</p>
           </div>
-          <div className="text-left text-xs text-ink/80 space-y-1">
+          <div className="text-left text-meta text-ink/80 space-y-1">
             <div>سازمان: {currentOrg.name}</div>
             <div>تاریخ صدور گزارش: {formatJalaliDate(new Date())}</div>
             <div>شناسه یکتای استعلام: GB-REP-{member.id}</div>
@@ -171,7 +163,7 @@ export const OrgPersonDetailScreen: React.FC = () => {
                   member.status === 'active'
                     ? 'bg-domain-3-tint text-secondary'
                     : member.status === 'at_risk'
-                      ? 'bg-domain-5-tint text-[#E58A1F]'
+                      ? 'bg-domain-5-tint text-domain-5'
                       : 'bg-canvas text-ink/60 border border-sunken'
                 }`}
               >
@@ -248,7 +240,7 @@ export const OrgPersonDetailScreen: React.FC = () => {
 
         <div className="p-4 rounded-tile bg-surface border border-sunken shadow-xs">
           <span className="text-meta font-bold text-ink/60 flex items-center gap-1.5 mb-1">
-            <Flame className="w-4 h-4 text-[#E58A1F]" />
+            <Flame className="w-4 h-4 text-domain-5" />
             <span>زنجیره پیوسته</span>
           </span>
           <div className="flex items-baseline gap-1">
@@ -287,35 +279,8 @@ export const OrgPersonDetailScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* Radar & Progress Matrix */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 print:grid-cols-2">
-        {/* Radar Chart */}
-        <div className="p-6 rounded-tile bg-surface border border-sunken shadow-xs flex flex-col">
-          <h3 className="text-headline font-black text-ink mb-1">نمودار شایستگی‌های ۵ گانه</h3>
-          <p className="text-meta text-ink/60 mb-4">سطح تسلط و ارزیابی در حوزه‌های مهارتی کلیدی</p>
-
-          <div className="h-72 w-full flex items-center justify-center" dir="ltr">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={domainRadarData}>
-                <PolarGrid stroke="#E8E1D5" />
-                <PolarAngleAxis dataKey="domain" tick={{ fill: '#0D3F6B', fontSize: 11 }} />
-                <PolarRadiusAxis
-                  angle={30}
-                  domain={[0, 100]}
-                  tick={{ fill: '#0D3F6B', fontSize: 10 }}
-                />
-                <Radar
-                  name="میزان تسلط"
-                  dataKey="score"
-                  stroke="#1E6FA8"
-                  fill="#1E6FA8"
-                  fillOpacity={0.4}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
+      {/* Domain Mastery — the bars carry this data on their own now */}
+      <div className="grid grid-cols-1 gap-6">
         {/* Detailed Domain Mastery List */}
         <div className="p-6 rounded-tile bg-surface border border-sunken shadow-xs flex flex-col justify-between">
           <div>
@@ -323,7 +288,7 @@ export const OrgPersonDetailScreen: React.FC = () => {
             <p className="text-meta text-ink/60 mb-4">عملکرد فردی در برابر استانداردهای سازمان</p>
 
             <div className="space-y-4">
-              {domainRadarData.map((d, i) => (
+              {domainScores.map((d, i) => (
                 <div key={i} className="space-y-1.5">
                   <div className="flex items-center justify-between text-meta font-bold">
                     <span className="text-ink">{d.domain}</span>
@@ -345,8 +310,7 @@ export const OrgPersonDetailScreen: React.FC = () => {
             <span className="font-bold text-ink">
               {toFa(
                 Math.round(
-                  domainRadarData.reduce((acc, curr) => acc + curr.score, 0) /
-                    domainRadarData.length
+                  domainScores.reduce((acc, curr) => acc + curr.score, 0) / domainScores.length
                 )
               )}
               ٪
@@ -357,7 +321,7 @@ export const OrgPersonDetailScreen: React.FC = () => {
 
       {/* Official Stamp & Signatures Box (visible in print) */}
       <div className="hidden print:block pt-8 mt-8 border-t border-sunken">
-        <div className="grid grid-cols-3 gap-8 text-center text-sm">
+        <div className="grid grid-cols-3 gap-8 text-center text-meta">
           <div className="space-y-8">
             <div className="font-bold text-ink">مهر و امضای سرپرست مستقیم</div>
             <div className="h-16 border-b border-dashed border-ink/40" />
@@ -368,7 +332,7 @@ export const OrgPersonDetailScreen: React.FC = () => {
           </div>
           <div className="flex flex-col items-center justify-center space-y-2">
             <QRCodeSVG value={`https://gerabyte.ir/verify/${member.id}`} size={64} />
-            <span className="text-xs text-ink/60">بارکد استعلام اعتبار کارنامه</span>
+            <span className="text-meta text-ink/60">بارکد استعلام اعتبار کارنامه</span>
           </div>
         </div>
       </div>

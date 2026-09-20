@@ -43,4 +43,6 @@ if (hits.length) {
   process.exit(1);
 }
 
-console.log(`check-dist: ${files.length} files scanned, none of [${FORBIDDEN.join(', ')}] present.`);
+console.log(
+  `check-dist: ${files.length} files scanned, none of [${FORBIDDEN.join(', ')}] present.`
+);

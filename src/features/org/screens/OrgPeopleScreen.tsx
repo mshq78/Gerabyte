@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   X,
   Download,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { useOrgScope } from '../context/ScopeContext';
 import { orgApi } from '../../../api/org/client';
@@ -24,6 +25,7 @@ import {
   RawImportRow,
 } from '../utils/export';
 import { maskPhone } from '../../../lib/privacy';
+import { Sheet } from '../../../components/ui/Sheet';
 
 export const OrgPeopleScreen: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -40,6 +42,7 @@ export const OrgPeopleScreen: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>(searchParams.get('status') || 'all');
   const [roleFilter] = useState<string>('all');
   const [levelFilter, setLevelFilter] = useState<string>('all');
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
   // Multi-selection
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -138,6 +141,63 @@ export const OrgPeopleScreen: React.FC = () => {
     setImportPreview([]);
   };
 
+  const activeFilterCount = [unitFilter, statusFilter, levelFilter].filter(
+    (value) => value !== 'all'
+  ).length;
+
+  const filterControls = (
+    <>
+      {/* Unit filter */}
+      <div>
+        <select
+          value={unitFilter}
+          disabled={!canManageAllUnits}
+          onChange={(e) => setUnitFilter(e.target.value)}
+          className={`w-full min-h-[48px] px-3 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink ${
+            !canManageAllUnits ? 'opacity-60 cursor-not-allowed' : ''
+          }`}
+        >
+          <option value="all">تمام واحدهای سازمان</option>
+          {units.map((u) => (
+            <option key={u.id} value={u.id}>
+              {u.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Status filter */}
+      <div>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="w-full min-h-[48px] px-3 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
+        >
+          <option value="all">تمام وضعیت‌ها</option>
+          <option value="active">فعال و پویا</option>
+          <option value="at_risk">نیازمند توجه</option>
+          <option value="inactive">غیرفعال</option>
+        </select>
+      </div>
+
+      {/* Level filter */}
+      <div>
+        <select
+          value={levelFilter}
+          onChange={(e) => setLevelFilter(e.target.value)}
+          className="w-full min-h-[48px] px-3 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
+        >
+          <option value="all">تمام سطوح مهارتی</option>
+          <option value="1">سطح ۱: آغازگر</option>
+          <option value="2">سطح ۲: کوشا</option>
+          <option value="3">سطح ۳: ماهر</option>
+          <option value="4">سطح ۴: پیشرو</option>
+          <option value="5">سطح ۵: الهام‌بخش</option>
+        </select>
+      </div>
+    </>
+  );
+
   return (
     <div className="space-y-6">
       {/* Top Header & Actions */}
@@ -178,8 +238,45 @@ export const OrgPeopleScreen: React.FC = () => {
         </div>
       </div>
 
+      {/* Filters: inline from md up, in a bottom sheet below that */}
+      <div className="md:hidden flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-ink/40 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="جستجوی نام یا شماره..."
+            aria-label="جستجوی همکاران"
+            className="w-full min-h-[44px] pr-10 pl-4 py-2 text-body bg-surface rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsFilterSheetOpen(true)}
+          className="min-h-[44px] min-w-[44px] px-4 rounded-tile bg-surface border border-sunken text-ink text-meta font-bold flex items-center gap-2 cursor-pointer"
+        >
+          <SlidersHorizontal className="w-4 h-4 text-primary" aria-hidden="true" />
+          <span>فیلترها</span>
+          {activeFilterCount > 0 && (
+            <span className="px-2 rounded-pill bg-primary text-surface text-meta font-bold">
+              {toFa(activeFilterCount)}
+            </span>
+          )}
+        </button>
+      </div>
+
+      <Sheet
+        isOpen={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        title="فیلتر همکاران"
+        subtitle="نتایج بلافاصله به‌روز می‌شوند"
+      >
+        <div className="space-y-4">{filterControls}</div>
+      </Sheet>
+
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-tile bg-surface border border-sunken shadow-xs space-y-4">
+      <div className="hidden md:block p-4 rounded-tile bg-surface border border-sunken shadow-xs space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {/* Search box */}
           <div className="relative lg:col-span-2">
@@ -193,54 +290,7 @@ export const OrgPeopleScreen: React.FC = () => {
             />
           </div>
 
-          {/* Unit filter */}
-          <div>
-            <select
-              value={unitFilter}
-              disabled={!canManageAllUnits}
-              onChange={(e) => setUnitFilter(e.target.value)}
-              className={`w-full min-h-[48px] px-3 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink ${
-                !canManageAllUnits ? 'opacity-60 cursor-not-allowed' : ''
-              }`}
-            >
-              <option value="all">تمام واحدهای سازمان</option>
-              {units.map((u) => (
-                <option key={u.id} value={u.id}>
-                  {u.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Status filter */}
-          <div>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full min-h-[48px] px-3 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
-            >
-              <option value="all">تمام وضعیت‌ها</option>
-              <option value="active">فعال و پویا</option>
-              <option value="at_risk">نیازمند توجه</option>
-              <option value="inactive">غیرفعال</option>
-            </select>
-          </div>
-
-          {/* Level filter */}
-          <div>
-            <select
-              value={levelFilter}
-              onChange={(e) => setLevelFilter(e.target.value)}
-              className="w-full min-h-[48px] px-3 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
-            >
-              <option value="all">تمام سطوح مهارتی</option>
-              <option value="1">سطح ۱: آغازگر</option>
-              <option value="2">سطح ۲: کوشا</option>
-              <option value="3">سطح ۳: ماهر</option>
-              <option value="4">سطح ۴: پیشرو</option>
-              <option value="5">سطح ۵: الهام‌بخش</option>
-            </select>
-          </div>
+          {filterControls}
         </div>
       </div>
 
@@ -267,7 +317,7 @@ export const OrgPeopleScreen: React.FC = () => {
               onClick={() => handleBulkStatusChange('at_risk')}
               className="min-h-[40px] px-3.5 py-1.5 rounded-tile bg-white/10 hover:bg-white/20 text-white text-meta font-bold flex items-center gap-1.5 transition-all cursor-pointer"
             >
-              <AlertTriangle className="w-4 h-4 text-[#F2A93B]" />
+              <AlertTriangle className="w-4 h-4 text-coin" />
               <span>نشان‌گذاری نیازمند توجه</span>
             </button>
 
@@ -308,134 +358,188 @@ export const OrgPeopleScreen: React.FC = () => {
             <p className="text-body font-bold text-ink/70">هیچ همکاری با این مشخصات یافت نشد.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-collapse">
-              <thead>
-                <tr className="border-b border-sunken text-meta font-bold text-ink/60">
-                  <th className="py-3 px-3 w-10">
-                    <input
-                      type="checkbox"
-                      checked={
-                        selectedIds.length > 0 && selectedIds.length === filteredMembers.length
-                      }
-                      onChange={handleSelectAll}
-                      className="w-4 h-4 rounded border-sunken text-primary focus:ring-primary cursor-pointer"
-                      aria-label="انتخاب همه"
-                    />
-                  </th>
-                  <th className="py-3 px-4">نام و مشخصات همکار</th>
-                  <th className="py-3 px-4">واحد سازمانی</th>
-                  <th className="py-3 px-4">سطح مهارت</th>
-                  <th className="py-3 px-4">نرخ انطباق</th>
-                  <th className="py-3 px-4">زنجیره</th>
-                  <th className="py-3 px-4 text-center">وضعیت</th>
-                  <th className="py-3 px-4 text-left">کارنامه</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-sunken text-body">
-                {filteredMembers.map((member) => {
-                  const isSelected = selectedIds.includes(member.id);
+          <>
+            {/* Stacked rows below md; the real table takes over from md up */}
+            <ul className="md:hidden divide-y divide-sunken">
+              {filteredMembers.map((member) => (
+                <li key={member.id} className="py-3 first:pt-0 last:pb-0">
+                  <Link
+                    to={`/org/people/${member.id}`}
+                    className="flex flex-col gap-2 py-1 rounded-tile hover:bg-canvas/60 transition-colors"
+                  >
+                    <span className="flex items-center gap-3">
+                      <Avatar seed={member.avatarSeed} name={member.fullName} size="sm" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-bold text-ink truncate">{member.fullName}</span>
+                        <span className="block text-meta text-ink/60 truncate">
+                          {member.unitName} · سطح {toFa(member.level)}
+                        </span>
+                      </span>
+                      <span
+                        className={`shrink-0 px-3 py-1 rounded-pill text-meta font-bold ${
+                          member.status === 'active'
+                            ? 'bg-domain-3-tint text-secondary'
+                            : member.status === 'at_risk'
+                              ? 'bg-domain-5-tint text-domain-5'
+                              : 'bg-canvas text-ink/60 border border-sunken'
+                        }`}
+                      >
+                        {member.status === 'active'
+                          ? 'فعال'
+                          : member.status === 'at_risk'
+                            ? 'نیازمند توجه'
+                            : 'غیرفعال'}
+                      </span>
+                    </span>
 
-                  return (
-                    <tr
-                      key={member.id}
-                      className={`hover:bg-canvas/60 transition-colors ${
-                        isSelected ? 'bg-domain-1-tint/30' : ''
-                      }`}
-                    >
-                      <td className="py-3.5 px-3">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => handleToggleSelect(member.id)}
-                          className="w-4 h-4 rounded border-sunken text-primary focus:ring-primary cursor-pointer"
-                          aria-label={`انتخاب ${member.fullName}`}
+                    <span className="flex items-center gap-2">
+                      <span className="flex-1 h-2 rounded-full bg-sunken overflow-hidden">
+                        <span
+                          className="block h-full rounded-full bg-primary"
+                          style={{ width: `${member.complianceRate}%` }}
                         />
-                      </td>
+                      </span>
+                      <span className="text-meta font-bold text-ink shrink-0">
+                        {toFa(member.complianceRate)}٪
+                      </span>
+                      <span className="text-meta text-ink/60 shrink-0">
+                        زنجیره {toFa(member.streakDays)} روز
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
 
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-3">
-                          <Avatar seed={member.avatarSeed} name={member.fullName} size="sm" />
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-ink">{member.fullName}</span>
-                              {member.role === 'org_admin' && (
-                                <span className="text-meta px-2 py-0.2 rounded-pill bg-primary/10 text-primary font-bold">
-                                  مدیر ارشد
-                                </span>
-                              )}
-                              {member.role === 'unit_manager' && (
-                                <span className="text-meta px-2 py-0.2 rounded-pill bg-secondary/10 text-secondary font-bold">
-                                  مدیر واحد
-                                </span>
-                              )}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-right border-collapse">
+                <thead>
+                  <tr className="border-b border-sunken text-meta font-bold text-ink/60">
+                    <th className="py-3 px-3 w-10">
+                      <input
+                        type="checkbox"
+                        checked={
+                          selectedIds.length > 0 && selectedIds.length === filteredMembers.length
+                        }
+                        onChange={handleSelectAll}
+                        className="w-4 h-4 rounded border-sunken text-primary focus:ring-primary cursor-pointer"
+                        aria-label="انتخاب همه"
+                      />
+                    </th>
+                    <th className="py-3 px-4">نام و مشخصات همکار</th>
+                    <th className="py-3 px-4">واحد سازمانی</th>
+                    <th className="py-3 px-4">سطح مهارت</th>
+                    <th className="py-3 px-4">نرخ انطباق</th>
+                    <th className="py-3 px-4">زنجیره</th>
+                    <th className="py-3 px-4 text-center">وضعیت</th>
+                    <th className="py-3 px-4 text-left">کارنامه</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-sunken text-body">
+                  {filteredMembers.map((member) => {
+                    const isSelected = selectedIds.includes(member.id);
+
+                    return (
+                      <tr
+                        key={member.id}
+                        className={`hover:bg-canvas/60 transition-colors ${
+                          isSelected ? 'bg-domain-1-tint/30' : ''
+                        }`}
+                      >
+                        <td className="py-3.5 px-3">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleToggleSelect(member.id)}
+                            className="w-4 h-4 rounded border-sunken text-primary focus:ring-primary cursor-pointer"
+                            aria-label={`انتخاب ${member.fullName}`}
+                          />
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-3">
+                            <Avatar seed={member.avatarSeed} name={member.fullName} size="sm" />
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-ink">{member.fullName}</span>
+                                {member.role === 'org_admin' && (
+                                  <span className="text-meta px-2 py-0.2 rounded-pill bg-primary/10 text-primary font-bold">
+                                    مدیر ارشد
+                                  </span>
+                                )}
+                                {member.role === 'unit_manager' && (
+                                  <span className="text-meta px-2 py-0.2 rounded-pill bg-secondary/10 text-secondary font-bold">
+                                    مدیر واحد
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-meta text-ink/60 font-medium">
+                                {maskPhone(member.phone)}
+                              </span>
                             </div>
-                            <span className="text-meta text-ink/60 font-medium">
-                              {maskPhone(member.phone)}
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-4 text-ink/80">{member.unitName}</td>
+
+                        <td className="py-3.5 px-4">
+                          <span className="inline-flex px-2.5 py-0.5 rounded-pill bg-canvas border border-sunken text-meta font-bold text-ink">
+                            سطح {toFa(member.level)}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-20 h-2 rounded-full bg-sunken overflow-hidden">
+                              <div
+                                className="h-full rounded-full bg-primary"
+                                style={{ width: `${member.complianceRate}%` }}
+                              />
+                            </div>
+                            <span className="text-meta font-bold text-ink">
+                              {toFa(member.complianceRate)}٪
                             </span>
                           </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      <td className="py-3.5 px-4 text-ink/80">{member.unitName}</td>
+                        <td className="py-3.5 px-4 text-ink font-bold">
+                          {toFa(member.streakDays)} روز
+                        </td>
 
-                      <td className="py-3.5 px-4">
-                        <span className="inline-flex px-2.5 py-0.5 rounded-pill bg-canvas border border-sunken text-meta font-bold text-ink">
-                          سطح {toFa(member.level)}
-                        </span>
-                      </td>
-
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-2">
-                          <div className="w-20 h-2 rounded-full bg-sunken overflow-hidden">
-                            <div
-                              className="h-full rounded-full bg-primary"
-                              style={{ width: `${member.complianceRate}%` }}
-                            />
-                          </div>
-                          <span className="text-meta font-bold text-ink">
-                            {toFa(member.complianceRate)}٪
-                          </span>
-                        </div>
-                      </td>
-
-                      <td className="py-3.5 px-4 text-ink font-bold">
-                        {toFa(member.streakDays)} روز
-                      </td>
-
-                      <td className="py-3.5 px-4 text-center">
-                        <span
-                          className={`inline-flex px-3 py-1 rounded-pill text-meta font-bold ${
-                            member.status === 'active'
-                              ? 'bg-domain-3-tint text-secondary'
+                        <td className="py-3.5 px-4 text-center">
+                          <span
+                            className={`inline-flex px-3 py-1 rounded-pill text-meta font-bold ${
+                              member.status === 'active'
+                                ? 'bg-domain-3-tint text-secondary'
+                                : member.status === 'at_risk'
+                                  ? 'bg-domain-5-tint text-domain-5'
+                                  : 'bg-canvas text-ink/60 border border-sunken'
+                            }`}
+                          >
+                            {member.status === 'active'
+                              ? 'فعال'
                               : member.status === 'at_risk'
-                                ? 'bg-domain-5-tint text-[#E58A1F]'
-                                : 'bg-canvas text-ink/60 border border-sunken'
-                          }`}
-                        >
-                          {member.status === 'active'
-                            ? 'فعال'
-                            : member.status === 'at_risk'
-                              ? 'نیازمند توجه'
-                              : 'غیرفعال'}
-                        </span>
-                      </td>
+                                ? 'نیازمند توجه'
+                                : 'غیرفعال'}
+                          </span>
+                        </td>
 
-                      <td className="py-3.5 px-4 text-left">
-                        <Link
-                          to={`/org/people/${member.id}`}
-                          className="min-h-[48px] px-3 py-2 rounded-tile hover:bg-canvas text-meta font-bold text-primary inline-flex items-center gap-1 transition-colors cursor-pointer"
-                        >
-                          <span>گزارش جامع</span>
-                          <ChevronLeft className="w-4 h-4" aria-hidden="true" />
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        <td className="py-3.5 px-4 text-left">
+                          <Link
+                            to={`/org/people/${member.id}`}
+                            className="min-h-[48px] px-3 py-2 rounded-tile hover:bg-canvas text-meta font-bold text-primary inline-flex items-center gap-1 transition-colors cursor-pointer"
+                          >
+                            <span>گزارش جامع</span>
+                            <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
