@@ -8,13 +8,15 @@ import {
   ChevronUp,
   Layers,
 } from 'lucide-react';
-import { challengeRequestsApi } from '../../../api/org/challengeRequests';
-import { subscriptionsApi } from '../../../api/org/subscriptions';
-import { ChallengeRequest, SeatSummary } from '../../../types/org';
-import { toFa } from '../../../lib/format';
-import { errorMessage } from '../../../lib/errors';
+import { challengeRequestsApi } from '../api/org/challengeRequests';
+import { subscriptionsApi } from '../api/org/subscriptions';
+import { ChallengeRequest, SeatSummary } from '../types/org';
+import { toFa } from '../lib/format';
+import { errorMessage } from '../lib/errors';
 
-export const OrgDemoPanel: React.FC<{ onRequestChanged?: () => void }> = ({ onRequestChanged }) => {
+export const OrgSimulatorPanel: React.FC<{ onRequestChanged?: () => void }> = ({
+  onRequestChanged,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [latestRequest, setLatestRequest] = useState<ChallengeRequest | null>(null);
   const [seatSummary, setSeatSummary] = useState<SeatSummary | null>(null);

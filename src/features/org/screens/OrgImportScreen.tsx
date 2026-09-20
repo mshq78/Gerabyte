@@ -17,7 +17,6 @@ import { orgApi } from '../../../api/org/client';
 import { ImportJob } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
 import { toFa } from '../../../lib/format';
-import { OrgDemoPanel } from '../components/OrgDemoPanel';
 
 type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -900,8 +899,6 @@ export const OrgImportScreen: React.FC = () => {
           </table>
         </div>
       </div>
-
-      <OrgDemoPanel />
     </div>
   );
 };

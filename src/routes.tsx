@@ -25,8 +25,6 @@ import { LoginScreen } from './features/auth/LoginScreen';
 import { OnboardingScreen } from './features/auth/OnboardingScreen';
 import { PlacementScreen } from './features/placement/PlacementScreen';
 import { AdminDashboardScreen } from './features/dashboard/AdminDashboardScreen';
-import { FaqScreen } from './features/faq/FaqScreen';
-import { PaletteDemoScreen } from './features/demo/PaletteDemoScreen';
 import { VisibilitySettingsScreen } from './features/settings/VisibilitySettingsScreen';
 
 // Lazy Loaded Org Dashboard Screens
@@ -149,7 +147,6 @@ export const AppRoutes: React.FC = () => {
           </RequireAuth>
         }
       />
-      <Route path="/demo/palette" element={<PaletteDemoScreen />} />
 
       {/* =========================================
           2. LEARNER SHELL LAYOUT ROUTE
@@ -271,7 +268,6 @@ export const AppRoutes: React.FC = () => {
           path="/notification-settings"
           element={<Navigate to="/settings/notifications" replace />}
         />
-        <Route path="/faq" element={<FaqScreen />} />
       </Route>
 
       {/* =========================================

@@ -31,6 +31,8 @@ export interface User {
   todayCompletedCount: number;
   membership?: OrgMembership; // undefined for individuals
   roles?: ('learner' | 'org_admin' | 'unit_manager' | 'super_admin')[];
+  /** Root of the org subtree a unit_manager may see. Unset for every other role. */
+  managedNodeId?: string;
   householdId?: string; // reserved for phase 2 (family accounts), no UI yet
   onboardingCompleted: boolean;
 }

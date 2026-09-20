@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { Avatar } from '../components/ui/Avatar';
+import { DevTools } from '../components/DevTools';
 import { authApi } from '../api/auth';
 import { ScopeProvider, useOrgScope } from '../features/org/context/ScopeContext';
 
@@ -33,15 +34,8 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useApp();
-  const {
-    currentOrg,
-    userRole,
-    setUserRole,
-    selectedUnitId,
-    setSelectedUnitId,
-    units,
-    canManageAllUnits,
-  } = useOrgScope();
+  const { currentOrg, userRole, selectedUnitId, setSelectedUnitId, units, canManageAllUnits } =
+    useOrgScope();
 
   const isAdmin = location.pathname.startsWith('/admin');
   const panelTitle = isAdmin ? 'پنل تیم گرا' : 'داشبورد سازمان';
@@ -237,32 +231,6 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
               </div>
             )}
 
-            {/* Quick Role Switcher Pill */}
-            <div className="flex items-center p-0.5 rounded-pill bg-canvas border border-sunken">
-              <button
-                onClick={() => setUserRole('org_admin')}
-                className={`min-h-[36px] px-3 rounded-pill text-meta font-bold transition-all cursor-pointer ${
-                  userRole === 'org_admin'
-                    ? 'bg-primary text-white shadow-xs'
-                    : 'text-ink/60 hover:text-ink'
-                }`}
-                title="مشاهده داشبورد با دسترسی مدیر ارشد سازمان"
-              >
-                مدیر ارشد
-              </button>
-              <button
-                onClick={() => setUserRole('unit_manager')}
-                className={`min-h-[36px] px-3 rounded-pill text-meta font-bold transition-all cursor-pointer ${
-                  userRole === 'unit_manager'
-                    ? 'bg-secondary text-white shadow-xs'
-                    : 'text-ink/60 hover:text-ink'
-                }`}
-                title="مشاهده داشبورد با دسترسی مدیر واحد"
-              >
-                مدیر واحد
-              </button>
-            </div>
-
             <Avatar seed={user.avatarSeed} name={user.fullName} size="sm" />
           </div>
         </header>
@@ -271,6 +239,9 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
         <main className="flex-1 p-4 sm:p-8 max-w-[1280px] w-full mx-auto safe-bottom">
           {children || <Outlet />}
         </main>
+
+        {/* Dev-only demo tools; absent from production bundles */}
+        <DevTools />
       </div>
     </div>
   );

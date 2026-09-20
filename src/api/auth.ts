@@ -2,6 +2,9 @@ import { mockRequest } from './client';
 import { User } from '../types/domain';
 import { MOCK_PERSONAS } from '../mock/data';
 
+// TODO(server): the server issues the real session token; this is a stand-in.
+const PLACEHOLDER_TOKEN_PREFIX = 'pending-server-session-';
+
 const STORAGE_KEY_USER = 'gerabyte:current_user';
 const STORAGE_KEY_SESSION = 'gerabyte:session';
 
@@ -55,7 +58,7 @@ export const authApi = {
         return {
           success: true,
           resendSeconds: 60,
-          message: 'کد تایید ۵ رقمی ارسال گردید (در نسخه پیش‌نمایش هر کدی پذیرفته می‌شود).',
+          message: 'کد تایید ۵ رقمی برای شما ارسال شد.',
         };
       },
       { endpoint: '/api/v1/auth/otp/request' }
@@ -82,7 +85,7 @@ export const authApi = {
         setStoredUser(updatedUser);
         return {
           user: updatedUser,
-          token: 'mock_jwt_token_gerabyte_' + Date.now(),
+          token: PLACEHOLDER_TOKEN_PREFIX + Date.now(),
           isNewUser: !updatedUser.onboardingCompleted,
         };
       },
@@ -105,7 +108,7 @@ export const authApi = {
         const currentUser = getStoredUser();
         return {
           user: currentUser,
-          token: 'mock_jwt_token_gerabyte_' + Date.now(),
+          token: PLACEHOLDER_TOKEN_PREFIX + Date.now(),
         };
       },
       { endpoint: '/api/v1/auth/login-password' }

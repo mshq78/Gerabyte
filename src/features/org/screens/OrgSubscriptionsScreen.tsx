@@ -18,7 +18,6 @@ import {
 import { SeatSummary, OrgRenewalRequest } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
 import { toFa } from '../../../lib/format';
-import { OrgDemoPanel } from '../components/OrgDemoPanel';
 import { errorMessage } from '../../../lib/errors';
 
 export const OrgSubscriptionsScreen: React.FC = () => {
@@ -469,8 +468,6 @@ export const OrgSubscriptionsScreen: React.FC = () => {
           </div>
         </div>
       )}
-
-      <OrgDemoPanel onRequestChanged={loadData} />
     </div>
   );
 };

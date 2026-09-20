@@ -14,7 +14,6 @@ import { challengeRequestsApi } from '../../../api/org/challengeRequests';
 import { ChallengeRequest, ChallengeRequestStatus } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
 import { toFa } from '../../../lib/format';
-import { OrgDemoPanel } from '../components/OrgDemoPanel';
 
 const STATUS_LABELS: Record<
   ChallengeRequestStatus | 'all',
@@ -293,7 +292,6 @@ export const OrgChallengesScreen: React.FC = () => {
       )}
 
       {/* Floating Demo Panel for review */}
-      <OrgDemoPanel onRequestChanged={loadData} />
     </div>
   );
 };

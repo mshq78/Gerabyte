@@ -188,7 +188,7 @@ export const NotificationSettingsScreen: React.FC = () => {
       {/* 3. Sample Respectful Messages Preview */}
       <div className="p-4 rounded-sheet bg-surface border border-sunken shadow-xs space-y-2.5">
         <h3 className="font-bold text-body text-ink">
-          پیش‌نمایش لحن پیام‌های یادآوری گرا (محترمانه و غیرسرزنش‌گر):
+          لحن پیام‌های یادآوری گرا (محترمانه و غیرسرزنش‌گر):
         </h3>
         <p className="text-meta text-ink/70">
           پیام‌های گرابایت هرگز حس تقصیر یا فشار روانی ایجاد نمی‌کنند:
