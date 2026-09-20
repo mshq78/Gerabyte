@@ -61,9 +61,12 @@ something you can actually try rather than take on trust.
 
 **Password for every seeded account: `gerabyte-dev-1404`**
 
-With `ALLOW_DEV_OTP=1` and `NODE_ENV` other than `production`, the OTP code
+With `ALLOW_DEV_OTP=1` and `DEPLOY_ENV` other than `production`, the OTP code
 `000000` is also accepted. Both are development-only: the server refuses to
 boot in production with either that flag or `SMS_PROVIDER=console`.
+
+On the staging deployment these same accounts exist, but the `credentials`
+table is empty — sign in with `000000`, not with the password.
 
 ### مجتمع فولاد نمونه (Foolad)
 

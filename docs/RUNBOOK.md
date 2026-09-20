@@ -61,9 +61,16 @@ exception: see _Preview deployments_ below.
 | `SESSION_HASH_SECRET`   | prod+preview | sensitive | `openssl rand -base64 48`                         |
 | `IP_HASH_SECRET`        | prod+preview | sensitive | `openssl rand -base64 32`                         |
 | `ALLOW_MOCK_STAGING`    | prod+preview | plain     | `1` — **Phase 2 only**, see below                 |
+| `ALLOW_DEV_OTP`         | prod+preview | plain     | `1` — **staging demo only**, see below            |
 
-Do **not** set `NODE_ENV` (Vercel owns it), `PORT` (serverless has no port) or
-`ALLOW_DEV_OTP` (staging is reachable, even behind SSO).
+Do **not** set `NODE_ENV` (Vercel owns it) or `PORT` (serverless has no port).
+
+`ALLOW_DEV_OTP=1` makes the OTP `000000` valid. It is on so the staging demo can
+be signed into without an SMS provider, and it is defensible only because
+staging sits behind Vercel Authentication and carries no real data. Delete it
+the moment either of those stops being true. It can never reach production by
+accident: the server refuses to boot with `DEPLOY_ENV=production` and this flag
+set.
 
 `ALLOW_MOCK_STAGING=1` is set, and has to be for now: XP, leagues, exams,
 subscriptions and notifications are still mock-backed, so `npm run build` fails
@@ -172,19 +179,23 @@ VALUES ('<sha256 of the .sql file>', <the "when" value from meta/_journal.json>)
 cross-organization isolation testable. It refuses to run with
 `NODE_ENV=production`.
 
-**Staging is deliberately left unseeded.** The seed sets a documented password
-on every account (see README.md), and a database that is reachable from anywhere
-with its connection string should not be pre-loaded with known credentials.
-Seed it when you want to demo, and treat it as disposable:
+**Staging carries the seed's organizations, people and roles, but no
+passwords.** The `credentials` table is empty on purpose: a database reachable
+from anywhere with its connection string should not be pre-loaded with a
+documented password. Sign in with the OTP `000000` instead (see
+`ALLOW_DEV_OTP` above).
+
+To put the passwords there anyway, or to re-seed from scratch, run the real
+seed from a machine with direct TCP access:
 
 ```bash
 DATABASE_URL='<Neon staging pooled URL>' npm run db:seed
 ```
 
-With `SMS_PROVIDER=console` on staging, the OTP is written to the Vercel runtime
-log under `devOtp`, so signing in without seeded passwords is still possible for
-anyone who can read the deployment logs. That is the reason staging stays behind
-Vercel Authentication.
+`SMS_PROVIDER=console` also writes every issued code to the Vercel runtime log
+under `devOtp`. Between that and the dev OTP, anyone who reaches staging can
+sign in as anyone — which is the reason staging stays behind Vercel
+Authentication, and the reason none of this survives `DEPLOY_ENV=production`.
 
 ---
 
@@ -206,8 +217,8 @@ In order:
 6. Set `DEPLOY_ENV=production`. Boot now fails on `ALLOW_DEV_OTP`, on
    `SMS_PROVIDER=console` and on a non-https `APP_ORIGIN` — that is the check
    working.
-7. Delete `ALLOW_MOCK_STAGING` and remove the `X-Robots-Tag` entry from
-   `vercel.json`.
+7. Delete `ALLOW_MOCK_STAGING` and `ALLOW_DEV_OTP`, and remove the
+   `X-Robots-Tag` entry from `vercel.json`.
 8. Turn Vercel Authentication off only once the above is done.
 
 ---
