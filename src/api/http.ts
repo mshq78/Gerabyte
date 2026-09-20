@@ -30,6 +30,20 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * Design mode swaps `fetch` for an in-memory transport so the UI can be worked
+ * on with no backend at all. The branch that uses it is guarded by a static
+ * `import.meta.env` comparison, so a production build folds it to `false` and
+ * drops both the branch and everything it reaches.
+ */
+type DesignTransport = (url: string, init: RequestInit) => Promise<Response>;
+
+let designTransport: DesignTransport | null = null;
+
+export function __setDesignTransport(transport: DesignTransport): void {
+  designTransport = transport;
+}
+
 type UnauthorizedHandler = () => void;
 
 let onUnauthorized: UnauthorizedHandler = () => {};
@@ -76,16 +90,22 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   headers[CSRF_HEADER] = CSRF_VALUE;
   if (body !== undefined) headers['Content-Type'] = 'application/json';
 
+  const url = buildUrl(path, query);
+  const init: RequestInit = {
+    method,
+    headers,
+    // Same-origin: the cookie is sent, and nothing is sent anywhere else.
+    credentials: 'same-origin',
+    body: body === undefined ? undefined : JSON.stringify(body),
+    ...(signal ? { signal } : {}),
+  };
+
   let response: Response;
   try {
-    response = await fetch(buildUrl(path, query), {
-      method,
-      headers,
-      // Same-origin: the cookie is sent, and nothing is sent anywhere else.
-      credentials: 'same-origin',
-      body: body === undefined ? undefined : JSON.stringify(body),
-      ...(signal ? { signal } : {}),
-    });
+    response =
+      import.meta.env.VITE_DESIGN_MODE === '1' && designTransport
+        ? await designTransport(url, init)
+        : await fetch(url, init);
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') throw error;
     throw new ApiError(0, 'NETWORK', 'ارتباط با سرور برقرار نشد. اتصال خود را بررسی کنید.');

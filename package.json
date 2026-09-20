@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "build": "vite build && node scripts/check-dist.mjs && node scripts/check-no-mocks.mjs",
+    "build": "node scripts/check-design-mode.mjs && vite build && node scripts/check-dist.mjs && node scripts/check-no-mocks.mjs",
     "preview": "vite preview --port=4173",
     "clean": "rm -rf dist",
     "typecheck": "tsc -b --force",
@@ -22,7 +22,8 @@
     "db:seed": "tsx --env-file-if-exists=.env db/seed.ts",
     "test:server": "vitest run --config vitest.server.config.ts",
     "web": "vite --port=3000 --host=0.0.0.0",
-    "check:emit": "node scripts/check-server-emit.mjs"
+    "check:emit": "node scripts/check-server-emit.mjs",
+    "design": "VITE_DESIGN_MODE=1 vite --port=3000 --host=0.0.0.0"
   },
   "dependencies": {
     "@fontsource-variable/vazirmatn": "^5.3.0",

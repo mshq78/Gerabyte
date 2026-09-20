@@ -7,7 +7,16 @@ import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const DIST = path.resolve(process.cwd(), 'dist');
-const FORBIDDEN = ['DEMO_ONLY', 'mock_jwt', 'PaletteDemo', 'پنل دموی'];
+const FORBIDDEN = [
+  'DEMO_ONLY',
+  'mock_jwt',
+  'PaletteDemo',
+  'پنل دموی',
+  // src/design/: the fake transport and persona switcher used to redesign the
+  // UI without a backend. Tree-shaking should already have dropped it; this
+  // is the proof rather than the assumption.
+  '__GB_DESIGN_MODE__',
+];
 
 async function walk(dir) {
   const out = [];
