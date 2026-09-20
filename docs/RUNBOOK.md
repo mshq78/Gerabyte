@@ -60,12 +60,16 @@ exception: see *Preview deployments* below.
 | `OTP_HMAC_SECRET`       | prod+preview | sensitive | `openssl rand -base64 48`                                    |
 | `SESSION_HASH_SECRET`   | prod+preview | sensitive | `openssl rand -base64 48`                                    |
 | `IP_HASH_SECRET`        | prod+preview | sensitive | `openssl rand -base64 32`                                    |
+| `ALLOW_MOCK_STAGING`    | prod+preview | plain     | `1` — **Phase 2 only**, see below                            |
 
-Do **not** set `NODE_ENV` (Vercel owns it), `PORT` (serverless has no port),
-`ALLOW_DEV_OTP` (staging is reachable, even behind SSO) or `ALLOW_MOCK_STAGING`
-as project-wide variables. `ALLOW_MOCK_STAGING=1` belongs only on a build you
-deliberately want the mock adapters in; without it `npm run build` fails if a
-mock adapter reached the bundle, which is the point.
+Do **not** set `NODE_ENV` (Vercel owns it), `PORT` (serverless has no port) or
+`ALLOW_DEV_OTP` (staging is reachable, even behind SSO).
+
+`ALLOW_MOCK_STAGING=1` is set, and has to be for now: XP, leagues, exams,
+subscriptions and notifications are still mock-backed, so `npm run build` fails
+without it — which is the point of the check. It is the single variable that
+must be **deleted** when `DEPLOY_ENV` flips to `production`; leaving it there
+would let mock data ship to real users.
 
 Strip `channel_binding=require` from the Neon URL. Neon's console adds it, but
 it is a libpq parameter and postgres.js does not implement `SCRAM-SHA-256-PLUS`.
@@ -90,8 +94,10 @@ URL — the one a pull request links to — works. The unique per-deployment URL
 Vercel builds from git. `npm run build` runs `vite build`, then
 `scripts/check-dist.mjs` (fails if a demo or mock string reached `dist/`) and
 `scripts/check-no-mocks.mjs` (fails if a mock adapter reached the bundle). A
-deploy that fails one of those is meant to fail; do not set
-`ALLOW_MOCK_STAGING=1` to get past it without reading why.
+deploy that fails `check-dist` is meant to fail. A deploy that fails
+`check-no-mocks` is telling you a mock adapter reached the bundle:
+`ALLOW_MOCK_STAGING=1` is the staging answer, and the production answer is to
+replace the adapter.
 
 `vercel.json` routes `/api/*` to the single Express function and everything else
 to `index.html`, and sets the security headers at the edge so static responses
@@ -200,7 +206,8 @@ In order:
 6. Set `DEPLOY_ENV=production`. Boot now fails on `ALLOW_DEV_OTP`, on
    `SMS_PROVIDER=console` and on a non-https `APP_ORIGIN` — that is the check
    working.
-7. Remove the `X-Robots-Tag` entry from `vercel.json`.
+7. Delete `ALLOW_MOCK_STAGING` and remove the `X-Robots-Tag` entry from
+   `vercel.json`.
 8. Turn Vercel Authentication off only once the above is done.
 
 ---
