@@ -189,17 +189,27 @@ Verified by emitting the server to JavaScript with `tsc` and driving a request
 through the emitted `api/index.js` under plain Node, with no bundler involved:
 `{"status":200,"body":{"status":"ok","database":"ok",…,"passwordHasher":"argon2id"}}`.
 
-**What I could and could not verify on the deployment itself.** The edge
-headers are confirmed live — CSP, HSTS, `Referrer-Policy: same-origin`, the
-Permissions-Policy, COOP, CORP, `X-Robots-Tag: noindex, nofollow` and
-`Cache-Control: no-store` on `/api/*` all came back on a real response. The
-`/api/health` body did not: this container has no general outbound HTTP, and
-the deployment sits behind Vercel Authentication, so the only tool that can
-reach it stops at the SSO redirect. Creating a standing protection-bypass
-secret would have got me a green tick at the cost of a permanent credential on
-your project, which is the wrong trade for this phase. Run the one-liner in
-`docs/RUNBOOK.md` from a browser you are logged into and you will have the
-confirmation in a second.
+**A second deploy-only bug followed it.** `api/index.ts` fills `APP_ORIGIN`
+from `VERCEL_BRANCH_URL` for previews, but a static `import` is hoisted above
+every statement in the module — so `server/app`, and through it the logger,
+which reads the validated environment while it is being constructed, ran
+before that could happen. The function died with `APP_ORIGIN: expected string,
+received undefined`. The app is now imported dynamically, after the origin is
+adopted and the environment validated. Reproduced locally first by booting the
+emitted JavaScript with `VERCEL_ENV=preview`, `VERCEL_BRANCH_URL` set and
+`APP_ORIGIN` unset.
+
+**Verified live.** `GET /api/health` on the staging deployment answers:
+
+```json
+{ "status": "ok", "database": "ok", "deployEnv": "staging", "passwordHasher": "argon2id" }
+```
+
+That one response proves the function boots, Vercel reaches Neon over the
+pooled connection, and argon2id runs natively on the platform rather than
+falling back to scrypt. Every security header came back with it: CSP, HSTS,
+`Referrer-Policy: same-origin`, the Permissions-Policy, COOP, CORP,
+`X-Robots-Tag: noindex, nofollow` and `Cache-Control: no-store` on `/api/*`.
 
 ---
 
@@ -219,10 +229,14 @@ they are just keyed on a variable that means what it says.
 production.** The brief said production; staging is also https and also holds
 real sessions, so there is no reason to weaken it there.
 
-**3. Staging is deliberately left unseeded.** The seed sets one documented
-password on every account. A database reachable from anywhere with its
-connection string should not come pre-loaded with known credentials. The exact
-command is in the runbook; run it when you want to demo.
+**3. Staging carries the seed's data but no passwords.** The organizations,
+people and roles are there so the deployment is worth looking at; the
+`credentials` table is empty, because a database reachable from anywhere with
+its connection string should not come pre-loaded with a documented password.
+Sign in with the dev OTP `000000` instead — `ALLOW_DEV_OTP=1` is set on the
+project, which is defensible only behind Vercel Authentication and cannot
+reach production by accident: the server refuses to boot with
+`DEPLOY_ENV=production` and that flag set.
 
 Two things the brief allowed that I did **not** do: argon2id runs natively on
 Vercel, so the scrypt fallback stayed a fallback (it is still implemented and
@@ -290,8 +304,11 @@ The full going-to-production checklist is in `docs/RUNBOOK.md`.
 - **Per-account lockout is not enforced.** `credentials.failed_attempts` and
   `locked_until` exist and are indexed, but only the rate limiter is in the
   path today. A single phone is still capped at 5 attempts an hour.
-- **Staging runs `SMS_PROVIDER=console`,** so OTP codes appear in the Vercel
-  runtime log. Acceptable only because staging is behind Vercel Authentication.
+- **Staging runs `SMS_PROVIDER=console` and `ALLOW_DEV_OTP=1`,** so OTP codes
+  appear in the Vercel runtime log and `000000` is always accepted. Anyone who
+  reaches staging can sign in as anyone. Acceptable only because staging is
+  behind Vercel Authentication and holds no real data; both flags are on the
+  going-to-production checklist.
 - **Preview deployments answer 403 on writes if you open the per-deployment
   URL** rather than the branch URL. Documented; fixing it properly needs a
   multi-origin CSRF allowlist, which is more machinery than a preview deserves.
