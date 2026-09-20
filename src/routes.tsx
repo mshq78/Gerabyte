@@ -27,6 +27,7 @@ import { PlacementScreen } from './features/placement/PlacementScreen';
 import { AdminDashboardScreen } from './features/dashboard/AdminDashboardScreen';
 import { FaqScreen } from './features/faq/FaqScreen';
 import { PaletteDemoScreen } from './features/demo/PaletteDemoScreen';
+import { VisibilitySettingsScreen } from './features/settings/VisibilitySettingsScreen';
 
 // Lazy Loaded Org Dashboard Screens
 const OrgOverviewScreen = React.lazy(() =>
@@ -43,6 +44,30 @@ const OrgAssignmentsScreen = React.lazy(() =>
 );
 const OrgReportsScreen = React.lazy(() =>
   import('./features/org/screens/OrgReportsScreen').then((m) => ({ default: m.OrgReportsScreen }))
+);
+const OrgChallengesScreen = React.lazy(() =>
+  import('./features/org/screens/OrgChallengesScreen').then((m) => ({ default: m.OrgChallengesScreen }))
+);
+const OrgChallengeNewScreen = React.lazy(() =>
+  import('./features/org/screens/OrgChallengeNewScreen').then((m) => ({ default: m.OrgChallengeNewScreen }))
+);
+const OrgChallengeDetailScreen = React.lazy(() =>
+  import('./features/org/screens/OrgChallengeDetailScreen').then((m) => ({ default: m.OrgChallengeDetailScreen }))
+);
+const OrgImportScreen = React.lazy(() =>
+  import('./features/org/screens/OrgImportScreen').then((m) => ({ default: m.OrgImportScreen }))
+);
+const OrgSubscriptionsScreen = React.lazy(() =>
+  import('./features/org/screens/OrgSubscriptionsScreen').then((m) => ({ default: m.OrgSubscriptionsScreen }))
+);
+const OrgCertificatesScreen = React.lazy(() =>
+  import('./features/org/screens/OrgCertificatesScreen').then((m) => ({ default: m.OrgCertificatesScreen }))
+);
+const OrgEffectivenessScreen = React.lazy(() =>
+  import('./features/org/screens/OrgEffectivenessScreen').then((m) => ({ default: m.OrgEffectivenessScreen }))
+);
+const OrgSettingsScreen = React.lazy(() =>
+  import('./features/org/screens/OrgSettingsScreen').then((m) => ({ default: m.OrgSettingsScreen }))
 );
 
 const OrgLoadingFallback: React.FC = () => (
@@ -219,6 +244,14 @@ export const AppRoutes: React.FC = () => {
           }
         />
         <Route
+          path="/settings/visibility"
+          element={
+            <RequireAuth>
+              <VisibilitySettingsScreen />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/notification-settings"
           element={<Navigate to="/settings/notifications" replace />}
         />
@@ -268,11 +301,91 @@ export const AppRoutes: React.FC = () => {
           }
         />
         <Route
+          path="/org/import"
+          element={
+            <RequireAuth>
+              <Suspense fallback={<OrgLoadingFallback />}>
+                <OrgImportScreen />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/org/assignments"
           element={
             <RequireAuth>
               <Suspense fallback={<OrgLoadingFallback />}>
                 <OrgAssignmentsScreen />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/org/challenges"
+          element={
+            <RequireAuth>
+              <Suspense fallback={<OrgLoadingFallback />}>
+                <OrgChallengesScreen />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/org/challenges/new"
+          element={
+            <RequireAuth>
+              <Suspense fallback={<OrgLoadingFallback />}>
+                <OrgChallengeNewScreen />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/org/challenges/:id"
+          element={
+            <RequireAuth>
+              <Suspense fallback={<OrgLoadingFallback />}>
+                <OrgChallengeDetailScreen />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/org/subscriptions"
+          element={
+            <RequireAuth>
+              <Suspense fallback={<OrgLoadingFallback />}>
+                <OrgSubscriptionsScreen />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/org/certificates"
+          element={
+            <RequireAuth>
+              <Suspense fallback={<OrgLoadingFallback />}>
+                <OrgCertificatesScreen />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/org/effectiveness"
+          element={
+            <RequireAuth>
+              <Suspense fallback={<OrgLoadingFallback />}>
+                <OrgEffectivenessScreen />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/org/settings"
+          element={
+            <RequireAuth>
+              <Suspense fallback={<OrgLoadingFallback />}>
+                <OrgSettingsScreen />
               </Suspense>
             </RequireAuth>
           }

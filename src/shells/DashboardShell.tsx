@@ -14,6 +14,10 @@ import {
   Sliders,
   Shield,
   Filter,
+  Trophy,
+  UploadCloud,
+  CreditCard,
+  LineChart,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { Avatar } from '../components/ui/Avatar';
@@ -52,8 +56,20 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
     : [
         { path: '/org/overview', label: 'نمای کلی و شاخص‌ها', icon: BarChart3 },
         { path: '/org/people', label: 'همکاران و مدیریت دسترسی', icon: Users },
+        ...(userRole === 'org_admin'
+          ? [{ path: '/org/import', label: 'بارگذاری گروهی پرسنل', icon: UploadCloud }]
+          : []),
         { path: '/org/assignments', label: 'مأموریت‌ها و مسیرها', icon: GraduationCap },
-        { path: '/org/reports', label: 'گزارش‌های تحلیلی و چاپ', icon: Award },
+        { path: '/org/challenges', label: 'چالش‌های سازمانی', icon: Trophy },
+        { path: '/org/certificates', label: 'گواهینامه‌های رسمی', icon: Award },
+        { path: '/org/effectiveness', label: 'ارزیابی اثربخشی (L1-L4)', icon: LineChart },
+        ...(userRole === 'org_admin'
+          ? [{ path: '/org/subscriptions', label: 'سهمیه‌ها و اشتراک‌ها', icon: CreditCard }]
+          : []),
+        { path: '/org/reports', label: 'گزارش‌های تحلیلی و چاپ', icon: BarChart3 },
+        ...(userRole === 'org_admin'
+          ? [{ path: '/org/settings', label: 'تنظیمات و ساختار درخت', icon: Settings }]
+          : []),
       ];
 
   const sidebarContent = (

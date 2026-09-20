@@ -11,6 +11,7 @@ import {
   User as UserIcon,
   LogOut,
   Bell,
+  Shield,
 } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { Avatar } from '../../components/ui/Avatar';
@@ -254,6 +255,17 @@ export const ProfileScreen: React.FC = () => {
             <p className="text-meta text-ink/70 pt-1">
               رده سازمانی: <strong>{user.membership.orgRank}</strong>
             </p>
+
+            <button
+              onClick={() => navigate('/settings/visibility')}
+              className="min-h-[48px] w-full mt-2 px-3 py-2 rounded-tile bg-surface hover:bg-canvas border border-sunken text-primary text-meta font-bold flex items-center justify-between transition-all cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-primary" />
+                <span>چه چیزی برای مدیر من قابل مشاهده است؟</span>
+              </div>
+              <ChevronLeft className="w-4 h-4 text-primary/70" />
+            </button>
           </div>
         ) : (
           <div className="p-3.5 rounded-tile bg-paper border border-sunken flex items-center gap-2 text-meta text-ink">
