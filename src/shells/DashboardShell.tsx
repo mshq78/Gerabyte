@@ -20,7 +20,6 @@ import {
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { Avatar } from '../components/ui/Avatar';
-import { DevTools } from '../components/DevTools';
 import { authApi } from '../api/auth';
 import { ScopeProvider, useOrgScope } from '../features/org/context/ScopeContext';
 import { Permission, can } from '../lib/permissions';
@@ -298,9 +297,6 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
         <main className="flex-1 p-4 sm:p-8 max-w-[1280px] w-full mx-auto safe-bottom">
           {children || <Outlet />}
         </main>
-
-        {/* Dev-only demo tools; absent from production bundles */}
-        <DevTools />
       </div>
     </div>
   );

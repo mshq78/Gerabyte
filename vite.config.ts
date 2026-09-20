@@ -12,6 +12,17 @@ export default defineConfig({
       '@': path.resolve(import.meta.dirname, '.'),
     },
   },
+  // `vite preview` needs the same /api proxy as the dev server so the built
+  // app is exercised against the real API on one origin.
+  preview: {
+    port: 4173,
+    proxy: {
+      '/api': {
+        target: `http://127.0.0.1:${process.env.PORT ?? 4000}`,
+        changeOrigin: false,
+      },
+    },
+  },
   server: {
     port: 3000,
     // One origin in dev as in production, so the cookie and CSRF rules are the

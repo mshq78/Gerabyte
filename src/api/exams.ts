@@ -1,7 +1,7 @@
 import { mockRequest } from './client';
 import { Exam, Question } from '../types/domain';
 import { MOCK_EXAMS } from '../mock/data';
-import { getStoredUser, setStoredUser } from './auth';
+import { getStoredUser, setStoredUser } from './mockUser';
 import { certificatesApi } from './certificates';
 import { RULES } from '../lib/rules';
 

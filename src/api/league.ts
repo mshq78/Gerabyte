@@ -1,7 +1,7 @@
 import { mockRequest } from './client';
 import { LeagueBoard, TeamBoardEntry, LeagueTier } from '../types/domain';
 import { MOCK_LEAGUE_MEMBERS, MOCK_TEAM_BOARD } from '../mock/data';
-import { getStoredUser } from './auth';
+import { getStoredUser } from './mockUser';
 import { RULES } from '../lib/rules';
 
 export const leagueApi = {

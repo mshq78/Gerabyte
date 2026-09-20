@@ -30,7 +30,7 @@ export interface User {
   dailyGoal: 1 | 2 | 3; // gerabytes per day
   todayCompletedCount: number;
   membership?: OrgMembership; // undefined for individuals
-  roles?: ('learner' | 'org_admin' | 'unit_manager' | 'super_admin')[];
+  roles?: ('learner' | 'org_admin' | 'unit_manager' | 'gera_admin')[];
   /** Root of the org subtree a unit_manager may see. Unset for every other role. */
   managedNodeId?: string;
   householdId?: string; // reserved for phase 2 (family accounts), no UI yet

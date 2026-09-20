@@ -4,7 +4,6 @@ import { BottomNav } from '../components/layout/BottomNav';
 import { OfflineBanner } from '../components/ui/OfflineBanner';
 import { Toast } from '../components/ui/Toast';
 import { useApp } from '../state/AppContext';
-import { DevTools } from '../components/DevTools';
 
 interface LearnerShellProps {
   children?: ReactNode;
@@ -40,9 +39,6 @@ export const LearnerShell: React.FC<LearnerShellProps> = ({ children }) => {
 
         {/* Persistent Bottom Navigation with safe-bottom */}
         {!isFullScreenFlow && <BottomNav />}
-
-        {/* Dev-only demo tools; absent from production bundles */}
-        <DevTools />
       </div>
     </div>
   );

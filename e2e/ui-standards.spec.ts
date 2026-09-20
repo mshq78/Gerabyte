@@ -7,32 +7,14 @@ import { expect, test, type Page } from '@playwright/test';
  * the same localStorage keys src/api/auth.ts reads. There is no server yet, so
  * this is the only login there is.
  */
-const BASE_USER = {
-  id: 'p-1',
-  fullName: 'علیرضا رضایی',
-  nickname: 'علیرضا',
-  avatarSeed: 'rezaei',
-  phone: '۰۹۱۲۳۴۵۶۷۸۹',
-  accountType: 'org_member',
-  level: 3,
-  levelSource: 'org_rank',
-  xpTotal: 840,
-  coins: 84,
-  streakDays: 9,
-  bestStreak: 14,
-  dailyGoal: 2,
-  todayCompletedCount: 1,
-  onboardingCompleted: true,
-  membership: {
-    orgId: 'org-foolad',
-    orgName: 'مجتمع فولاد نمونه',
-    orgRank: 'supervisor',
-    nodePath: ['فولاد نمونه', 'معاونت تولید و عملیات', 'واحد نورد گرم و مقاطع'],
-  },
-};
-
-const ORG_ADMIN = { ...BASE_USER, id: 'p-admin', roles: ['learner', 'org_admin'] };
-const LEARNER = { ...BASE_USER, id: 'p-learner', roles: ['learner'] };
+/**
+ * Accounts created by `npm run db:seed`. There is no persona switcher any more:
+ * the suite signs in through the real API, the same way a person does.
+ */
+const SEED_PASSWORD = 'gerabyte-dev-1404';
+const ORG_ADMIN_PHONE = '09120000001';
+const UNIT_MANAGER_PHONE = '09120000003';
+const LEARNER_PHONE = '09120000004';
 
 const LEARNER_ROUTES = [
   '/',
@@ -71,16 +53,43 @@ const VIEWPORTS = [
 /** Everything the app loads must come from its own origin: no CDN, no analytics. */
 const APP_ORIGIN = 'http://127.0.0.1:4173';
 
+/**
+ * A 401 from the /api/me probe on the login page is the documented way the app
+ * discovers it is signed out; the browser still logs it as a failed resource.
+ */
+function isExpectedAuthProbe(text: string, pageUrl: string): boolean {
+  return (
+    text.includes('401') &&
+    text.includes('Failed to load resource') &&
+    new URL(pageUrl).pathname === '/login'
+  );
+}
+
 const MIN_FONT_PX = 14;
 const MIN_TAP_PX = 44;
 const TOUCH_BREAKPOINT = 768;
 
-async function signIn(page: Page, user: unknown) {
+/**
+ * Sign in for real: POST /api/auth/login from inside the page, so the browser
+ * stores the httpOnly session cookie exactly as it would in use.
+ */
+async function signIn(page: Page, phone: string) {
   await page.goto('/login');
-  await page.evaluate((u) => {
-    localStorage.setItem('gerabyte:session', '1');
-    localStorage.setItem('gerabyte:current_user', JSON.stringify(u));
-  }, user);
+  const result = await page.evaluate(
+    async ({ phone, password }) => {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'gerabyte' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ phone, password }),
+      });
+      return { status: response.status, body: await response.text() };
+    },
+    { phone, password: SEED_PASSWORD }
+  );
+  if (result.status !== 200) {
+    throw new Error(`sign-in failed for ${phone}: ${result.status} ${result.body}`);
+  }
 }
 
 interface Audit {
@@ -148,7 +157,12 @@ for (const viewport of VIEWPORTS) {
       const consoleErrors: string[] = [];
       const foreignRequests: string[] = [];
       page.on('console', (m) => {
-        if (m.type() === 'error') consoleErrors.push(`${page.url()} :: ${m.text()}`);
+        if (m.type() !== 'error') return;
+        // The app asks /api/me on load to find out whether anyone is signed in.
+        // Before sign-in that is a 401, which the browser logs as a failed
+        // resource even though the app handles it. Expected, not a defect.
+        if (isExpectedAuthProbe(m.text(), page.url())) return;
+        consoleErrors.push(`${page.url()} :: ${m.text()}`);
       });
       page.on('pageerror', (e) => consoleErrors.push(`${page.url()} :: ${e.message}`));
       page.on('request', (r) => {
@@ -157,7 +171,7 @@ for (const viewport of VIEWPORTS) {
         if (target.origin !== APP_ORIGIN) foreignRequests.push(r.url());
       });
 
-      await signIn(page, ORG_ADMIN);
+      await signIn(page, ORG_ADMIN_PHONE);
 
       for (const route of [...LEARNER_ROUTES, ...ORG_ROUTES]) {
         await page.goto(route);
@@ -187,7 +201,7 @@ for (const viewport of VIEWPORTS) {
 
 test.describe('access control', () => {
   test('a plain learner opening /org is sent back to the learner home', async ({ page }) => {
-    await signIn(page, LEARNER);
+    await signIn(page, LEARNER_PHONE);
     await page.goto('/org/overview');
     await page.waitForLoadState('networkidle');
     expect(new URL(page.url()).pathname).toBe('/');
@@ -195,7 +209,7 @@ test.describe('access control', () => {
 
   test('a plain learner cannot reach any /org route', async ({ page }) => {
     test.setTimeout(120_000);
-    await signIn(page, LEARNER);
+    await signIn(page, LEARNER_PHONE);
     for (const route of ORG_ROUTES) {
       await page.goto(route);
       await page.waitForLoadState('networkidle');
@@ -203,8 +217,29 @@ test.describe('access control', () => {
     }
   });
 
+  test('a unit manager reaches /org but sees a narrower scope than the admin', async ({ page }) => {
+    await signIn(page, UNIT_MANAGER_PHONE);
+    await page.goto('/org/people');
+    await page.waitForLoadState('networkidle');
+    expect(new URL(page.url()).pathname).toBe('/org/people');
+
+    const managerPeople = await page.evaluate(async () => {
+      const r = await fetch('/api/org/people', { credentials: 'same-origin' });
+      return (await r.json()).total as number;
+    });
+
+    await signIn(page, ORG_ADMIN_PHONE);
+    const adminPeople = await page.evaluate(async () => {
+      const r = await fetch('/api/org/people', { credentials: 'same-origin' });
+      return (await r.json()).total as number;
+    });
+
+    expect(managerPeople).toBeGreaterThan(0);
+    expect(managerPeople).toBeLessThan(adminPeople);
+  });
+
   test('an org admin cannot reach the Gera admin panel', async ({ page }) => {
-    await signIn(page, ORG_ADMIN);
+    await signIn(page, ORG_ADMIN_PHONE);
     await page.goto('/admin');
     await page.waitForLoadState('networkidle');
     expect(new URL(page.url()).pathname).toBe('/');
@@ -213,7 +248,7 @@ test.describe('access control', () => {
 
 test.describe('deleted surfaces', () => {
   test('/demo/palette no longer exists', async ({ page }) => {
-    await signIn(page, ORG_ADMIN);
+    await signIn(page, ORG_ADMIN_PHONE);
     await page.goto('/demo/palette');
     await page.waitForLoadState('networkidle');
     expect(new URL(page.url()).pathname).toBe('/');
@@ -221,7 +256,7 @@ test.describe('deleted surfaces', () => {
   });
 
   test('/faq no longer exists', async ({ page }) => {
-    await signIn(page, ORG_ADMIN);
+    await signIn(page, ORG_ADMIN_PHONE);
     await page.goto('/faq');
     await page.waitForLoadState('networkidle');
     expect(new URL(page.url()).pathname).toBe('/');

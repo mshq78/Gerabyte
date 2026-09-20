@@ -1,6 +1,6 @@
 import { mockRequest } from './client';
 import { User, NotificationPrefs, Level, Badge } from '../types/domain';
-import { getStoredUser, setStoredUser } from './auth';
+import { getStoredUser, setStoredUser } from './mockUser';
 import { MOCK_BADGES } from '../mock/data';
 
 const STORAGE_PREFS_KEY = 'gerabyte:notif_prefs';

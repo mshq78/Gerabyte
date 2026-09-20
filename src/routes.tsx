@@ -1,8 +1,7 @@
 import React, { ReactNode, Suspense, useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { hasSession } from './api/auth';
-import { useApp } from './state/AppContext';
 import { canOpenDashboard, isGeraAdmin } from './lib/permissions';
+import { useApp } from './state/AppContext';
 import { LearnerShell } from './shells/LearnerShell';
 import { DashboardShell } from './shells/DashboardShell';
 import { Skeleton } from './components/ui/Skeleton';
@@ -151,8 +150,13 @@ const ScreenFallback: React.FC = () => (
  */
 export const RequireAuth: React.FC<{ children: ReactNode }> = ({ children }) => {
   const location = useLocation();
+  const { ready, isAuthenticated } = useApp();
 
-  if (!hasSession()) {
+  // Until /api/me has answered we know nothing, so render a skeleton rather
+  // than briefly bouncing a signed-in user to /login.
+  if (!ready) return <ScreenFallback />;
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -169,16 +173,20 @@ export const RequireRole: React.FC<{ area: 'org' | 'admin'; children: ReactNode 
   area,
   children,
 }) => {
-  const { user, showToast } = useApp();
-  const allowed = area === 'org' ? canOpenDashboard(user) : isGeraAdmin(user);
+  const { me, ready, showToast } = useApp();
+  // Roles come from the server's /api/me payload and nowhere else.
+  const roles = { roles: me?.roles };
+  const allowed = area === 'org' ? canOpenDashboard(roles) : isGeraAdmin(roles);
   const warned = useRef(false);
 
   useEffect(() => {
-    if (!allowed && !warned.current) {
+    if (ready && !allowed && !warned.current) {
       warned.current = true;
       showToast('به این بخش دسترسی ندارید', 'error');
     }
-  }, [allowed, showToast]);
+  }, [ready, allowed, showToast]);
+
+  if (!ready) return <ScreenFallback />;
 
   if (!allowed) {
     return <Navigate to="/" replace />;

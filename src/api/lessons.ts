@@ -1,7 +1,7 @@
 import { mockRequest } from './client';
 import { Lesson, User } from '../types/domain';
 import { MOCK_LESSONS, MOCK_LESSON_SHOWCASE } from '../mock/data';
-import { getStoredUser, setStoredUser } from './auth';
+import { getStoredUser, setStoredUser } from './mockUser';
 import { subscriptionApi } from './subscription';
 import { computeEntitlements, RULES } from '../lib/rules';
 import { pathsApi, saveStoredPaths, getStoredPaths } from './paths';

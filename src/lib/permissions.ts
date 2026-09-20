@@ -66,7 +66,7 @@ export function canOpenDashboard(user: Pick<User, 'roles'>): boolean {
 
 /** True when the session may open the Gera admin panel. */
 export function isGeraAdmin(user: Pick<User, 'roles'>): boolean {
-  return (user.roles ?? []).includes('super_admin');
+  return (user.roles ?? []).includes('gera_admin');
 }
 
 /**

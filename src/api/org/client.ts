@@ -1,4 +1,6 @@
 import { OrgUnit, OrgMember, PathAssignment, OrgKpiSummary, OrgRole } from '../../types/org';
+import { orgApi as orgHttpApi } from '../orgApi';
+import type { OrgNodeDto, OrgPersonDto } from '../../../shared/schemas/org';
 import {
   MOCK_ORG_UNITS,
   getMockOrgMembers,
@@ -58,12 +60,87 @@ function saveStoredAssignments(list: PathAssignment[]): void {
   }
 }
 
+/**
+ * Adapters from the server DTOs to the shapes the dashboard screens still use.
+ *
+ * Phase-3 fields (xp, compliance, streaks, certificates, domain mastery) have
+ * no server source yet and are filled with neutral placeholders rather than
+ * invented numbers, so nothing on screen claims to be real when it is not.
+ */
+function toOrgUnit(node: OrgNodeDto): OrgUnit {
+  return {
+    id: node.id,
+    name: node.name,
+    code: '',
+    parentId: node.parentId,
+    memberCount: node.memberCount,
+    managerName: '',
+    managerId: '',
+    level: node.depth,
+  };
+}
+
+function toOrgMember(person: OrgPersonDto): OrgMember {
+  return {
+    id: person.id,
+    fullName: person.fullName,
+    nickname: person.nickname,
+    avatarSeed: person.avatarSeed,
+    // The server never sends an email, and managers must never see one.
+    email: '',
+    phone: person.phoneMasked,
+    unitId: person.nodeId,
+    unitName: person.nodeName,
+    rank: person.rank ?? 'operator',
+    level: 1,
+    role: 'learner',
+    status: person.status === 'invited' ? 'inactive' : person.status,
+    xpTotal: 0,
+    streakDays: 0,
+    todayCompleted: false,
+    totalAssignedLessons: 0,
+    completedLessonsCount: 0,
+    complianceRate: 0,
+    lastActiveAt: person.joinedAt,
+    certificatesCount: 0,
+    domainMastery: {},
+  };
+}
+
 export const orgApi = {
+  /**
+   * REAL: the organization tree comes from the server, already narrowed to the
+   * caller's scope. A manager cannot see a node the server did not send.
+   */
   async getUnits(): Promise<OrgUnit[]> {
-    return MOCK_ORG_UNITS;
+    const tree = await orgHttpApi.tree();
+    return tree.items.map(toOrgUnit);
   },
 
+  /**
+   * REAL identity, mock progress.
+   *
+   * The people list, the scope and the masked phones come from the server.
+   * XP, compliance and streaks are still mock values keyed by membership id,
+   * because the learning engine lands in Phase 3.
+   */
   async getMembers(params?: {
+    unitId?: string;
+    search?: string;
+    status?: string;
+    role?: string;
+  }): Promise<OrgMember[]> {
+    const page = await orgHttpApi.people({
+      ...(params?.unitId && params.unitId !== 'all' ? { nodeId: params.unitId } : {}),
+      ...(params?.search ? { q: params.search } : {}),
+      ...(params?.status && params.status !== 'all'
+        ? { status: params.status as 'invited' | 'active' | 'inactive' }
+        : {}),
+    });
+    return page.items.map(toOrgMember);
+  },
+
+  async getMembersMock(params?: {
     unitId?: string;
     search?: string;
     status?: string;
@@ -99,9 +176,15 @@ export const orgApi = {
     return list;
   },
 
+  /** REAL: the server decides whether this person is in the caller's scope. */
   async getMemberById(id: string): Promise<OrgMember | null> {
-    const members = getStoredMembers();
-    return members.find((m) => m.id === id) || null;
+    try {
+      const summary = await orgHttpApi.personSummary(id);
+      return toOrgMember(summary);
+    } catch {
+      // Out of scope, or gone. Either way the caller sees "not found".
+      return null;
+    }
   },
 
   async updateMemberRole(id: string, role: OrgRole): Promise<OrgMember> {

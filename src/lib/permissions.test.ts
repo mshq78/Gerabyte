@@ -72,8 +72,8 @@ describe('canOpenDashboard / isGeraAdmin', () => {
     expect(canOpenDashboard({})).toBe(false);
   });
 
-  it('gates /admin on super_admin alone', () => {
-    expect(isGeraAdmin({ roles: ['super_admin'] })).toBe(true);
+  it('gates /admin on gera_admin alone', () => {
+    expect(isGeraAdmin({ roles: ['gera_admin'] })).toBe(true);
     expect(isGeraAdmin({ roles: ['org_admin'] })).toBe(false);
     expect(isGeraAdmin({ roles: ['learner', 'unit_manager'] })).toBe(false);
     expect(isGeraAdmin({})).toBe(false);

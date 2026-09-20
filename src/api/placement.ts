@@ -1,6 +1,6 @@
 import { mockRequest } from './client';
 import { Level, Question } from '../types/domain';
-import { getStoredUser, setStoredUser } from './auth';
+import { getStoredUser, setStoredUser } from './mockUser';
 
 export interface PlacementTestResult {
   suggestedLevel: Level;

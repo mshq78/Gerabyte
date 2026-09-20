@@ -2,20 +2,30 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield } from 'lucide-react';
 import { authApi } from '../../api/auth';
+import { OTP_LENGTH } from '../../../shared/schemas/auth';
+import { ApiError } from '../../api/http';
 import { Button } from '../../components/ui/Button';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
 import { errorMessage } from '../../lib/errors';
 
+/** Prefer the server's Persian sentence; fall back to a local one. */
+function apiMessage(error: unknown, fallback: string): string {
+  if (error instanceof ApiError) return error.message;
+  return errorMessage(error) || fallback;
+}
+
 export const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { updateUserLocal, showToast } = useApp();
+  const { refreshMe, updateMe, showToast } = useApp();
 
   const [activeTab, setActiveTab] = useState<'otp' | 'password'>('otp');
   const [mobile, setMobile] = useState('09123456789');
   const [password, setPassword] = useState('');
   const [otpStep, setOtpStep] = useState<'request' | 'verify'>('request');
-  const [otpDigits, setOtpDigits] = useState(['', '', '', '', '']);
+  const [otpDigits, setOtpDigits] = useState<string[]>(() => Array(OTP_LENGTH).fill(''));
+  /** Opaque handle for the code in flight; never the code itself. */
+  const [codeId, setCodeId] = useState<string | null>(null);
   const [resendTimer, setResendTimer] = useState(60);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,13 +54,15 @@ export const LoginScreen: React.FC = () => {
     }
     try {
       setIsLoading(true);
-      await authApi.requestOtp(mobile);
+      const result = await authApi.requestOtp(mobile);
+      setCodeId(result.codeId);
+      setOtpDigits(Array(OTP_LENGTH).fill(''));
       setOtpStep('verify');
-      setResendTimer(60);
-      showToast('کد ۵ رقمی ارسال شد (کد آزمایشی: ۱۲۳۴۵)', 'info');
+      setResendTimer(result.resendAfterSeconds);
+      showToast(`کد ${toFa(OTP_LENGTH)} رقمی برای شما ارسال شد.`, 'info');
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
     } catch (err) {
-      showToast(errorMessage(err) || 'خطا در ارسال کد', 'error');
+      showToast(apiMessage(err, 'خطا در ارسال کد'), 'error');
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +75,7 @@ export const LoginScreen: React.FC = () => {
     setOtpDigits(next);
 
     // Auto-advance
-    if (val && index < 4) {
+    if (val && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };
@@ -76,24 +88,25 @@ export const LoginScreen: React.FC = () => {
 
   const handleVerifyOtp = async () => {
     const code = otpDigits.join('');
-    if (code.length < 5) {
-      showToast('لطفاً تمام ۵ رقم کد را وارد فرمایید.', 'info');
+    if (code.length < OTP_LENGTH || !codeId) {
+      showToast(`لطفاً تمام ${toFa(OTP_LENGTH)} رقم کد را وارد فرمایید.`, 'info');
       return;
     }
     try {
       setIsLoading(true);
-      const res = await authApi.verifyOtp(mobile, code);
-      if (res.isNewUser) {
-        setSetupFullName(res.user.fullName);
-        setSetupNickname(res.user.nickname || '');
+      await authApi.verifyOtp(mobile, codeId, code);
+      const me = await refreshMe();
+      // A brand-new account has no name yet: ask for one before going further.
+      if (me && !me.onboardingCompleted) {
+        setSetupFullName(me.fullName);
+        setSetupNickname(me.nickname);
         setNeedsSetup(true);
       } else {
-        updateUserLocal(res.user);
         showToast('ورود با موفقیت انجام شد.', 'success');
         navigate('/');
       }
     } catch (err) {
-      showToast(errorMessage(err) || 'کد وارد شده صحیح نمی‌باشد.', 'error');
+      showToast(apiMessage(err, 'کد وارد شده صحیح نمی‌باشد.'), 'error');
     } finally {
       setIsLoading(false);
     }
@@ -106,25 +119,28 @@ export const LoginScreen: React.FC = () => {
     }
     try {
       setIsLoading(true);
-      const res = await authApi.loginWithPassword(mobile, password);
-      updateUserLocal(res.user);
+      await authApi.loginWithPassword(mobile, password);
+      await refreshMe();
       showToast('ورود با موفقیت انجام شد.', 'success');
       navigate('/');
     } catch (err) {
-      showToast(errorMessage(err) || 'نام کاربری یا رمز عبور اشتباه است.', 'error');
+      showToast(apiMessage(err, 'شماره موبایل یا کلمه عبور اشتباه است.'), 'error');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCompleteSetup = () => {
-    updateUserLocal({
-      fullName: setupFullName,
-      nickname: setupNickname,
-      onboardingCompleted: true,
-    });
-    showToast('اطلاعات کاربری ثبت شد.', 'success');
-    navigate('/onboarding');
+  const handleCompleteSetup = async () => {
+    try {
+      setIsLoading(true);
+      await updateMe({ fullName: setupFullName, nickname: setupNickname });
+      showToast('اطلاعات کاربری ثبت شد.', 'success');
+      navigate('/onboarding');
+    } catch (err) {
+      showToast(apiMessage(err, 'ثبت اطلاعات انجام نشد.'), 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -210,12 +226,13 @@ export const LoginScreen: React.FC = () => {
                   <div className="space-y-4">
                     <div className="text-center">
                       <p className="text-meta text-ink/80">
-                        کد ۵ رقمی ارسال شده به شماره <strong>{toFa(mobile)}</strong> را وارد نمایید:
+                        کد {toFa(OTP_LENGTH)} رقمی ارسال شده به شماره{' '}
+                        <strong>{toFa(mobile)}</strong> را وارد نمایید:
                       </p>
                     </div>
 
-                    {/* 5-digit Auto-advancing boxes */}
-                    <div className="flex items-center justify-center gap-2" dir="ltr">
+                    {/* Six auto-advancing boxes; the count follows OTP_LENGTH. */}
+                    <div className="flex items-center justify-center gap-1.5" dir="ltr">
                       {otpDigits.map((digit, idx) => (
                         <input
                           key={idx}
@@ -228,7 +245,7 @@ export const LoginScreen: React.FC = () => {
                           value={digit}
                           onChange={(e) => handleOtpDigitChange(idx, e.target.value)}
                           onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                          className="w-12 h-12 min-h-[48px] text-center text-title font-bold font-mono rounded-tile border-2 border-sunken focus:border-primary outline-none bg-paper text-ink"
+                          className="w-11 h-12 min-h-[48px] min-w-[44px] text-center text-title font-bold font-mono rounded-tile border-2 border-sunken focus:border-primary outline-none bg-paper text-ink"
                         />
                       ))}
                     </div>
