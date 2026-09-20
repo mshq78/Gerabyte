@@ -251,14 +251,12 @@ async function seedOrg(
     if (!user) throw new Error(`failed to create user ${person.phone}`);
 
     if (person.withPassword) {
-      await db
-        .insert(s.credentials)
-        .values({
-          userId: user.id,
-          passwordHash,
-          algorithm: 'argon2id',
-          passwordUpdatedAt: new Date(),
-        });
+      await db.insert(s.credentials).values({
+        userId: user.id,
+        passwordHash,
+        algorithm: 'argon2id',
+        passwordUpdatedAt: new Date(),
+      });
     }
 
     await db.insert(s.memberships).values({
@@ -325,14 +323,12 @@ async function main() {
       })
       .returning();
     if (!gera) throw new Error('failed to create gera admin');
-    await db
-      .insert(s.credentials)
-      .values({
-        userId: gera.id,
-        passwordHash,
-        algorithm: 'argon2id',
-        passwordUpdatedAt: new Date(),
-      });
+    await db.insert(s.credentials).values({
+      userId: gera.id,
+      passwordHash,
+      algorithm: 'argon2id',
+      passwordUpdatedAt: new Date(),
+    });
     await db
       .insert(s.userRoles)
       .values({ userId: gera.id, role: 'gera_admin', orgId: null, nodeId: null });

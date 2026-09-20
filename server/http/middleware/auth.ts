@@ -1,0 +1,93 @@
+import type { NextFunction, Request, Response } from 'express';
+import type { Database } from '../../../db/client';
+import { can, type Action } from '../../policies';
+import type { Principal, Scope } from '../../policies/scope';
+import { resolveScope } from '../../policies/scope';
+import { loadPrincipal, type PrincipalContext } from '../../repositories/users';
+import * as sessionService from '../../services/session';
+import { forbidden, unauthenticated } from '../errors';
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    db: Database;
+    auth?: {
+      sessionId: string;
+      principal: Principal;
+      context: PrincipalContext;
+    };
+    scope?: Scope;
+  }
+}
+
+/**
+ * Resolve the session cookie into a principal, if there is one. Never rejects:
+ * public routes still work, and requireAuth does the rejecting.
+ */
+export function loadSession() {
+  return async (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      const token = sessionService.readSessionCookie(req);
+      if (!token) {
+        next();
+        return;
+      }
+      const session = await sessionService.loadSession(req.db, token);
+      if (!session) {
+        next();
+        return;
+      }
+      const context = await loadPrincipal(req.db, session.userId);
+      req.auth = { sessionId: session.id, principal: context.principal, context };
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+}
+
+export function requireAuth() {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.auth) {
+      // Clear a cookie that no longer resolves, so the browser stops sending it.
+      sessionService.clearSessionCookie(res);
+      next(unauthenticated());
+      return;
+    }
+    next();
+  };
+}
+
+/** Gate a route on a central policy action. */
+export function requireAction(action: Action) {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    if (!req.auth) {
+      next(unauthenticated());
+      return;
+    }
+    if (!can(req.auth.principal, action)) {
+      next(forbidden());
+      return;
+    }
+    next();
+  };
+}
+
+/**
+ * Attach the organization scope every /api/org route must narrow by. A caller
+ * with no resolvable scope is refused here rather than deeper in a query.
+ */
+export function requireScope() {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    if (!req.auth) {
+      next(unauthenticated());
+      return;
+    }
+    const scope = resolveScope(req.auth.principal);
+    if (!scope) {
+      next(forbidden());
+      return;
+    }
+    req.scope = scope;
+    next();
+  };
+}
