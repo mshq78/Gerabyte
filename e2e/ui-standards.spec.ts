@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { LEARNER_PHONE, ORG_ADMIN_PHONE, UNIT_MANAGER_PHONE, signIn } from './accounts';
 
 /**
  * The design standard, asserted against the production build.
@@ -7,14 +8,6 @@ import { expect, test, type Page } from '@playwright/test';
  * the same localStorage keys src/api/auth.ts reads. There is no server yet, so
  * this is the only login there is.
  */
-/**
- * Accounts created by `npm run db:seed`. There is no persona switcher any more:
- * the suite signs in through the real API, the same way a person does.
- */
-const SEED_PASSWORD = 'gerabyte-dev-1404';
-const ORG_ADMIN_PHONE = '09120000001';
-const UNIT_MANAGER_PHONE = '09120000003';
-const LEARNER_PHONE = '09120000004';
 
 const LEARNER_ROUTES = [
   '/',
@@ -73,25 +66,6 @@ const TOUCH_BREAKPOINT = 768;
  * Sign in for real: POST /api/auth/login from inside the page, so the browser
  * stores the httpOnly session cookie exactly as it would in use.
  */
-async function signIn(page: Page, phone: string) {
-  await page.goto('/login');
-  const result = await page.evaluate(
-    async ({ phone, password }) => {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'gerabyte' },
-        credentials: 'same-origin',
-        body: JSON.stringify({ phone, password }),
-      });
-      return { status: response.status, body: await response.text() };
-    },
-    { phone, password: SEED_PASSWORD }
-  );
-  if (result.status !== 200) {
-    throw new Error(`sign-in failed for ${phone}: ${result.status} ${result.body}`);
-  }
-}
-
 interface Audit {
   overflow: number | null;
   tinyText: string[];

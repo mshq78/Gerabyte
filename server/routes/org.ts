@@ -4,7 +4,7 @@ import { PAGE_SIZE, type Paginated } from '../../shared/schemas/common.js';
 import { peopleQuerySchema, type OrgPersonDto } from '../../shared/schemas/org.js';
 import { env } from '../config/env.js';
 import { notFound, unauthenticated } from '../http/errors.js';
-import { requireAction, requireAuth, requireScope } from '../http/middleware/auth.js';
+import { requireAuth, requirePermission, requireScope } from '../http/middleware/auth.js';
 import { parseQuery } from '../http/validate.js';
 import { toOrgNodeDto, toOrgPersonDto, toOrgPersonSummaryDto } from '../dto/org.js';
 import * as orgRepo from '../repositories/org.js';
@@ -25,7 +25,7 @@ export function orgRouter(): Router {
   router.use(requireAuth());
 
   /** GET /api/org/tree — the subtree the caller may see, and nothing above it. */
-  router.get('/tree', requireAction('org.tree.read'), requireScope(), async (req, res, next) => {
+  router.get('/tree', requirePermission('org.tree.read'), requireScope(), async (req, res, next) => {
     try {
       const scope = req.scope;
       if (!scope) throw unauthenticated();
@@ -39,7 +39,7 @@ export function orgRouter(): Router {
   /** GET /api/org/people — search, filter, sort, 25 per page, inside the scope. */
   router.get(
     '/people',
-    requireAction('org.people.read'),
+    requirePermission('org.people.read'),
     requireScope(),
     async (req, res, next) => {
       try {
@@ -68,7 +68,7 @@ export function orgRouter(): Router {
    */
   router.get(
     '/people/:id/summary',
-    requireAction('org.person.read'),
+    requirePermission('org.person.read'),
     requireScope(),
     async (req, res, next) => {
       try {

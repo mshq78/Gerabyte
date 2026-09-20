@@ -1,80 +1,58 @@
+import {
+  canOpenAdminPanel,
+  resolvePermissionRole,
+  roleCan,
+  type Permission,
+  type PermissionRole,
+} from '../../shared/permissions';
 import { useApp } from '../state/AppContext';
 import { User } from '../types/domain';
 import { OrgRole } from '../types/org';
 
 /**
- * Everything a dashboard user can be allowed to do.
+ * The web app's view of the permission matrix.
  *
- * TODO(server): authoritative RBAC and scope on every endpoint; UI guards are UX only.
+ * The matrix itself lives in `shared/permissions.ts` and is the same object
+ * the server checks against — this module only adapts it to React and to the
+ * app's own `User`/`OrgRole` types.
+ *
+ * Every guard here is UX only. The server refuses the request regardless.
  */
-export type Permission =
-  | 'org.overview.view'
-  | 'org.people.view'
-  | 'org.person.report.view'
-  | 'org.assignments.manage'
-  | 'org.reports.view'
-  | 'org.certificates.view'
-  | 'org.challengeRequests.manage'
-  | 'org.effectiveness.view'
-  | 'org.import.manage'
-  | 'org.subscriptions.manage'
-  | 'org.settings.manage'
-  | 'org.hierarchy.manage';
+export type { Permission, PermissionRole };
+export {
+  canOpenAdminPanel,
+  canOpenDashboard,
+  permissionsFor,
+  roleCan,
+} from '../../shared/permissions';
 
-/** A unit manager works inside their own subtree and nowhere else. */
-const UNIT_MANAGER_PERMISSIONS: readonly Permission[] = [
-  'org.overview.view',
-  'org.people.view',
-  'org.person.report.view',
-  'org.assignments.manage',
-  'org.reports.view',
-  'org.certificates.view',
-  'org.challengeRequests.manage',
-  'org.effectiveness.view',
-];
-
-/** An org admin gets everything under /org. */
-const ORG_ADMIN_PERMISSIONS: readonly Permission[] = [
-  ...UNIT_MANAGER_PERMISSIONS,
-  'org.import.manage',
-  'org.subscriptions.manage',
-  'org.settings.manage',
-  'org.hierarchy.manage',
-];
-
-export function can(role: OrgRole, permission: Permission): boolean {
-  if (role === 'org_admin') return ORG_ADMIN_PERMISSIONS.includes(permission);
-  if (role === 'unit_manager') return UNIT_MANAGER_PERMISSIONS.includes(permission);
-  return false;
+export function can(role: PermissionRole, permission: Permission): boolean {
+  return roleCan(role, permission);
 }
 
 /**
- * The dashboard role a session actually carries. `org_admin` wins when a user
- * holds both; anyone else is a plain learner with no dashboard access.
+ * The dashboard role a session carries, for display and for the mock adapters
+ * that still take an `OrgRole`. `gera_admin` is not an organization role, so
+ * it resolves to `learner` here — it has no place inside `/org`.
  */
 export function resolveOrgRole(user: Pick<User, 'roles'>): OrgRole {
-  const roles = user.roles ?? [];
-  if (roles.includes('org_admin')) return 'org_admin';
-  if (roles.includes('unit_manager')) return 'unit_manager';
-  return 'learner';
-}
-
-/** True when the session may open any part of the organization dashboard. */
-export function canOpenDashboard(user: Pick<User, 'roles'>): boolean {
-  return resolveOrgRole(user) !== 'learner';
+  const role = resolvePermissionRole(user.roles);
+  return role === 'org_admin' || role === 'unit_manager' ? role : 'learner';
 }
 
 /** True when the session may open the Gera admin panel. */
 export function isGeraAdmin(user: Pick<User, 'roles'>): boolean {
-  return (user.roles ?? []).includes('gera_admin');
+  return canOpenAdminPanel(user.roles);
 }
 
-/**
- * UX-only permission check for the current session.
- *
- * TODO(server): authoritative RBAC and scope on every endpoint; UI guards are UX only.
- */
+/** UX-only permission check for the current session. */
 export function useCan(permission: Permission): boolean {
-  const { user } = useApp();
-  return can(resolveOrgRole(user), permission);
+  const { me } = useApp();
+  return roleCan(resolvePermissionRole(me?.roles), permission);
+}
+
+/** The permission role of the current session, for conditional rendering. */
+export function usePermissionRole(): PermissionRole {
+  const { me } = useApp();
+  return resolvePermissionRole(me?.roles);
 }

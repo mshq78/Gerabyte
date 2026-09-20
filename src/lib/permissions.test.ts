@@ -1,52 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { Permission, can, canOpenDashboard, isGeraAdmin, resolveOrgRole } from './permissions';
+import { ORG_NAV_ITEMS, ORG_ROUTES } from '../features/org/nav';
+import { PERMISSIONS } from '../../shared/permissions';
+import { can, isGeraAdmin, resolveOrgRole } from './permissions';
 
-const ORG_ADMIN_ONLY: Permission[] = [
-  'org.import.manage',
-  'org.subscriptions.manage',
-  'org.settings.manage',
-  'org.hierarchy.manage',
-];
-
-const SHARED: Permission[] = [
-  'org.overview.view',
-  'org.people.view',
-  'org.person.report.view',
-  'org.assignments.manage',
-  'org.reports.view',
-  'org.certificates.view',
-  'org.challengeRequests.manage',
-  'org.effectiveness.view',
-];
-
-describe('can', () => {
-  it('gives an org admin everything under /org', () => {
-    for (const p of [...SHARED, ...ORG_ADMIN_ONLY]) {
-      expect(can('org_admin', p), p).toBe(true);
-    }
-  });
-
-  it('gives a unit manager the read and assignment surfaces', () => {
-    for (const p of SHARED) {
-      expect(can('unit_manager', p), p).toBe(true);
-    }
-  });
-
-  it('withholds import, subscriptions, settings and hierarchy from a unit manager', () => {
-    for (const p of ORG_ADMIN_ONLY) {
-      expect(can('unit_manager', p), p).toBe(false);
-    }
-  });
-
-  it('gives a plain learner nothing at all', () => {
-    for (const p of [...SHARED, ...ORG_ADMIN_ONLY]) {
-      expect(can('learner', p), p).toBe(false);
-    }
-  });
-});
+// The matrix itself is tested in shared/permissions.test.ts, next to where it
+// lives. This file covers the web app's adapter over it, and the nav table
+// that both the sidebar and the router are generated from.
 
 describe('resolveOrgRole', () => {
-  it('reads the role off the session roles', () => {
+  it('reads the organization role off the session roles', () => {
     expect(resolveOrgRole({ roles: ['learner', 'org_admin'] })).toBe('org_admin');
     expect(resolveOrgRole({ roles: ['learner', 'unit_manager'] })).toBe('unit_manager');
     expect(resolveOrgRole({ roles: ['learner'] })).toBe('learner');
@@ -54,7 +16,6 @@ describe('resolveOrgRole', () => {
 
   it('acts as org_admin when a user holds both dashboard roles', () => {
     expect(resolveOrgRole({ roles: ['unit_manager', 'org_admin'] })).toBe('org_admin');
-    expect(resolveOrgRole({ roles: ['org_admin', 'unit_manager'] })).toBe('org_admin');
   });
 
   it('never defaults a role-less session to org_admin', () => {
@@ -62,20 +23,50 @@ describe('resolveOrgRole', () => {
     expect(resolveOrgRole({ roles: [] })).toBe('learner');
     expect(resolveOrgRole({ roles: undefined })).toBe('learner');
   });
-});
 
-describe('canOpenDashboard / isGeraAdmin', () => {
-  it('lets both dashboard roles in and keeps everyone else out', () => {
-    expect(canOpenDashboard({ roles: ['org_admin'] })).toBe(true);
-    expect(canOpenDashboard({ roles: ['unit_manager'] })).toBe(true);
-    expect(canOpenDashboard({ roles: ['learner'] })).toBe(false);
-    expect(canOpenDashboard({})).toBe(false);
-  });
-
-  it('gates /admin on gera_admin alone', () => {
+  it('is not an organization role for a platform admin', () => {
+    expect(resolveOrgRole({ roles: ['gera_admin'] })).toBe('learner');
     expect(isGeraAdmin({ roles: ['gera_admin'] })).toBe(true);
     expect(isGeraAdmin({ roles: ['org_admin'] })).toBe(false);
-    expect(isGeraAdmin({ roles: ['learner', 'unit_manager'] })).toBe(false);
-    expect(isGeraAdmin({})).toBe(false);
+  });
+});
+
+describe('the org nav table', () => {
+  it('names a real permission for every route', () => {
+    for (const route of ORG_ROUTES) {
+      expect(PERMISSIONS, route.path).toContain(route.permission);
+    }
+  });
+
+  it('has no duplicate paths', () => {
+    const paths = ORG_ROUTES.map((r) => r.path);
+    expect(new Set(paths).size).toBe(paths.length);
+  });
+
+  it('shows a unit manager only what they may open', () => {
+    const visible = ORG_NAV_ITEMS.filter((item) => can('unit_manager', item.permission)).map(
+      (item) => item.path
+    );
+    expect(visible).not.toContain('/org/import');
+    expect(visible).not.toContain('/org/subscriptions');
+    expect(visible).not.toContain('/org/settings');
+    expect(visible).toContain('/org/overview');
+    expect(visible).toContain('/org/people');
+  });
+
+  it('shows an org admin every menu entry', () => {
+    for (const item of ORG_NAV_ITEMS) {
+      expect(can('org_admin', item.permission), item.path).toBe(true);
+    }
+  });
+
+  it('guards the three URLs a unit manager could previously reach by typing', () => {
+    // The regression this whole step exists for: these were reachable by URL
+    // because only the sidebar hid them.
+    for (const path of ['/org/import', '/org/subscriptions', '/org/settings']) {
+      const route = ORG_ROUTES.find((r) => r.path === path);
+      expect(route, path).toBeDefined();
+      expect(can('unit_manager', route!.permission), path).toBe(false);
+    }
   });
 });

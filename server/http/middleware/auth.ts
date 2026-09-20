@@ -1,11 +1,13 @@
 import type { NextFunction, Request, Response } from 'express';
 import type { Database } from '../../../db/client.js';
-import { can, type Action } from '../../policies/index.js';
+import type { Permission } from '../../../shared/permissions.js';
+import { can } from '../../policies/index.js';
 import type { Principal, Scope } from '../../policies/scope.js';
 import { resolveScope } from '../../policies/scope.js';
 import { loadPrincipal, type PrincipalContext } from '../../repositories/users.js';
 import * as sessionService from '../../services/session.js';
 import { forbidden, unauthenticated } from '../errors.js';
+import { tagPolicy } from '../routePolicy.js';
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -46,7 +48,7 @@ export function loadSession() {
 }
 
 export function requireAuth() {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return tagPolicy((req: Request, res: Response, next: NextFunction) => {
     if (!req.auth) {
       // Clear a cookie that no longer resolves, so the browser stops sending it.
       sessionService.clearSessionCookie(res);
@@ -54,22 +56,27 @@ export function requireAuth() {
       return;
     }
     next();
-  };
+  }, { kind: 'authenticated' });
 }
 
-/** Gate a route on a central policy action. */
-export function requireAction(action: Action) {
-  return (req: Request, _res: Response, next: NextFunction) => {
+/**
+ * Gate a route on a permission from the shared matrix.
+ *
+ * The tag is what makes the route show up as decided in the deny-by-default
+ * policy test; the check is what makes it true at runtime.
+ */
+export function requirePermission(permission: Permission) {
+  return tagPolicy((req: Request, _res: Response, next: NextFunction) => {
     if (!req.auth) {
       next(unauthenticated());
       return;
     }
-    if (!can(req.auth.principal, action)) {
+    if (!can(req.auth.principal, permission)) {
       next(forbidden());
       return;
     }
     next();
-  };
+  }, { kind: 'permission', permission });
 }
 
 /**

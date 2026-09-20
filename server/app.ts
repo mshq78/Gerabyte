@@ -8,6 +8,7 @@ import { logger } from './logger.js';
 import { errorHandler, notFoundHandler } from './http/middleware/errorHandler.js';
 import { loadSession } from './http/middleware/auth.js';
 import { requestId } from './http/middleware/requestId.js';
+import { mountRouter } from './http/routePolicy.js';
 import {
   csrfGuard,
   extraSecurityHeaders,
@@ -76,16 +77,16 @@ export function createApp(deps: AppDeps): Express {
     next();
   });
 
-  app.use('/api/health', healthRouter());
+  mountRouter(app, '/api/health', healthRouter());
 
   // Everything past this point is state-changing-aware: CSRF first, then the
   // session, so a forged request is rejected before it can touch a session.
   app.use(csrfGuard());
   app.use(loadSession());
 
-  app.use('/api/auth', authRouter());
-  app.use('/api/me', meRouter());
-  app.use('/api/org', orgRouter());
+  mountRouter(app, '/api/auth', authRouter());
+  mountRouter(app, '/api/me', meRouter());
+  mountRouter(app, '/api/org', orgRouter());
 
   app.use(notFoundHandler());
   app.use(errorHandler());

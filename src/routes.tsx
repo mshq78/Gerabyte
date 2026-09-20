@@ -1,6 +1,8 @@
 import React, { ReactNode, Suspense, useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { canOpenDashboard, isGeraAdmin } from './lib/permissions';
+import type { Permission } from './lib/permissions';
+import { canOpenAdminPanel, canOpenDashboard, rolesCan } from '../shared/permissions';
+import { ORG_ROUTES } from './features/org/nav';
 import { useApp } from './state/AppContext';
 import { LearnerShell } from './shells/LearnerShell';
 import { DashboardShell } from './shells/DashboardShell';
@@ -68,63 +70,6 @@ const VisibilitySettingsScreen = lazyNamed(
   'VisibilitySettingsScreen'
 );
 
-// Lazy Loaded Org Dashboard Screens
-const OrgOverviewScreen = React.lazy(() =>
-  import('./features/org/screens/OrgOverviewScreen').then((m) => ({ default: m.OrgOverviewScreen }))
-);
-const OrgPeopleScreen = React.lazy(() =>
-  import('./features/org/screens/OrgPeopleScreen').then((m) => ({ default: m.OrgPeopleScreen }))
-);
-const OrgPersonDetailScreen = React.lazy(() =>
-  import('./features/org/screens/OrgPersonDetailScreen').then((m) => ({
-    default: m.OrgPersonDetailScreen,
-  }))
-);
-const OrgAssignmentsScreen = React.lazy(() =>
-  import('./features/org/screens/OrgAssignmentsScreen').then((m) => ({
-    default: m.OrgAssignmentsScreen,
-  }))
-);
-const OrgReportsScreen = React.lazy(() =>
-  import('./features/org/screens/OrgReportsScreen').then((m) => ({ default: m.OrgReportsScreen }))
-);
-const OrgChallengesScreen = React.lazy(() =>
-  import('./features/org/screens/OrgChallengesScreen').then((m) => ({
-    default: m.OrgChallengesScreen,
-  }))
-);
-const OrgChallengeNewScreen = React.lazy(() =>
-  import('./features/org/screens/OrgChallengeNewScreen').then((m) => ({
-    default: m.OrgChallengeNewScreen,
-  }))
-);
-const OrgChallengeDetailScreen = React.lazy(() =>
-  import('./features/org/screens/OrgChallengeDetailScreen').then((m) => ({
-    default: m.OrgChallengeDetailScreen,
-  }))
-);
-const OrgImportScreen = React.lazy(() =>
-  import('./features/org/screens/OrgImportScreen').then((m) => ({ default: m.OrgImportScreen }))
-);
-const OrgSubscriptionsScreen = React.lazy(() =>
-  import('./features/org/screens/OrgSubscriptionsScreen').then((m) => ({
-    default: m.OrgSubscriptionsScreen,
-  }))
-);
-const OrgCertificatesScreen = React.lazy(() =>
-  import('./features/org/screens/OrgCertificatesScreen').then((m) => ({
-    default: m.OrgCertificatesScreen,
-  }))
-);
-const OrgEffectivenessScreen = React.lazy(() =>
-  import('./features/org/screens/OrgEffectivenessScreen').then((m) => ({
-    default: m.OrgEffectivenessScreen,
-  }))
-);
-const OrgSettingsScreen = React.lazy(() =>
-  import('./features/org/screens/OrgSettingsScreen').then((m) => ({ default: m.OrgSettingsScreen }))
-);
-
 const OrgLoadingFallback: React.FC = () => (
   <div className="flex items-center justify-center min-h-[300px]">
     <div className="flex flex-col items-center gap-3">
@@ -175,8 +120,7 @@ export const RequireRole: React.FC<{ area: 'org' | 'admin'; children: ReactNode 
 }) => {
   const { me, ready, showToast } = useApp();
   // Roles come from the server's /api/me payload and nowhere else.
-  const roles = { roles: me?.roles };
-  const allowed = area === 'org' ? canOpenDashboard(roles) : isGeraAdmin(roles);
+  const allowed = area === 'org' ? canOpenDashboard(me?.roles) : canOpenAdminPanel(me?.roles);
   const warned = useRef(false);
 
   useEffect(() => {
@@ -191,6 +135,38 @@ export const RequireRole: React.FC<{ area: 'org' | 'admin'; children: ReactNode 
   if (!allowed) {
     return <Navigate to="/" replace />;
   }
+
+  return <>{children}</>;
+};
+
+/**
+ * Route guard for a single permission, from the shared matrix.
+ *
+ * `RequireRole` answers "may you open the dashboard at all"; this answers
+ * "may you open this screen". Without it a unit manager could reach
+ * /org/import by typing the URL, because hiding the sidebar link hides
+ * nothing from anyone who knows the address.
+ *
+ * The server refuses the underlying requests regardless — this exists so the
+ * refusal is an explanation rather than a broken screen.
+ */
+export const RequirePermission: React.FC<{ permission: Permission; children: ReactNode }> = ({
+  permission,
+  children,
+}) => {
+  const { me, ready, showToast } = useApp();
+  const allowed = rolesCan(me?.roles, permission);
+  const warned = useRef(false);
+
+  useEffect(() => {
+    if (ready && !allowed && !warned.current) {
+      warned.current = true;
+      showToast('به این بخش دسترسی ندارید', 'error');
+    }
+  }, [ready, allowed, showToast]);
+
+  if (!ready) return <ScreenFallback />;
+  if (!allowed) return <Navigate to="/org/overview" replace />;
 
   return <>{children}</>;
 };
@@ -372,110 +348,19 @@ export const AppRoutes: React.FC = () => {
           }
         >
           <Route path="/org" element={<Navigate to="/org/overview" replace />} />
-          <Route
-            path="/org/overview"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgOverviewScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/people"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgPeopleScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/people/:id"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgPersonDetailScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/import"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgImportScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/assignments"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgAssignmentsScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/challenges"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgChallengesScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/challenges/new"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgChallengeNewScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/challenges/:id"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgChallengeDetailScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/subscriptions"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgSubscriptionsScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/certificates"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgCertificatesScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/effectiveness"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgEffectivenessScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/settings"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgSettingsScreen />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/org/reports"
-            element={
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgReportsScreen />
-              </Suspense>
-            }
-          />
+          {ORG_ROUTES.map(({ path, permission, Component }) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                <RequirePermission permission={permission}>
+                  <Suspense fallback={<OrgLoadingFallback />}>
+                    <Component />
+                  </Suspense>
+                </RequirePermission>
+              }
+            />
+          ))}
         </Route>
 
         {/* =========================================
