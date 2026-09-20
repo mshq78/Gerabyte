@@ -1,4 +1,5 @@
 import { OrgCertificateItem } from '../../types/org';
+import { isoDaysFromToday } from '../../lib/jalali';
 
 export const INITIAL_ORG_CERTIFICATES: OrgCertificateItem[] = [
   {
@@ -9,7 +10,7 @@ export const INITIAL_ORG_CERTIFICATES: OrgCertificateItem[] = [
     holderName: 'علیرضا رضایی',
     unitId: 'u-nord',
     unitName: 'واحد نورد گرم و مقاطع',
-    issuedAt: '۱۴۰۳/۰۶/۱۴',
+    issuedAt: isoDaysFromToday(-46),
     scorePct: 94,
     pathName: 'مسیر طلایی ایمنی کارگاهی',
   },
@@ -21,7 +22,7 @@ export const INITIAL_ORG_CERTIFICATES: OrgCertificateItem[] = [
     holderName: 'زهرا کریمی',
     unitId: 'u-lab',
     unitName: 'آزمایشگاه متالورژی و کنترل کیفی',
-    issuedAt: '۱۴۰۳/۰۶/۱۸',
+    issuedAt: isoDaysFromToday(-39),
     scorePct: 98,
     pathName: 'استانداردهای کنترل کیفی شمش و میلگرد',
   },
@@ -33,7 +34,7 @@ export const INITIAL_ORG_CERTIFICATES: OrgCertificateItem[] = [
     holderName: 'محسن اسدی',
     unitId: 'u-nord',
     unitName: 'واحد نورد گرم و مقاطع',
-    issuedAt: '۱۴۰۳/۰۶/۲۰',
+    issuedAt: isoDaysFromToday(-33),
     scorePct: 88,
     pathName: 'مهارت‌های تکمیلی سرپرستی شیفت',
   },
@@ -45,7 +46,7 @@ export const INITIAL_ORG_CERTIFICATES: OrgCertificateItem[] = [
     holderName: 'سپیده رهنما',
     unitId: 'u-lab',
     unitName: 'آزمایشگاه متالورژی و کنترل کیفی',
-    issuedAt: '۱۴۰۳/۰۶/۲۲',
+    issuedAt: isoDaysFromToday(-26),
     scorePct: 92,
     pathName: 'بهینه‌سازی حرارتی و راندمان کوره',
   },
@@ -57,7 +58,7 @@ export const INITIAL_ORG_CERTIFICATES: OrgCertificateItem[] = [
     holderName: 'مهدی حسینی',
     unitId: 'u-hse',
     unitName: 'واحد بهداشت، ایمنی و محیط زیست (HSE)',
-    issuedAt: '۱۴۰۳/۰۶/۲۵',
+    issuedAt: isoDaysFromToday(-18),
     scorePct: 100,
     pathName: 'فرماندهی حوادث صنعتی',
   },
@@ -69,7 +70,7 @@ export const INITIAL_ORG_CERTIFICATES: OrgCertificateItem[] = [
     holderName: 'سارا باقری',
     unitId: 'u-fani',
     unitName: 'معاونت فنی و مهندسی',
-    issuedAt: '۱۴۰۳/۰۶/۲۷',
+    issuedAt: isoDaysFromToday(-9),
     scorePct: 90,
     pathName: 'نگهداری و تعمیرات قابلیت‌اطمینان محور',
   },

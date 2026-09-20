@@ -15,6 +15,7 @@ import { ChallengeRequest, ChallengeRequestStatus } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
 import { useApp } from '../../../state/AppContext';
 import { toFa } from '../../../lib/format';
+import { formatJalaliDate } from '../../../lib/jalali';
 
 const STATUS_LABELS: Record<
   ChallengeRequestStatus | 'all',
@@ -215,7 +216,7 @@ export const OrgChallengesScreen: React.FC = () => {
                     <span className="text-meta text-ink/60 flex items-center gap-1 font-mono">
                       <Calendar className="w-3.5 h-3.5" />
                       <span>
-                        {toFa(req.startsAt)} تا {toFa(req.endsAt)}
+                        {formatJalaliDate(req.startsAt)} تا {formatJalaliDate(req.endsAt)}
                       </span>
                     </span>
                   </div>

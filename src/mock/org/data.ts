@@ -1,5 +1,10 @@
 import { OrgUnit, OrgMember, PathAssignment, OrgKpiSummary } from '../../types/org';
 import { Level, OrgRank } from '../../types/domain';
+import { daysSince, isOverdue, isoDaysFromToday } from '../../lib/jalali';
+
+/** A learner counts as at risk after this many idle days, inactive after the next. */
+export const AT_RISK_AFTER_DAYS = 7;
+export const INACTIVE_AFTER_DAYS = 21;
 
 // Seeded PRNG for deterministic, reproducible mock data
 function createPrng(seed: number) {
@@ -392,11 +397,12 @@ export function getMockOrgMembers(): OrgMember[] {
       Math.round((completedLessonsCount / totalAssignedLessons) * 100)
     );
 
-    const status: 'active' | 'inactive' | 'at_risk' = isInactive
-      ? 'inactive'
-      : isAtRisk
-        ? 'at_risk'
-        : 'active';
+    // The timestamp is the source of truth; at-risk and inactive are read off it.
+    const daysIdle = isInactive ? 24 : isAtRisk ? 9 : 1 + Math.floor(prng() * 2);
+    const lastActiveAt = isoDaysFromToday(-daysIdle);
+    const idle = daysSince(lastActiveAt);
+    const status: 'active' | 'inactive' | 'at_risk' =
+      idle >= INACTIVE_AFTER_DAYS ? 'inactive' : idle >= AT_RISK_AFTER_DAYS ? 'at_risk' : 'active';
     const certificatesCount = isHighPerformer ? 2 : completedLessonsCount >= 12 ? 1 : 0;
 
     return {
@@ -408,7 +414,7 @@ export function getMockOrgMembers(): OrgMember[] {
       totalAssignedLessons,
       completedLessonsCount,
       complianceRate,
-      lastActiveAt: isInactive ? '۱۴۰۳/۰۶/۱۵' : isAtRisk ? '۱۴۰۳/۰۶/۲۸' : '۱۴۰۳/۰۷/۰۱',
+      lastActiveAt,
       certificatesCount,
       domainMastery: {
         'domain-1': Math.min(100, Math.round(50 + prng() * 45)),
@@ -424,7 +430,7 @@ export function getMockOrgMembers(): OrgMember[] {
 }
 
 export function getMockPathAssignments(): PathAssignment[] {
-  return [
+  const assignments: PathAssignment[] = [
     {
       id: 'asg-1',
       title: 'الزامات ایمنی و حفاظت فردی در خطوط نورد (HSE)',
@@ -435,8 +441,8 @@ export function getMockPathAssignments(): PathAssignment[] {
       targetId: 'u-top',
       targetName: 'تمام کارکنان مجتمع',
       mandatory: true,
-      assignedDate: '۱۴۰۳/۰۶/۱۰',
-      dueDate: '۱۴۰۳/۰۷/۱۵',
+      assignedDate: isoDaysFromToday(-10),
+      dueDate: isoDaysFromToday(14),
       status: 'active',
       totalAssigned: 32,
       completedCount: 26,
@@ -452,8 +458,8 @@ export function getMockPathAssignments(): PathAssignment[] {
       targetId: 'u-nord',
       targetName: 'واحد نورد گرم و مقاطع',
       mandatory: true,
-      assignedDate: '۱۴۰۳/۰۶/۱۵',
-      dueDate: '۱۴۰۳/۰۷/۲۰',
+      assignedDate: isoDaysFromToday(-18),
+      dueDate: isoDaysFromToday(7),
       status: 'active',
       totalAssigned: 8,
       completedCount: 6,
@@ -469,8 +475,8 @@ export function getMockPathAssignments(): PathAssignment[] {
       targetId: 'u-lab',
       targetName: 'آزمایشگاه متالورژی و کنترل کیفی',
       mandatory: true,
-      assignedDate: '۱۴۰۳/۰۶/۲۰',
-      dueDate: '۱۴۰۳/۰۷/۳۰',
+      assignedDate: isoDaysFromToday(-25),
+      dueDate: isoDaysFromToday(-3),
       status: 'active',
       totalAssigned: 5,
       completedCount: 4,
@@ -486,14 +492,25 @@ export function getMockPathAssignments(): PathAssignment[] {
       targetId: 'u-top',
       targetName: 'تمام کارکنان مجتمع',
       mandatory: false,
-      assignedDate: '۱۴۰۳/۰۶/۰۱',
-      dueDate: '۱۴۰۳/۰۸/۰۱',
+      assignedDate: isoDaysFromToday(-40),
+      dueDate: isoDaysFromToday(30),
       status: 'active',
       totalAssigned: 32,
       completedCount: 18,
       inProgressCount: 9,
     },
   ];
+
+  // The dates decide the state, not a literal in the fixture.
+  return assignments.map((a) => ({
+    ...a,
+    status:
+      a.completedCount >= a.totalAssigned
+        ? 'completed'
+        : isOverdue(a.dueDate)
+          ? 'overdue'
+          : 'active',
+  }));
 }
 
 export function getMockOrgKpis(unitId: string | 'all' = 'all'): OrgKpiSummary {

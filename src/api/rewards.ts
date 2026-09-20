@@ -2,6 +2,7 @@ import { mockRequest } from './client';
 import { Reward, RedeemedReward } from '../types/domain';
 import { MOCK_REWARDS } from '../mock/data';
 import { getStoredUser, setStoredUser } from './auth';
+import { isoDaysFromToday } from '../lib/jalali';
 
 const STORAGE_REDEMPTIONS_KEY = 'gerabyte:my_redemptions';
 
@@ -21,7 +22,7 @@ function getStoredRedemptions(): RedeemedReward[] {
       id: 'red-seed-1',
       rewardId: 'rew-org-4',
       title: 'کارت هدیه خرید کتاب از بوک‌استور کارخانه',
-      redeemedAt: '2026-09-10T14:20:00Z',
+      redeemedAt: isoDaysFromToday(-10),
       voucherCode: 'FOOLAD-BOOK-۹۸۲۴',
       costCoins: 60,
       provider: 'org',

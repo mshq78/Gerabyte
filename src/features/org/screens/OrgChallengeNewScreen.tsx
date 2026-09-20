@@ -18,6 +18,12 @@ import { useApp } from '../../../state/AppContext';
 import { toFa } from '../../../lib/format';
 import { Level } from '../../../types/domain';
 import { errorMessage } from '../../../lib/errors';
+import {
+  daysUntil,
+  formatJalaliNumeric,
+  isoDaysFromToday,
+  parseJalaliNumeric,
+} from '../../../lib/jalali';
 
 export const OrgChallengeNewScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -31,8 +37,8 @@ export const OrgChallengeNewScreen: React.FC = () => {
   const [selectedLevels, setSelectedLevels] = useState<Level[]>([1, 2, 3, 4, 5]);
   const [goalType, setGoalType] = useState<'lessons' | 'xp' | 'streak' | 'exam'>('xp');
   const [goalTarget, setGoalTarget] = useState<number>(500);
-  const [startsAt, setStartsAt] = useState('۱۴۰۳/۰۷/۱۵');
-  const [endsAt, setEndsAt] = useState('۱۴۰۳/۰۷/۲۹');
+  const [startsAt, setStartsAt] = useState(() => formatJalaliNumeric(isoDaysFromToday(7)));
+  const [endsAt, setEndsAt] = useState(() => formatJalaliNumeric(isoDaysFromToday(21)));
   const [suggestedPrize, setSuggestedPrize] = useState('');
   const [notes, setNotes] = useState('');
 
@@ -68,14 +74,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
       errs.goalTarget = 'مقدار عددی هدف باید بزرگ‌تر از صفر باشد.';
     }
 
+    const startsIso = parseJalaliNumeric(startsAt);
+    const endsIso = parseJalaliNumeric(endsAt);
     if (!startsAt.trim() || !endsAt.trim()) {
       errs.dates = 'تاریخ شروع و پایان شمسی الزامی است.';
+    } else if (!startsIso || !endsIso) {
+      errs.dates = 'تاریخ شمسی معتبر نیست. قالب درست: ۱۴۰۵/۰۷/۰۲';
     } else {
-      // Days difference check: min 3 days, max 30 days
-      // For Jalali format mock validation
-      const sDay = parseInt(startsAt.split('/')[2] || '1', 10);
-      const eDay = parseInt(endsAt.split('/')[2] || '1', 10);
-      const diff = eDay >= sDay ? eDay - sDay : eDay + 30 - sDay;
+      const diff = daysUntil(endsIso, new Date(startsIso));
       if (diff < 3 || diff > 30) {
         errs.dates = 'طول مدت برگزاری چالش باید حداقل ۳ روز و حداکثر ۳۰ روز باشد.';
       }
@@ -108,8 +114,8 @@ export const OrgChallengeNewScreen: React.FC = () => {
         target: targetObj,
         levelFilter: selectedLevels,
         goal: { type: goalType, target: goalTarget },
-        startsAt,
-        endsAt,
+        startsAt: parseJalaliNumeric(startsAt) ?? isoDaysFromToday(7),
+        endsAt: parseJalaliNumeric(endsAt) ?? isoDaysFromToday(21),
         suggestedPrize,
         notes,
         requestedByName: user.fullName,
@@ -359,7 +365,7 @@ export const OrgChallengeNewScreen: React.FC = () => {
               <input
                 id="org-challenge-new-f7"
                 type="text"
-                placeholder="۱۴۰۳/۰۷/۱۵"
+                placeholder={formatJalaliNumeric(isoDaysFromToday(7))}
                 value={startsAt}
                 onChange={(e) => setStartsAt(e.target.value)}
                 className="min-h-[48px] w-full px-4 py-2 rounded-tile bg-canvas border border-sunken text-body font-mono text-ink focus:outline-none focus:border-primary"
@@ -376,7 +382,7 @@ export const OrgChallengeNewScreen: React.FC = () => {
               <input
                 id="org-challenge-new-f8"
                 type="text"
-                placeholder="۱۴۰۳/۰۷/۲۹"
+                placeholder={formatJalaliNumeric(isoDaysFromToday(21))}
                 value={endsAt}
                 onChange={(e) => setEndsAt(e.target.value)}
                 className="min-h-[48px] w-full px-4 py-2 rounded-tile bg-canvas border border-sunken text-body font-mono text-ink focus:outline-none focus:border-primary"

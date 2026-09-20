@@ -1,4 +1,5 @@
 import { ImportJob, ImportRowError, OrgMember } from '../../types/org';
+import { isoDaysFromToday } from '../../lib/jalali';
 import { OrgRank, Level } from '../../types/domain';
 import { subscriptionsApi } from './subscriptions';
 
@@ -268,7 +269,7 @@ export const importApi = {
     const initial: ImportJob[] = [
       {
         id: 'job-1',
-        fileName: 'پرسنل_شیفت_تابستان_۱۴۰۳.xlsx',
+        fileName: 'پرسنل_شیفت_تابستان.xlsx',
         rowCount: 85,
         validRows: 85,
         errorRows: 0,
@@ -276,7 +277,7 @@ export const importApi = {
         errors: [],
         options: {
           autoCreateNodes: true,
-          sponsorship: { months: 6, startsAt: '۱۴۰۳/۰۶/۰۱' },
+          sponsorship: { months: 6, startsAt: isoDaysFromToday(-30) },
           sendInviteSms: true,
         },
         result: { added: 85, updated: 0, skipped: 0, failed: 0 },

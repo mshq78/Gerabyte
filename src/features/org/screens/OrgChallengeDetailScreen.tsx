@@ -16,6 +16,7 @@ import { ChallengeRequest } from '../../../types/org';
 import { toFa } from '../../../lib/format';
 import { useApp } from '../../../state/AppContext';
 import { errorMessage } from '../../../lib/errors';
+import { formatJalaliDate } from '../../../lib/jalali';
 
 export const OrgChallengeDetailScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -165,7 +166,7 @@ export const OrgChallengeDetailScreen: React.FC = () => {
               <div>
                 <span className="text-ink/50 text-meta block">بازه زمانی:</span>
                 <strong className="text-ink font-mono block">
-                  {toFa(request.startsAt)} تا {toFa(request.endsAt)}
+                  {formatJalaliDate(request.startsAt)} تا {formatJalaliDate(request.endsAt)}
                 </strong>
               </div>
             </div>
@@ -303,7 +304,7 @@ export const OrgChallengeDetailScreen: React.FC = () => {
                 <div key={idx} className="relative">
                   {/* Timeline dot */}
                   <div className="absolute -right-[23px] top-1 w-3.5 h-3.5 rounded-full bg-primary border-2 border-surface" />
-                  <div className="text-meta font-mono text-ink/50">{toFa(step.at)}</div>
+                  <div className="text-meta font-mono text-ink/50">{formatJalaliDate(step.at)}</div>
                   <div className="text-meta font-bold text-ink mt-0.5">{step.byName}</div>
                   {step.comment && (
                     <div className="p-2.5 rounded-tile bg-canvas border border-sunken text-meta text-ink/80 mt-1.5 leading-relaxed">

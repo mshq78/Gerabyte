@@ -26,6 +26,7 @@ import { toFa } from '../../../lib/format';
 import { Avatar } from '../../../components/ui/Avatar';
 import { useOrgScope } from '../context/ScopeContext';
 import { useApp } from '../../../state/AppContext';
+import { formatJalaliDate } from '../../../lib/jalali';
 
 export const OrgPersonDetailScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -141,7 +142,7 @@ export const OrgPersonDetailScreen: React.FC = () => {
           </div>
           <div className="text-left text-xs text-ink/80 space-y-1">
             <div>سازمان: {currentOrg.name}</div>
-            <div>تاریخ صدور گزارش: ۱۴۰۳/۰۷/۰۲</div>
+            <div>تاریخ صدور گزارش: {formatJalaliDate(new Date())}</div>
             <div>شناسه یکتای استعلام: GB-REP-{member.id}</div>
           </div>
         </div>
@@ -276,7 +277,9 @@ export const OrgPersonDetailScreen: React.FC = () => {
             <span className="text-headline font-black text-ink">{toFa(member.xpTotal)}</span>
             <span className="text-meta font-bold text-ink/60">امتیاز</span>
           </div>
-          <p className="text-meta text-ink/50 mt-1">آخرین فعالیت: {member.lastActiveAt}</p>
+          <p className="text-meta text-ink/50 mt-1">
+            آخرین فعالیت: {formatJalaliDate(member.lastActiveAt)}
+          </p>
         </div>
       </div>
 

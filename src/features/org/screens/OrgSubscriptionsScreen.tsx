@@ -20,6 +20,8 @@ import { useOrgScope } from '../context/ScopeContext';
 import { can } from '../../../lib/permissions';
 import { toFa } from '../../../lib/format';
 import { errorMessage } from '../../../lib/errors';
+import { formatJalaliYear } from '../../../lib/jalali';
+import { formatJalaliDate } from '../../../lib/jalali';
 
 export const OrgSubscriptionsScreen: React.FC = () => {
   const { userRole } = useOrgScope();
@@ -242,7 +244,9 @@ export const OrgSubscriptionsScreen: React.FC = () => {
               <Calendar className="w-5 h-5 text-primary" />
               <span>پیش‌بینی موعد انقضای اشتراک‌ها برحسب ماه</span>
             </h3>
-            <span className="text-meta text-ink/60 font-mono">سال ۱۴۰۳</span>
+            <span className="text-meta text-ink/60 font-mono">
+              سال {formatJalaliYear(new Date())}
+            </span>
           </div>
 
           <div className="space-y-3">
@@ -305,7 +309,9 @@ export const OrgSubscriptionsScreen: React.FC = () => {
                       {toFa(member.daysRemaining)} روز
                     </span>
                   </td>
-                  <td className="p-3 font-mono text-ink/70">{toFa(member.sponsorshipEndsAt)}</td>
+                  <td className="p-3 font-mono text-ink/70">
+                    {formatJalaliDate(member.sponsorshipEndsAt)}
+                  </td>
                   <td className="p-3">
                     {member.remindersCountToday >= 1 ? (
                       <span className="text-meta text-success font-bold flex items-center gap-1">
@@ -358,7 +364,7 @@ export const OrgSubscriptionsScreen: React.FC = () => {
               {renewalRequests.map((req) => (
                 <tr key={req.id} className="hover:bg-canvas">
                   <td className="p-3 font-mono font-bold text-ink">{req.id}</td>
-                  <td className="p-3 font-mono">{toFa(req.requestedAt)}</td>
+                  <td className="p-3 font-mono">{formatJalaliDate(req.requestedAt)}</td>
                   <td className="p-3 font-mono text-primary font-bold">
                     {toFa(req.seatsCount)} سهمیه
                   </td>

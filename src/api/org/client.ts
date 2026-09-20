@@ -187,7 +187,7 @@ export const orgApi = {
     const newAssignment: PathAssignment = {
       id: `asg-${Date.now()}`,
       ...data,
-      assignedDate: '۱۴۰۳/۰۷/۰۲',
+      assignedDate: new Date().toISOString(),
       status: 'active',
       totalAssigned: targetCount,
       completedCount: 0,

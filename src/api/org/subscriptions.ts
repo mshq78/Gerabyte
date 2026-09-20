@@ -1,4 +1,5 @@
 import { SeatSummary, OrgRenewalRequest } from '../../types/org';
+import { formatJalaliMonthYear, isoDaysFromToday } from '../../lib/jalali';
 
 const STORAGE_KEY_SEAT_SUMMARY = 'gerabyte_org_seat_summary_v1';
 const STORAGE_KEY_RENEWALS = 'gerabyte_org_renewals_v1';
@@ -38,7 +39,7 @@ export const INITIAL_EXPIRING_MEMBERS: ExpiringMemberItem[] = [
     unitName: 'واحد نورد گرم و مقاطع',
     rank: 'کارشناس',
     daysRemaining: 3,
-    sponsorshipEndsAt: '۱۴۰۳/۰۷/۰۵',
+    sponsorshipEndsAt: isoDaysFromToday(3),
     remindersCountToday: 0,
   },
   {
@@ -48,7 +49,7 @@ export const INITIAL_EXPIRING_MEMBERS: ExpiringMemberItem[] = [
     unitName: 'آزمایشگاه متالورژی',
     rank: 'کارشناس',
     daysRemaining: 5,
-    sponsorshipEndsAt: '۱۴۰۳/۰۷/۰۷',
+    sponsorshipEndsAt: isoDaysFromToday(5),
     remindersCountToday: 1,
     lastReminderSentAt: 'دیروز',
   },
@@ -59,7 +60,7 @@ export const INITIAL_EXPIRING_MEMBERS: ExpiringMemberItem[] = [
     unitName: 'معاونت فنی و مهندسی',
     rank: 'سرپرست',
     daysRemaining: 7,
-    sponsorshipEndsAt: '۱۴۰۳/۰۷/۰۹',
+    sponsorshipEndsAt: isoDaysFromToday(7),
     remindersCountToday: 0,
   },
   {
@@ -69,7 +70,7 @@ export const INITIAL_EXPIRING_MEMBERS: ExpiringMemberItem[] = [
     unitName: 'واحد بهداشت و ایمنی (HSE)',
     rank: 'کارشناس',
     daysRemaining: 9,
-    sponsorshipEndsAt: '۱۴۰۳/۰۷/۱۱',
+    sponsorshipEndsAt: isoDaysFromToday(9),
     remindersCountToday: 0,
   },
   {
@@ -79,7 +80,7 @@ export const INITIAL_EXPIRING_MEMBERS: ExpiringMemberItem[] = [
     unitName: 'توسعه سرمایه انسانی',
     rank: 'اپراتور',
     daysRemaining: 12,
-    sponsorshipEndsAt: '۱۴۰۳/۰۷/۱۴',
+    sponsorshipEndsAt: isoDaysFromToday(12),
     remindersCountToday: 0,
   },
 ];
@@ -120,14 +121,19 @@ export const subscriptionsApi = {
 
   // TODO(backend): GET /api/v1/org/subscriptions/distribution
   async getMonthlyDistribution(): Promise<MonthlySponsorshipDistribution[]> {
-    return [
-      { monthName: 'مهر ۱۴۰۳', count: 180, percentage: 4.1 },
-      { monthName: 'آبان ۱۴۰۳', count: 320, percentage: 7.2 },
-      { monthName: 'آذر ۱۴۰۳', count: 650, percentage: 14.7 },
-      { monthName: 'دی ۱۴۰۳', count: 940, percentage: 21.2 },
-      { monthName: 'بهمن ۱۴۰۳', count: 1120, percentage: 25.3 },
-      { monthName: 'اسفند ۱۴۰۳', count: 1210, percentage: 27.5 },
+    // The six months up to and including this one, named from real dates.
+    const buckets = [
+      { count: 180, percentage: 4.1 },
+      { count: 320, percentage: 7.2 },
+      { count: 650, percentage: 14.7 },
+      { count: 940, percentage: 21.2 },
+      { count: 1120, percentage: 25.3 },
+      { count: 1210, percentage: 27.5 },
     ];
+    return buckets.map((bucket, index) => ({
+      monthName: formatJalaliMonthYear(isoDaysFromToday(-30 * (buckets.length - 1 - index))),
+      ...bucket,
+    }));
   },
 
   // TODO(backend): GET /api/v1/org/subscriptions/expiring-list
@@ -164,7 +170,7 @@ export const subscriptionsApi = {
     const initial: OrgRenewalRequest[] = [
       {
         id: 'ren-1',
-        requestedAt: '۱۴۰۳/۰۶/۱۵',
+        requestedAt: isoDaysFromToday(-16),
         seatsCount: 500,
         durationMonths: 6,
         status: 'approved',
@@ -172,7 +178,7 @@ export const subscriptionsApi = {
       },
       {
         id: 'ren-2',
-        requestedAt: '۱۴۰۳/۰۴/۰۱',
+        requestedAt: isoDaysFromToday(-92),
         seatsCount: 1000,
         durationMonths: 12,
         status: 'invoiced',
@@ -192,7 +198,7 @@ export const subscriptionsApi = {
     const list = await this.getRenewalRequests();
     const newReq: OrgRenewalRequest = {
       id: `ren-${Date.now()}`,
-      requestedAt: '۱۴۰۳/۰۷/۰۲',
+      requestedAt: new Date().toISOString(),
       seatsCount: data.seatsCount,
       durationMonths: data.durationMonths,
       status: 'pending',

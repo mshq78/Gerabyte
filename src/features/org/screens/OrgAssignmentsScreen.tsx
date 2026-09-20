@@ -5,6 +5,12 @@ import { orgApi } from '../../../api/org/client';
 import { PathAssignment } from '../../../types/org';
 import { toFa } from '../../../lib/format';
 import { useApp } from '../../../state/AppContext';
+import {
+  formatJalaliDate,
+  formatJalaliNumeric,
+  isoDaysFromToday,
+  parseJalaliNumeric,
+} from '../../../lib/jalali';
 
 export const OrgAssignmentsScreen: React.FC = () => {
   const { currentOrg, effectiveUnitId, units } = useOrgScope();
@@ -24,7 +30,7 @@ export const OrgAssignmentsScreen: React.FC = () => {
     effectiveUnitId === 'all' ? 'u-top' : effectiveUnitId
   );
   const [newMandatory, setNewMandatory] = useState(true);
-  const [newDueDate, setNewDueDate] = useState('۱۴۰۳/۰۸/۱۵');
+  const [newDueDate, setNewDueDate] = useState(() => formatJalaliNumeric(isoDaysFromToday(30)));
 
   const domainOptions = [
     { id: 'domain-1', title: 'شایستگی‌های فردی و سازمانی' },
@@ -65,7 +71,7 @@ export const OrgAssignmentsScreen: React.FC = () => {
         targetId: newTargetType === 'all' ? 'u-top' : newTargetId,
         targetName: newTargetType === 'all' ? 'تمام سازمان' : targetUnit?.name || 'واحد انتخابی',
         mandatory: newMandatory,
-        dueDate: newDueDate,
+        dueDate: parseJalaliNumeric(newDueDate) ?? isoDaysFromToday(30),
       });
 
       showToast('مأموریت یادگیری با موفقیت تخصیص یافت.', 'success');
@@ -179,7 +185,7 @@ export const OrgAssignmentsScreen: React.FC = () => {
                     </span>
                     <span className="flex items-center gap-1.5 font-bold">
                       <Calendar className="w-4 h-4 text-ink/40" />
-                      <span>مهلت: {asg.dueDate}</span>
+                      <span>مهلت: {formatJalaliDate(asg.dueDate)}</span>
                     </span>
                   </div>
 
@@ -332,7 +338,7 @@ export const OrgAssignmentsScreen: React.FC = () => {
                     type="text"
                     value={newDueDate}
                     onChange={(e) => setNewDueDate(e.target.value)}
-                    placeholder="۱۴۰۳/۰۸/۱۵"
+                    placeholder={formatJalaliNumeric(isoDaysFromToday(30))}
                     className="w-full min-h-[48px] px-3.5 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
                   />
                 </div>

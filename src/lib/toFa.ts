@@ -10,6 +10,13 @@ export function toFa(value: number | string | null | undefined): string {
   return str.replace(/[0-9]/g, (w) => FA_DIGITS[+w]);
 }
 
+/** Turn Persian and Arabic-Indic digits back into ASCII digits. */
+export function toEn(value: string): string {
+  return value
+    .replace(/[\u06f0-\u06f9]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+    .replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x0660));
+}
+
 /**
  * Format number with Persian thousands separator «٬»
  */

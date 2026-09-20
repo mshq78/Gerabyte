@@ -1,4 +1,5 @@
 import { ChallengeRequest, OrgScope } from '../../types/org';
+import { isoDaysFromToday } from '../../lib/jalali';
 import { Prize, Level, Challenge } from '../../types/domain';
 
 const STORAGE_KEY_CHALLENGE_REQUESTS = 'gerabyte_org_challenge_requests_v1';
@@ -12,8 +13,8 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
     target: { unitId: 'u-nord', unitName: 'واحد نورد گرم و مقاطع', includeChildren: true },
     levelFilter: [1, 2, 3],
     goal: { type: 'xp', target: 500 },
-    startsAt: '۱۴۰۳/۰۷/۰۱',
-    endsAt: '۱۴۰۳/۰۷/۱۵',
+    startsAt: isoDaysFromToday(-6),
+    endsAt: isoDaysFromToday(8),
     suggestedPrize: 'ماگ هوشمند حرارتی و ست وسایل ارگونومیک گرا',
     notes: 'پرسنل شیفت شب نیز می‌توانند در زمان استراحت شرکت کنند.',
     status: 'active',
@@ -21,25 +22,25 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
     estimatedParticipants: 48,
     timeline: [
       {
-        at: '۱۴۰۳/۰۶/۲۵',
+        at: isoDaysFromToday(-12),
         status: 'submitted',
         byName: 'مهندس علیرضا رضایی',
         comment: 'درخواست چالش برای پرسنل نورد ارسال شد.',
       },
       {
-        at: '۱۴۰۳/۰۶/۲۶',
+        at: isoDaysFromToday(-11),
         status: 'in_review',
         byName: 'تیم آموزش گرا',
         comment: 'بررسی اهداف آموزشی و تطابق با کاتالوگ مهارت‌ها.',
       },
       {
-        at: '۱۴۰۳/۰۶/۲۷',
+        at: isoDaysFromToday(-10),
         status: 'approved',
         byName: 'تیم آموزش گرا',
         comment: 'چالش تأیید شد و جوایز پستی تخصیص یافت.',
       },
       {
-        at: '۱۴۰۳/۰۷/۰۱',
+        at: isoDaysFromToday(-6),
         status: 'active',
         byName: 'سیستم هوشمند گرا',
         comment: 'چالش در اپلیکیشن کارکنان فعال گردید.',
@@ -65,8 +66,8 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
     target: { unitId: 'u-lab', unitName: 'آزمایشگاه متالورژی و کنترل کیفی' },
     levelFilter: [2, 3, 4],
     goal: { type: 'lessons', target: 8 },
-    startsAt: '۱۴۰۳/۰۷/۱۰',
-    endsAt: '۱۴۰۳/۰۷/۲۴',
+    startsAt: isoDaysFromToday(3),
+    endsAt: isoDaysFromToday(17),
     suggestedPrize: 'کارت هدیه کتاب فنی یا هندبوک متالورژی ASM',
     notes: 'تمرکز بر بخش تلورانس ابعادی و عیوب ساختاری فولاد',
     status: 'in_review',
@@ -74,13 +75,13 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
     estimatedParticipants: 18,
     timeline: [
       {
-        at: '۱۴۰۳/۰۷/۰۱',
+        at: isoDaysFromToday(-6),
         status: 'submitted',
         byName: 'دکتر سپیده رهنما',
         comment: 'ثبت طرح اولیه برای کارشناسان آزمایشگاه',
       },
       {
-        at: '۱۴۰۳/۰۷/۰۲',
+        at: isoDaysFromToday(-5),
         status: 'in_review',
         byName: 'تیم آموزش گرا',
         comment: 'در حال بررسی توسط منتور ارشد صنعتی گرا',
@@ -94,17 +95,17 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
     target: 'all',
     levelFilter: [3, 4, 5],
     goal: { type: 'streak', target: 7 },
-    startsAt: '۱۴۰۳/۰۷/۱۵',
-    endsAt: '۱۴۰۳/۰۷/۳۰',
+    startsAt: isoDaysFromToday(8),
+    endsAt: isoDaysFromToday(23),
     suggestedPrize: 'دوره ویژه رهبری سازمانی',
     notes: 'در شیفت عصر و شب نیاز مبرم به ارتباط شفاف وجود دارد.',
     status: 'needs_changes',
     requestedByName: 'مهندس محمدرضا صادقی',
     estimatedParticipants: 75,
     timeline: [
-      { at: '۱۴۰۳/۰۶/۲۰', status: 'submitted', byName: 'مهندس محمدرضا صادقی' },
+      { at: isoDaysFromToday(-17), status: 'submitted', byName: 'مهندس محمدرضا صادقی' },
       {
-        at: '۱۴۰۳/۰۶/۲۲',
+        at: isoDaysFromToday(-15),
         status: 'needs_changes',
         byName: 'تیم آموزش گرا',
         comment:
@@ -118,8 +119,8 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
     objective: 'ارتقای دانش فنی فرآیندهای جوشکاری و برشکاری صنعتی',
     target: 'all',
     goal: { type: 'lessons', target: 12 },
-    startsAt: '۱۴۰۳/۰۵/۰۱',
-    endsAt: '۱۴۰۳/۰۵/۲۵',
+    startsAt: isoDaysFromToday(-67),
+    endsAt: isoDaysFromToday(-43),
     status: 'ended',
     requestedByName: 'سرکار خانم فریبا رادمنش',
     estimatedParticipants: 140,
@@ -132,11 +133,11 @@ export const INITIAL_MOCK_CHALLENGE_REQUESTS: ChallengeRequest[] = [
     },
     winnersRule: 'بیشترین پیشرفت و نمره در آزمون جامع فنی',
     timeline: [
-      { at: '۱۴۰۳/۰۴/۲۰', status: 'submitted', byName: 'سرکار خانم فریبا رادمنش' },
-      { at: '۱۴۰۳/۰۴/۲۴', status: 'approved', byName: 'تیم آموزش گرا' },
-      { at: '۱۴۰۳/۰۵/۰۱', status: 'active', byName: 'سیستم گرا' },
+      { at: isoDaysFromToday(-78), status: 'submitted', byName: 'سرکار خانم فریبا رادمنش' },
+      { at: isoDaysFromToday(-74), status: 'approved', byName: 'تیم آموزش گرا' },
+      { at: isoDaysFromToday(-67), status: 'active', byName: 'سیستم گرا' },
       {
-        at: '۱۴۰۳/۰۵/۲۵',
+        at: isoDaysFromToday(-43),
         status: 'ended',
         byName: 'سیستم گرا',
         comment: 'چالش به پایان رسید و نتایج نهایی استخراج شد.',

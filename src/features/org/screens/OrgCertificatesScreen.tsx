@@ -5,6 +5,7 @@ import { certificatesApi } from '../../../api/org/certificates';
 import { OrgCertificateItem } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
 import { toFa } from '../../../lib/format';
+import { formatJalaliDate } from '../../../lib/jalali';
 
 export const OrgCertificatesScreen: React.FC = () => {
   const { userRole, units } = useOrgScope();
@@ -64,7 +65,7 @@ export const OrgCertificatesScreen: React.FC = () => {
         `"${c.holderName}"`,
         `"${c.unitName}"`,
         `"${c.scorePct}%"`,
-        `"${c.issuedAt}"`,
+        `"${formatJalaliDate(c.issuedAt)}"`,
       ].join(',')
     );
     const content = bom + [headers.join(','), ...rows].join('\r\n');
@@ -230,7 +231,9 @@ export const OrgCertificatesScreen: React.FC = () => {
                       {toFa(cert.scorePct)}٪
                     </td>
                     <td className="p-3.5 font-mono text-ink/80 text-meta">{cert.serial}</td>
-                    <td className="p-3.5 font-mono text-ink/60">{toFa(cert.issuedAt)}</td>
+                    <td className="p-3.5 font-mono text-ink/60">
+                      {formatJalaliDate(cert.issuedAt)}
+                    </td>
                     <td className="p-3.5 text-center">
                       <Link
                         to={`/verify/${cert.serial}`}

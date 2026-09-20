@@ -15,6 +15,7 @@ import { orgApi } from '../../../api/org/client';
 import { OrgKpiSummary, OrgMember } from '../../../types/org';
 import { toFa } from '../../../lib/format';
 import { exportMembersToXlsx } from '../utils/export';
+import { formatJalaliDate } from '../../../lib/jalali';
 
 export const OrgReportsScreen: React.FC = () => {
   const { currentOrg, effectiveUnitId } = useOrgScope();
@@ -92,7 +93,7 @@ export const OrgReportsScreen: React.FC = () => {
             <p className="text-sm text-ink/70">سامانه یادگیری پیوسته گرابایت · {currentOrg.name}</p>
           </div>
           <div className="text-left text-xs text-ink/80 space-y-1">
-            <div>تاریخ تنظیم گزارش: ۱۴۰۳/۰۷/۰۲</div>
+            <div>تاریخ تنظیم گزارش: {formatJalaliDate(new Date())}</div>
             <div>جامعه آماری: {toFa(members.length)} نفر</div>
           </div>
         </div>
@@ -219,7 +220,7 @@ export const OrgReportsScreen: React.FC = () => {
                     <td className="py-3 px-3 text-ink/70">{m.unitName}</td>
                     <td className="py-3 px-3 text-ink/80">سطح {toFa(m.level)}</td>
                     <td className="py-3 px-3 font-bold text-danger">{toFa(m.complianceRate)}٪</td>
-                    <td className="py-3 px-3 text-ink/60">{m.lastActiveAt}</td>
+                    <td className="py-3 px-3 text-ink/60">{formatJalaliDate(m.lastActiveAt)}</td>
                   </tr>
                 ))}
               </tbody>
