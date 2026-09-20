@@ -28,6 +28,10 @@ From Phase 2: Express 5 + TypeScript + Zod + Drizzle ORM + PostgreSQL (Neon), de
 
 ## Commands
 `npm run dev | build | typecheck | lint | test | e2e | check` (`check` = typecheck + lint + test + build).
+`build` also runs `scripts/check-dist.mjs`, which fails if a demo or mock string reached `dist/`.
+`check` runs the Playwright suite only when `CI` is set; locally run it yourself with `npm run e2e`
+(or `npm run check:e2e` for both). Playwright uses the browser already on the machine when
+`/opt/pw-browsers/chromium` exists, so no download step is needed.
 
 ## Workflow
 Small steps, one concern per commit (conventional commits), branch per phase. Run `npm run check` before finishing. Update this file when the structure changes.
