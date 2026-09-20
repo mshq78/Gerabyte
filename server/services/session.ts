@@ -2,7 +2,7 @@ import { and, eq, isNull } from 'drizzle-orm';
 import type { CookieOptions, Request, Response } from 'express';
 import type { Database } from '../../db/client';
 import { sessions } from '../../db/schema';
-import { env } from '../config/env';
+import { env, isDeployed } from '../config/env';
 import { hmacHex, randomToken } from '../util/crypto';
 
 /**
@@ -19,11 +19,13 @@ export const ABSOLUTE_TIMEOUT_MS = 60 * 24 * 60 * 60 * 1000; // 60 days
  * https, so plain-http development uses the unprefixed name.
  */
 export function cookieName(): string {
-  return env().NODE_ENV === 'production' ? '__Host-gerabyte_session' : 'gerabyte_session';
+  // __Host- requires Secure, so it is used on every https deployment —
+  // staging included — and not on plain-http local development.
+  return isDeployed() ? '__Host-gerabyte_session' : 'gerabyte_session';
 }
 
 function cookieOptions(expires: Date): CookieOptions {
-  const secure = env().NODE_ENV === 'production';
+  const secure = isDeployed();
   return {
     httpOnly: true,
     secure,

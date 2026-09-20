@@ -2,7 +2,7 @@ import { and, desc, eq, gt, isNull, sql } from 'drizzle-orm';
 import type { Database } from '../../db/client';
 import { otpCodes } from '../../db/schema';
 import { OTP_LENGTH } from '../../shared/schemas/auth';
-import { env } from '../config/env';
+import { env, isProductionDeployment } from '../config/env';
 import { AppError } from '../http/errors';
 import { hmacHex, randomNumericCode, safeEqualHex } from '../util/crypto';
 import { smsProvider } from './sms';
@@ -88,8 +88,8 @@ export async function verifyOtp(
   submitted: string,
   now: Date = new Date()
 ): Promise<OtpVerifyOutcome> {
-  const devBypass =
-    env().NODE_ENV !== 'production' && env().ALLOW_DEV_OTP && submitted === DEV_OTP_CODE;
+  // Never on a production deployment, and only when explicitly switched on.
+  const devBypass = !isProductionDeployment() && env().ALLOW_DEV_OTP && submitted === DEV_OTP_CODE;
 
   const [row] = await db
     .select()

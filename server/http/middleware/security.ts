@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
-import { env } from '../../config/env';
+import { env, isProductionDeployment } from '../../config/env';
 import { forbidden } from '../errors';
 
 /** The header a browser cannot set cross-origin without a preflight we never answer. */
@@ -48,7 +48,9 @@ export function extraSecurityHeaders() {
       'Permissions-Policy',
       'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()'
     );
-    if (env().DEPLOY_ENV !== 'production') {
+    // Anything that is not the real production deployment must stay out of
+    // search results.
+    if (!isProductionDeployment()) {
       res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     }
     next();

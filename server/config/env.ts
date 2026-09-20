@@ -50,7 +50,13 @@ const envSchema = z
     TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(0),
   })
   .superRefine((env, ctx) => {
-    if (env.NODE_ENV === 'production') {
+    // The security gates key off DEPLOY_ENV, not NODE_ENV.
+    //
+    // Vercel sets NODE_ENV=production for every deployment, staging included,
+    // so gating on it would either block a staging deploy entirely or force us
+    // to lie about NODE_ENV and lose the production build optimisations.
+    // DEPLOY_ENV is ours, it is explicit, and it says what we actually mean.
+    if (env.DEPLOY_ENV === 'production') {
       if (env.ALLOW_DEV_OTP) {
         ctx.addIssue({
           code: 'custom',
@@ -108,4 +114,8 @@ export function setEnvForTests(value: Env): void {
   cached = value;
 }
 
-export const isProduction = () => env().NODE_ENV === 'production';
+/** True only for a real production deployment, whatever NODE_ENV says. */
+export const isProductionDeployment = () => env().DEPLOY_ENV === 'production';
+
+/** True anywhere the app is served over https: every deployment. */
+export const isDeployed = () => env().DEPLOY_ENV !== 'local';
