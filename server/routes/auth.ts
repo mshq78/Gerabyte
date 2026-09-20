@@ -12,6 +12,7 @@ import { requireAuth } from '../http/middleware/auth.js';
 import { publicRoute } from '../http/routePolicy.js';
 import { parseBody } from '../http/validate.js';
 import * as audit from '../services/audit.js';
+import * as lockout from '../services/lockout.js';
 import * as otpService from '../services/otp.js';
 import { hashPassword, verifyPassword, describeHasher } from '../services/password.js';
 import * as rateLimit from '../services/rateLimit.js';
@@ -147,21 +148,50 @@ export function authRouter(): Router {
         await rateLimit.enforce(req.db, rateLimit.LIMITS.loginPerIp, `ip:${ip ?? 'unknown'}`);
 
         const user = await usersRepo.findByPhone(req.db, phone);
-        const hash = user ? await usersRepo.getPasswordHash(req.db, user.id) : null;
-        // Run the verify even without a user so the timing does not distinguish
-        // "no such account" from "wrong password".
-        const ok = await verifyPassword(hash, password);
+        // One credential read either way, so an unknown phone costs the same
+        // as a known one and the timing does not tell them apart.
+        const credential = user
+          ? await lockout.loadCredential(req.db, user.id)
+          : await lockout.loadCredentialForUnknownUser(req.db);
 
-        if (!user || !ok) {
+        const locked = lockout.isLocked(credential);
+        // Run the verify even without a user, and even while locked, so the
+        // timing does not distinguish "no such account" from "wrong password"
+        // from "locked out".
+        const ok = await verifyPassword(credential?.passwordHash ?? null, password);
+
+        if (!user || !ok || locked) {
+          // A locked account does not count the attempt again: otherwise an
+          // attacker could hold the lock open forever by keeping on guessing.
+          const outcome = user && !locked ? await lockout.recordFailure(req.db, user.id) : null;
+
           await audit.record(req.db, {
             action: 'auth.login.failed',
             actorUserId: user?.id ?? null,
             ipHash,
             requestId: req.requestId,
-            metadata: { method: 'password' },
+            metadata: { method: 'password', locked },
           });
+
+          if (user && outcome?.lockedUntil) {
+            await audit.record(req.db, {
+              action: 'auth.password.locked',
+              actorUserId: user.id,
+              ipHash,
+              requestId: req.requestId,
+              metadata: {
+                failedAttempts: outcome.failedAttempts,
+                until: outcome.lockedUntil.toISOString(),
+              },
+            });
+          }
+
+          // Always the same answer. Saying "locked" would confirm the account
+          // exists, and would tell an attacker their guessing is working.
           throw new AppError(401, 'INVALID_CREDENTIALS');
         }
+
+        await lockout.recordSuccess(req.db, user.id);
         if (user.disabledAt) throw new AppError(403, 'ACCOUNT_DISABLED');
 
         const session = await sessionService.createSession(req.db, user.id, {

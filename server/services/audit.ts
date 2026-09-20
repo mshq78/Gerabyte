@@ -14,6 +14,7 @@ export const AUDIT_ACTIONS = [
   'auth.login.failed',
   'auth.logout',
   'auth.password.set',
+  'auth.password.locked',
   'session.revoked',
   'role.granted',
   'role.revoked',
