@@ -6,7 +6,7 @@ import {
   createOrg,
   TEST_PASSWORD,
   type SeededOrg,
-} from '../testing/fixtures';
+} from '../testing/fixtures.js';
 import {
   CSRF_HEADERS,
   agent,
@@ -14,7 +14,7 @@ import {
   resetDatabase,
   setupTestApp,
   teardownTestApp,
-} from '../testing/harness';
+} from '../testing/harness.js';
 
 let app: Express;
 

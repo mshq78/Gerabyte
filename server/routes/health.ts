@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { sql } from 'drizzle-orm';
-import { env } from '../config/env';
-import { describeHasher } from '../services/password';
+import { env } from '../config/env.js';
+import { describeHasher } from '../services/password.js';
 
 /**
  * GET /api/health — liveness plus a real database round-trip.

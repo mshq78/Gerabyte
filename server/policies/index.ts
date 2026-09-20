@@ -1,7 +1,7 @@
-import type { Principal } from './scope';
-import { hasRole } from './scope';
+import type { Principal } from './scope.js';
+import { hasRole } from './scope.js';
 
-export * from './scope';
+export * from './scope.js';
 
 /**
  * Every action the API gates on. The central list is the point: a new endpoint

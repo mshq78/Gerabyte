@@ -1,6 +1,6 @@
-import type { Database } from '../../db/client';
-import { auditLog } from '../../db/schema';
-import { logger } from '../logger';
+import type { Database } from '../../db/client.js';
+import { auditLog } from '../../db/schema.js';
+import { logger } from '../logger.js';
 
 /**
  * Every action worth reconstructing later. Adding a case here is cheaper than

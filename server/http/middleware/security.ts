@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
-import { env, isProductionDeployment } from '../../config/env';
-import { forbidden } from '../errors';
+import { env, isProductionDeployment } from '../../config/env.js';
+import { forbidden } from '../errors.js';
 
 /** The header a browser cannot set cross-origin without a preflight we never answer. */
 export const CSRF_HEADER = 'x-requested-with';

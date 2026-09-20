@@ -1,4 +1,4 @@
-import type { AppRole } from '../../shared/schemas/me';
+import type { AppRole } from '../../shared/schemas/me.js';
 
 /**
  * The scope every organization query must be narrowed by.

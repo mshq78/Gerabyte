@@ -2,10 +2,10 @@ import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { sql } from 'drizzle-orm';
 import type { Express } from 'express';
 import request from 'supertest';
-import { createDatabase, type Database } from '../../db/client';
-import * as schema from '../../db/schema';
-import { createApp } from '../app';
-import { setSmsProviderForTests, type SmsProvider } from '../services/sms';
+import { createDatabase, type Database } from '../../db/client.js';
+import * as schema from '../../db/schema.js';
+import { createApp } from '../app.js';
+import { setSmsProviderForTests, type SmsProvider } from '../services/sms/index.js';
 
 export const APP_ORIGIN = 'http://localhost:3000';
 export const CSRF_HEADERS = {

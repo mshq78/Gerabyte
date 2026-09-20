@@ -1,7 +1,7 @@
 import { and, eq, gte, sql } from 'drizzle-orm';
-import type { Database } from '../../db/client';
-import { rateLimits } from '../../db/schema';
-import { rateLimited } from '../http/errors';
+import type { Database } from '../../db/client.js';
+import { rateLimits } from '../../db/schema.js';
+import { rateLimited } from '../http/errors.js';
 
 export interface LimitRule {
   action: string;

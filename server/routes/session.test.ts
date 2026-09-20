@@ -1,8 +1,8 @@
 import type { Express } from 'express';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import * as schema from '../../db/schema';
-import { ABSOLUTE_TIMEOUT_MS, IDLE_TIMEOUT_MS } from '../services/session';
-import { createMember, createOrg, TEST_PASSWORD } from '../testing/fixtures';
+import * as schema from '../../db/schema.js';
+import { ABSOLUTE_TIMEOUT_MS, IDLE_TIMEOUT_MS } from '../services/session.js';
+import { createMember, createOrg, TEST_PASSWORD } from '../testing/fixtures.js';
 import {
   CSRF_HEADERS,
   agent,
@@ -11,7 +11,7 @@ import {
   resetDatabase,
   setupTestApp,
   teardownTestApp,
-} from '../testing/harness';
+} from '../testing/harness.js';
 
 let app: Express;
 const PHONE = '09120000001';

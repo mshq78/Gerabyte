@@ -1,11 +1,11 @@
-import { maskPhoneE164 } from '../../shared/schemas/common';
+import { maskPhoneE164 } from '../../shared/schemas/common.js';
 import {
   SCOPE_NOTE,
   type OrgNodeDto,
   type OrgPersonDto,
   type OrgPersonSummaryDto,
-} from '../../shared/schemas/org';
-import type { OrgNodeRow, PersonRow } from '../repositories/org';
+} from '../../shared/schemas/org.js';
+import type { OrgNodeRow, PersonRow } from '../repositories/org.js';
 
 /**
  * Explicit whitelists again. The phone is masked here, on the server, so the

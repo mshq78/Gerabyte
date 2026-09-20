@@ -1,6 +1,6 @@
-import { env } from '../../config/env';
-import { logger } from '../../logger';
-import type { SmsProvider } from './index';
+import { env } from '../../config/env.js';
+import { logger } from '../../logger.js';
+import type { SmsProvider } from './index.js';
 
 /**
  * Kavenegar Verify Lookup. Lookup is the right endpoint for OTP: the body is a

@@ -5,18 +5,18 @@ import {
   passwordLoginSchema,
   setPasswordSchema,
   type OtpRequestResult,
-} from '../../shared/schemas/auth';
-import { env } from '../config/env';
-import { AppError, badRequest, unauthenticated } from '../http/errors';
-import { requireAuth } from '../http/middleware/auth';
-import { parseBody } from '../http/validate';
-import * as audit from '../services/audit';
-import * as otpService from '../services/otp';
-import { hashPassword, verifyPassword, describeHasher } from '../services/password';
-import * as rateLimit from '../services/rateLimit';
-import * as sessionService from '../services/session';
-import * as usersRepo from '../repositories/users';
-import { hashIp } from '../util/crypto';
+} from '../../shared/schemas/auth.js';
+import { env } from '../config/env.js';
+import { AppError, badRequest, unauthenticated } from '../http/errors.js';
+import { requireAuth } from '../http/middleware/auth.js';
+import { parseBody } from '../http/validate.js';
+import * as audit from '../services/audit.js';
+import * as otpService from '../services/otp.js';
+import { hashPassword, verifyPassword, describeHasher } from '../services/password.js';
+import * as rateLimit from '../services/rateLimit.js';
+import * as sessionService from '../services/session.js';
+import * as usersRepo from '../repositories/users.js';
+import { hashIp } from '../util/crypto.js';
 
 export function authRouter(): Router {
   const router = Router();

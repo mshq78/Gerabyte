@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
-import { logger } from '../../logger';
-import { AppError, type ApiErrorBody, type ErrorCode, messageFor } from '../errors';
+import { logger } from '../../logger.js';
+import { AppError, type ApiErrorBody, type ErrorCode, messageFor } from '../errors.js';
 
 function body(code: ErrorCode, requestId: string, details?: unknown): ApiErrorBody {
   const error: ApiErrorBody['error'] = { code, message: messageFor(code), requestId };

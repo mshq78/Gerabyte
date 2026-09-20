@@ -1,16 +1,16 @@
 import type { Express } from 'express';
 import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import * as schema from '../../db/schema';
-import { OTP_MAX_ATTEMPTS } from '../services/otp';
-import { LIMITS } from '../services/rateLimit';
+import * as schema from '../../db/schema.js';
+import { OTP_MAX_ATTEMPTS } from '../services/otp.js';
+import { LIMITS } from '../services/rateLimit.js';
 import {
   createInvite,
   createMember,
   createOrg,
   findUserByPhone,
   TEST_PASSWORD,
-} from '../testing/fixtures';
+} from '../testing/fixtures.js';
 import {
   APP_ORIGIN,
   CSRF_HEADERS,
@@ -21,7 +21,7 @@ import {
   sentCodes,
   setupTestApp,
   teardownTestApp,
-} from '../testing/harness';
+} from '../testing/harness.js';
 
 let app: Express;
 

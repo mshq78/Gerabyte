@@ -1,7 +1,7 @@
-import { maskPhoneE164 } from '../../shared/schemas/common';
-import type { MeDto, SessionDto } from '../../shared/schemas/me';
-import type { PrincipalContext, UserRecord } from '../repositories/users';
-import type { ActiveSession } from '../services/session';
+import { maskPhoneE164 } from '../../shared/schemas/common.js';
+import type { MeDto, SessionDto } from '../../shared/schemas/me.js';
+import type { PrincipalContext, UserRecord } from '../repositories/users.js';
+import type { ActiveSession } from '../services/session.js';
 
 /**
  * Explicit whitelists. A database row is never returned directly, so adding a

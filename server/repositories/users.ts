@@ -1,8 +1,8 @@
 import { and, eq, isNull, or } from 'drizzle-orm';
-import type { Database } from '../../db/client';
-import { credentials, memberships, orgNodes, orgs, userRoles, users } from '../../db/schema';
-import type { AppRole } from '../../shared/schemas/me';
-import type { Principal } from '../policies/scope';
+import type { Database } from '../../db/client.js';
+import { credentials, memberships, orgNodes, orgs, userRoles, users } from '../../db/schema.js';
+import type { AppRole } from '../../shared/schemas/me.js';
+import type { Principal } from '../policies/scope.js';
 
 export interface UserRecord {
   id: string;

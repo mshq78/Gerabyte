@@ -1,5 +1,5 @@
-import { logger } from '../../logger';
-import type { SmsProvider } from './index';
+import { logger } from '../../logger.js';
+import type { SmsProvider } from './index.js';
 
 /**
  * Development provider: prints the code to the server log instead of sending it.

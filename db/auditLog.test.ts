@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { auditLog } from './schema';
+import { auditLog } from './schema.js';
 import {
   db,
   rawSql,
   resetDatabase,
   setupTestApp,
   teardownTestApp,
-} from '../server/testing/harness';
+} from '../server/testing/harness.js';
 
 /**
  * The audit log is the record of last resort. If the application can rewrite

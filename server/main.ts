@@ -1,6 +1,6 @@
-import { createApp, defaultDatabase } from './app';
-import { loadEnv } from './config/env';
-import { logger } from './logger';
+import { createApp, defaultDatabase } from './app.js';
+import { loadEnv } from './config/env.js';
+import { logger } from './logger.js';
 
 /**
  * Plain Node entry, for local development, Docker, or any host that is not

@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES, type ApiErrorBody, type ErrorCode } from '../../shared/errors';
+import { ERROR_MESSAGES, type ApiErrorBody, type ErrorCode } from '../../shared/errors.js';
 
 export type { ApiErrorBody, ErrorCode };
 export { ERROR_MESSAGES };

@@ -1,23 +1,23 @@
 import cookieParser from 'cookie-parser';
 import express, { type Express } from 'express';
 import pinoHttp from 'pino-http';
-import type { Database } from '../db/client';
-import { createDatabase } from '../db/client';
-import { env } from './config/env';
-import { logger } from './logger';
-import { errorHandler, notFoundHandler } from './http/middleware/errorHandler';
-import { loadSession } from './http/middleware/auth';
-import { requestId } from './http/middleware/requestId';
+import type { Database } from '../db/client.js';
+import { createDatabase } from '../db/client.js';
+import { env } from './config/env.js';
+import { logger } from './logger.js';
+import { errorHandler, notFoundHandler } from './http/middleware/errorHandler.js';
+import { loadSession } from './http/middleware/auth.js';
+import { requestId } from './http/middleware/requestId.js';
 import {
   csrfGuard,
   extraSecurityHeaders,
   sameOriginOnly,
   securityHeaders,
-} from './http/middleware/security';
-import { authRouter } from './routes/auth';
-import { healthRouter } from './routes/health';
-import { meRouter } from './routes/me';
-import { orgRouter } from './routes/org';
+} from './http/middleware/security.js';
+import { authRouter } from './routes/auth.js';
+import { healthRouter } from './routes/health.js';
+import { meRouter } from './routes/me.js';
+import { orgRouter } from './routes/org.js';
 
 /** Bodies are small JSON documents; anything larger is refused outright. */
 const JSON_BODY_LIMIT = '32kb';

@@ -1,5 +1,5 @@
-import { createApp, defaultDatabase } from '../server/app';
-import { loadEnv } from '../server/config/env';
+import { createApp, defaultDatabase } from '../server/app.js';
+import { loadEnv } from '../server/config/env.js';
 
 /**
  * Vercel entry. The only vendor-specific file in the backend: it exports the

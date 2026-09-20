@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
-import { createDatabase } from './client';
-import * as s from './schema';
-import { hashPassword } from '../server/services/password';
-import { normalizePhone } from '../shared/schemas/common';
+import { createDatabase } from './client.js';
+import * as s from './schema.js';
+import { hashPassword } from '../server/services/password.js';
+import { normalizePhone } from '../shared/schemas/common.js';
 
 /**
  * Development and staging seed. Refuses to run against NODE_ENV=production.

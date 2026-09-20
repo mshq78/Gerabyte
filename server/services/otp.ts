@@ -1,11 +1,11 @@
 import { and, desc, eq, gt, isNull, sql } from 'drizzle-orm';
-import type { Database } from '../../db/client';
-import { otpCodes } from '../../db/schema';
-import { OTP_LENGTH } from '../../shared/schemas/auth';
-import { env, isProductionDeployment } from '../config/env';
-import { AppError } from '../http/errors';
-import { hmacHex, randomNumericCode, safeEqualHex } from '../util/crypto';
-import { smsProvider } from './sms';
+import type { Database } from '../../db/client.js';
+import { otpCodes } from '../../db/schema.js';
+import { OTP_LENGTH } from '../../shared/schemas/auth.js';
+import { env, isProductionDeployment } from '../config/env.js';
+import { AppError } from '../http/errors.js';
+import { hmacHex, randomNumericCode, safeEqualHex } from '../util/crypto.js';
+import { smsProvider } from './sms/index.js';
 
 export const OTP_TTL_SECONDS = 120;
 export const OTP_MAX_ATTEMPTS = 5;

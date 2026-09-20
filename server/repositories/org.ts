@@ -1,9 +1,9 @@
 import { and, asc, count, desc, eq, ilike, inArray, like, or, sql, type SQL } from 'drizzle-orm';
-import type { Database } from '../../db/client';
-import { memberships, orgNodes, users } from '../../db/schema';
-import type { MembershipStatus, OrgRankValue, PeopleQuery } from '../../shared/schemas/org';
-import { PAGE_SIZE } from '../../shared/schemas/common';
-import type { Scope } from '../policies/scope';
+import type { Database } from '../../db/client.js';
+import { memberships, orgNodes, users } from '../../db/schema.js';
+import type { MembershipStatus, OrgRankValue, PeopleQuery } from '../../shared/schemas/org.js';
+import { PAGE_SIZE } from '../../shared/schemas/common.js';
+import type { Scope } from '../policies/scope.js';
 
 /**
  * Every function here takes a `Scope` as its first argument, by design.

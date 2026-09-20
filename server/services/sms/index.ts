@@ -1,6 +1,6 @@
-import { env } from '../../config/env';
-import { consoleSmsProvider } from './console';
-import { kavenegarSmsProvider } from './kavenegar';
+import { env } from '../../config/env.js';
+import { consoleSmsProvider } from './console.js';
+import { kavenegarSmsProvider } from './kavenegar.js';
 
 export interface SmsProvider {
   readonly name: string;

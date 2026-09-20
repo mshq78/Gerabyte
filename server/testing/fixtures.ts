@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
-import * as schema from '../../db/schema';
-import { normalizePhone } from '../../shared/schemas/common';
-import { hashPassword } from '../services/password';
-import { db } from './harness';
+import * as schema from '../../db/schema.js';
+import { normalizePhone } from '../../shared/schemas/common.js';
+import { hashPassword } from '../services/password.js';
+import { db } from './harness.js';
 
 export const TEST_PASSWORD = 'test-password-1404';
 

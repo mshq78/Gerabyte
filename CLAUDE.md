@@ -31,6 +31,7 @@ From Phase 2: Express 5 + TypeScript + Zod + Drizzle ORM + PostgreSQL (Neon), de
 - Out-of-scope reads answer 404, never 403, so a status code cannot confirm a record exists.
 - Managers see only: progress and scores of assigned paths, certificates of those paths, active days. Phones are masked server-side. Never show coins, rewards, personal paths or emails to managers.
 - Portability: standard PostgreSQL and a plain Node entry; vendor-specific code (Vercel, Neon) lives in adapters only.
+- Backend relative imports carry an explicit `.js` extension (`./app.js`, `./sms/index.js`): Vercel transpiles `server/`, `db/`, `shared/` and `api/` file by file and Node's ESM loader does not guess extensions.
 
 ## Commands
 `npm run dev | build | typecheck | lint | test | test:server | e2e | check`

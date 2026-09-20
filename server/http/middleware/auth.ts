@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { Database } from '../../../db/client';
-import { can, type Action } from '../../policies';
-import type { Principal, Scope } from '../../policies/scope';
-import { resolveScope } from '../../policies/scope';
-import { loadPrincipal, type PrincipalContext } from '../../repositories/users';
-import * as sessionService from '../../services/session';
-import { forbidden, unauthenticated } from '../errors';
+import type { Database } from '../../../db/client.js';
+import { can, type Action } from '../../policies/index.js';
+import type { Principal, Scope } from '../../policies/scope.js';
+import { resolveScope } from '../../policies/scope.js';
+import { loadPrincipal, type PrincipalContext } from '../../repositories/users.js';
+import * as sessionService from '../../services/session.js';
+import { forbidden, unauthenticated } from '../errors.js';
 
 declare module 'express-serve-static-core' {
   interface Request {

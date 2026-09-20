@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { paginationSchema } from './common';
+import { paginationSchema } from './common.js';
 
 export const ORG_NODE_KINDS = ['org', 'deputy', 'unit', 'group'] as const;
 export type OrgNodeKind = (typeof ORG_NODE_KINDS)[number];

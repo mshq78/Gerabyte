@@ -1,7 +1,7 @@
 import { Writable } from 'node:stream';
 import pino from 'pino';
 import { describe, expect, it } from 'vitest';
-import { REDACTION_PLACEHOLDER } from './logger';
+import { REDACTION_PLACEHOLDER } from './logger.js';
 
 /**
  * The redaction list is the only thing standing between a debug log line and a

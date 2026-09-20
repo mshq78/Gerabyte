@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { updateMeSchema } from '../../shared/schemas/me';
-import { env } from '../config/env';
-import { notFound, unauthenticated } from '../http/errors';
-import { requireAuth } from '../http/middleware/auth';
-import { parseBody } from '../http/validate';
-import { toMeDto, toSessionDto } from '../dto/user';
-import * as usersRepo from '../repositories/users';
-import * as audit from '../services/audit';
-import * as sessionService from '../services/session';
-import { hashIp } from '../util/crypto';
+import { updateMeSchema } from '../../shared/schemas/me.js';
+import { env } from '../config/env.js';
+import { notFound, unauthenticated } from '../http/errors.js';
+import { requireAuth } from '../http/middleware/auth.js';
+import { parseBody } from '../http/validate.js';
+import { toMeDto, toSessionDto } from '../dto/user.js';
+import * as usersRepo from '../repositories/users.js';
+import * as audit from '../services/audit.js';
+import * as sessionService from '../services/session.js';
+import { hashIp } from '../util/crypto.js';
 
 export function meRouter(): Router {
   const router = Router();

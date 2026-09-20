@@ -1,5 +1,5 @@
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import { createDatabase } from './client';
+import { createDatabase } from './client.js';
 
 /**
  * Migrations always use the direct (unpooled) connection, and always run as a

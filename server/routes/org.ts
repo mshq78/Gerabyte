@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { PAGE_SIZE, type Paginated } from '../../shared/schemas/common';
-import { peopleQuerySchema, type OrgPersonDto } from '../../shared/schemas/org';
-import { env } from '../config/env';
-import { notFound, unauthenticated } from '../http/errors';
-import { requireAction, requireAuth, requireScope } from '../http/middleware/auth';
-import { parseQuery } from '../http/validate';
-import { toOrgNodeDto, toOrgPersonDto, toOrgPersonSummaryDto } from '../dto/org';
-import * as orgRepo from '../repositories/org';
-import * as audit from '../services/audit';
-import { hashIp } from '../util/crypto';
+import { PAGE_SIZE, type Paginated } from '../../shared/schemas/common.js';
+import { peopleQuerySchema, type OrgPersonDto } from '../../shared/schemas/org.js';
+import { env } from '../config/env.js';
+import { notFound, unauthenticated } from '../http/errors.js';
+import { requireAction, requireAuth, requireScope } from '../http/middleware/auth.js';
+import { parseQuery } from '../http/validate.js';
+import { toOrgNodeDto, toOrgPersonDto, toOrgPersonSummaryDto } from '../dto/org.js';
+import * as orgRepo from '../repositories/org.js';
+import * as audit from '../services/audit.js';
+import { hashIp } from '../util/crypto.js';
 
 /**
  * The first scoped resource, end to end. Every handler:

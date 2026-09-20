@@ -1,9 +1,9 @@
 import { and, eq, isNull } from 'drizzle-orm';
 import type { CookieOptions, Request, Response } from 'express';
-import type { Database } from '../../db/client';
-import { sessions } from '../../db/schema';
-import { env, isDeployed } from '../config/env';
-import { hmacHex, randomToken } from '../util/crypto';
+import type { Database } from '../../db/client.js';
+import { sessions } from '../../db/schema.js';
+import { env, isDeployed } from '../config/env.js';
+import { hmacHex, randomToken } from '../util/crypto.js';
 
 /**
  * Sessions are opaque and server-side. The browser holds a random token; the
