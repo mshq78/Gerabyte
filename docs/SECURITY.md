@@ -100,7 +100,7 @@ different one later is a rehash-on-login, not a password reset for everyone.
 Password brute force is bounded by the same limiter as OTP: 5 attempts per phone
 per hour, 20 per IP per hour. The `credentials.failed_attempts` and
 `locked_until` columns exist for a per-account lockout but are **not yet
-enforced** — see *Known gaps*.
+enforced** — see _Known gaps_.
 
 ---
 
@@ -108,14 +108,14 @@ enforced** — see *Known gaps*.
 
 Sliding windows stored in Postgres, keyed by phone and by IP:
 
-| Bucket               | Window | Max |
-| -------------------- | ------ | --- |
-| OTP request / phone  | 1 h    | 5   |
-| OTP request / IP     | 1 h    | 20  |
-| OTP resend cooldown  | 60 s   | 1   |
-| OTP verify / IP      | 1 h    | 40  |
-| Login / phone        | 1 h    | 5   |
-| Login / IP           | 1 h    | 20  |
+| Bucket              | Window | Max |
+| ------------------- | ------ | --- |
+| OTP request / phone | 1 h    | 5   |
+| OTP request / IP    | 1 h    | 20  |
+| OTP resend cooldown | 60 s   | 1   |
+| OTP verify / IP     | 1 h    | 40  |
+| Login / phone       | 1 h    | 5   |
+| Login / IP          | 1 h    | 20  |
 
 Postgres rather than memory, deliberately: serverless instances are
 per-invocation, so an in-memory counter resets on every cold start and is

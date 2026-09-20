@@ -9,12 +9,12 @@ variables and in the Neon console, and nowhere else.
 
 ## Environments
 
-| Environment    | Where                                  | `DEPLOY_ENV` | Database (Neon branch)  |
-| -------------- | -------------------------------------- | ------------ | ----------------------- |
-| local          | your machine, `npm run dev`            | `local`      | local Postgres 16       |
-| preview        | one per git branch, created by Vercel  | `staging`    | Neon `staging`          |
-| staging        | https://gerabyte.vercel.app            | `staging`    | Neon `staging`          |
-| production     | not created yet                        | `production` | Neon `production`       |
+| Environment | Where                                 | `DEPLOY_ENV` | Database (Neon branch) |
+| ----------- | ------------------------------------- | ------------ | ---------------------- |
+| local       | your machine, `npm run dev`           | `local`      | local Postgres 16      |
+| preview     | one per git branch, created by Vercel | `staging`    | Neon `staging`         |
+| staging     | https://gerabyte.vercel.app           | `staging`    | Neon `staging`         |
+| production  | not created yet                       | `production` | Neon `production`      |
 
 `DEPLOY_ENV` — not `NODE_ENV` — is what the security gates read. Vercel sets
 `NODE_ENV=production` on every deployment including staging, so gating on it
@@ -46,21 +46,21 @@ app and is not used by GeraByte. Leave it alone.
 ## Vercel environment variables
 
 Set on the project, targets **Production** and **Preview**. `APP_ORIGIN` is the
-exception: see *Preview deployments* below.
+exception: see _Preview deployments_ below.
 
-| Key                     | Target       | Type      | Value                                                       |
-| ----------------------- | ------------ | --------- | ----------------------------------------------------------- |
-| `DEPLOY_ENV`            | prod+preview | plain     | `staging`                                                    |
-| `APP_ORIGIN`            | prod only    | plain     | `https://gerabyte.vercel.app`                                |
-| `SMS_PROVIDER`          | prod+preview | plain     | `console`                                                    |
-| `LOG_LEVEL`             | prod+preview | plain     | `info`                                                       |
-| `TRUST_PROXY_HOPS`      | prod+preview | plain     | `1`                                                          |
-| `DATABASE_URL`          | prod+preview | sensitive | Neon `staging` **pooled** URL, `?sslmode=require`            |
-| `DATABASE_URL_UNPOOLED` | prod+preview | sensitive | Neon `staging` **direct** URL, `?sslmode=require`            |
-| `OTP_HMAC_SECRET`       | prod+preview | sensitive | `openssl rand -base64 48`                                    |
-| `SESSION_HASH_SECRET`   | prod+preview | sensitive | `openssl rand -base64 48`                                    |
-| `IP_HASH_SECRET`        | prod+preview | sensitive | `openssl rand -base64 32`                                    |
-| `ALLOW_MOCK_STAGING`    | prod+preview | plain     | `1` — **Phase 2 only**, see below                            |
+| Key                     | Target       | Type      | Value                                             |
+| ----------------------- | ------------ | --------- | ------------------------------------------------- |
+| `DEPLOY_ENV`            | prod+preview | plain     | `staging`                                         |
+| `APP_ORIGIN`            | prod only    | plain     | `https://gerabyte.vercel.app`                     |
+| `SMS_PROVIDER`          | prod+preview | plain     | `console`                                         |
+| `LOG_LEVEL`             | prod+preview | plain     | `info`                                            |
+| `TRUST_PROXY_HOPS`      | prod+preview | plain     | `1`                                               |
+| `DATABASE_URL`          | prod+preview | sensitive | Neon `staging` **pooled** URL, `?sslmode=require` |
+| `DATABASE_URL_UNPOOLED` | prod+preview | sensitive | Neon `staging` **direct** URL, `?sslmode=require` |
+| `OTP_HMAC_SECRET`       | prod+preview | sensitive | `openssl rand -base64 48`                         |
+| `SESSION_HASH_SECRET`   | prod+preview | sensitive | `openssl rand -base64 48`                         |
+| `IP_HASH_SECRET`        | prod+preview | sensitive | `openssl rand -base64 32`                         |
+| `ALLOW_MOCK_STAGING`    | prod+preview | plain     | `1` — **Phase 2 only**, see below                 |
 
 Do **not** set `NODE_ENV` (Vercel owns it), `PORT` (serverless has no port) or
 `ALLOW_DEV_OTP` (staging is reachable, even behind SSO).
