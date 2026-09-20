@@ -1,4 +1,3 @@
-import { createApp, defaultDatabase } from '../server/app.js';
 import { loadEnv } from '../server/config/env.js';
 
 /**
@@ -29,6 +28,12 @@ adoptPreviewOrigin();
 // Environment validation runs at module load, so a misconfigured deployment
 // fails on the first cold start rather than serving broken requests.
 loadEnv();
+
+// Imported dynamically, and only now: `server/app` pulls in the logger, which
+// reads the validated environment while it is being constructed. A static
+// import is hoisted above everything above this line, so the logger would run
+// before adoptPreviewOrigin() had a chance to fill APP_ORIGIN in.
+const { createApp, defaultDatabase } = await import('../server/app.js');
 
 const app = createApp({ db: defaultDatabase() });
 
