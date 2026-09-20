@@ -53,6 +53,16 @@ export default tseslint.config(
     rules: { 'no-console': 'off' },
   },
   {
+    // Backend, database tooling and the Vercel entry run under Node, not a browser.
+    files: ['server/**/*.ts', 'db/**/*.ts', 'api/**/*.ts', 'shared/**/*.ts'],
+    languageOptions: { globals: { ...globals.node } },
+  },
+  {
+    // CLI scripts talk to the operator through stdout.
+    files: ['db/migrate.ts', 'db/seed.ts', 'server/main.ts'],
+    rules: { 'no-console': 'off' },
+  },
+  {
     files: ['src/**/*.test.{ts,tsx}', 'e2e/**/*.ts'],
     languageOptions: { globals: { ...globals.node } },
     rules: { 'no-console': 'off' },

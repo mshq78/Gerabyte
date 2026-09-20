@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "module": "ESNext",
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["server/**/*", "db/**/*", "api/**/*", "shared/**/*", "*.config.ts"]
+}

@@ -8,7 +8,19 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
+      '@shared': path.resolve(import.meta.dirname, './shared'),
       '@': path.resolve(import.meta.dirname, '.'),
+    },
+  },
+  server: {
+    port: 3000,
+    // One origin in dev as in production, so the cookie and CSRF rules are the
+    // same everywhere and the browser never makes a cross-origin API call.
+    proxy: {
+      '/api': {
+        target: `http://127.0.0.1:${process.env.PORT ?? 4000}`,
+        changeOrigin: false,
+      },
     },
   },
   build: {
