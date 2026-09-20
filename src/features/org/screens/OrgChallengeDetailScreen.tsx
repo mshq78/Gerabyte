@@ -1,37 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import {
   Trophy,
   ArrowRight,
-  Calendar,
   Users,
-  Target,
-  Gift,
-  Award,
   Clock,
   CheckCircle2,
-  AlertCircle,
-  XCircle,
   Send,
   RotateCcw,
   Sparkles,
   PartyPopper,
 } from 'lucide-react';
 import { challengeRequestsApi } from '../../../api/org/challengeRequests';
-import { ChallengeRequest, ChallengeRequestStatus } from '../../../types/org';
+import { ChallengeRequest } from '../../../types/org';
 import { toFa } from '../../../lib/format';
 import { useOrgScope } from '../context/ScopeContext';
+import { errorMessage } from '../../../lib/errors';
 
 export const OrgChallengeDetailScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { userRole } = useOrgScope();
   const [request, setRequest] = useState<ChallengeRequest | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [isCongratulated, setIsCongratulated] = useState(false);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!id) return;
     setLoading(true);
     try {
@@ -40,11 +34,11 @@ export const OrgChallengeDetailScreen: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     loadData();
-  }, [id]);
+  }, [loadData]);
 
   if (loading) {
     return (
@@ -73,8 +67,8 @@ export const OrgChallengeDetailScreen: React.FC = () => {
       );
       setRequest(updated);
       setActionMessage('درخواست جهت ویرایش مجدد بازپس‌گرفته شد.');
-    } catch (err: any) {
-      setActionMessage(err.message);
+    } catch (err) {
+      setActionMessage(errorMessage(err) || 'خطای نامشخص رخ داد.');
     }
   };
 
@@ -86,8 +80,8 @@ export const OrgChallengeDetailScreen: React.FC = () => {
       );
       setRequest(updated);
       setActionMessage('درخواست به تیم پشتیبانی گرا ارسال گردید.');
-    } catch (err: any) {
-      setActionMessage(err.message);
+    } catch (err) {
+      setActionMessage(errorMessage(err) || 'خطای نامشخص رخ داد.');
     }
   };
 
@@ -97,9 +91,7 @@ export const OrgChallengeDetailScreen: React.FC = () => {
   };
 
   const targetLabel =
-    request.target === 'all'
-      ? 'تمام واحدهای سازمان'
-      : (request.target as any).unitName || 'واحد مشخص';
+    request.target === 'all' ? 'تمام واحدهای سازمان' : request.target.unitName || 'واحد مشخص';
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-12 text-ink">

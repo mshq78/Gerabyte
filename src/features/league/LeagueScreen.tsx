@@ -9,6 +9,7 @@ import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
 import { getLeagueCountdownFa } from '../../lib/jalali';
 import { LEAGUE_TIER_INFO } from '../../lib/format';
+import { clickableProps } from '../../lib/a11y';
 
 export const LeagueScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -254,7 +255,7 @@ export const LeagueScreen: React.FC = () => {
           {challenges.map((ch) => (
             <div
               key={ch.id}
-              onClick={() => navigate(`/challenges/${ch.id}`)}
+              {...clickableProps(() => navigate(`/challenges/${ch.id}`))}
               className="p-4 min-h-[48px] rounded-tile bg-surface border border-sunken hover:border-primary/50 shadow-xs cursor-pointer transition-all space-y-2.5"
             >
               <div className="flex items-center justify-between">

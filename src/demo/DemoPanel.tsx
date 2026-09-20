@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Wrench, Calendar, RefreshCw, AlertTriangle, UserCheck, X } from 'lucide-react';
+import { Wrench, Calendar, RefreshCw, AlertTriangle, UserCheck } from 'lucide-react';
 import { Sheet } from '../components/ui/Sheet';
 import { Button } from '../components/ui/Button';
 import { useApp } from '../state/AppContext';
@@ -8,7 +8,7 @@ import { MOCK_PERSONAS } from '../mock/data';
 import { setErrorSimulation, isErrorSimulationEnabled } from '../api/client';
 import { setStoredUser } from '../api/auth';
 import { saveSubscription } from '../api/subscription';
-import { User, Subscription } from '../types/domain';
+import { User } from '../types/domain';
 
 /**
  * DEMO_ONLY: Persona Switcher, Time-Travel and Error-Simulation Panel
@@ -146,10 +146,10 @@ export const DemoPanel: React.FC = () => {
         <div className="space-y-5 text-ink">
           {/* Persona Switcher */}
           <div>
-            <label className="block text-meta font-bold text-ink/80 mb-2">
+            <p id="demo-f1" className="block text-meta font-bold text-ink/80 mb-2">
               انتخاب پرسونای آزمایشی:
-            </label>
-            <div className="space-y-2">
+            </p>
+            <div className="space-y-2" role="group" aria-labelledby="demo-f1">
               {MOCK_PERSONAS.map((p, idx) => (
                 <button
                   key={idx}
@@ -176,10 +176,10 @@ export const DemoPanel: React.FC = () => {
 
           {/* Time Travel Controls */}
           <div className="pt-3 border-t border-sunken">
-            <label className="block text-meta font-bold text-ink/80 mb-2">
+            <p id="demo-f2" className="block text-meta font-bold text-ink/80 mb-2">
               شبیه‌سازی زمان (Time-Travel):
-            </label>
-            <div className="grid grid-cols-2 gap-3">
+            </p>
+            <div className="grid grid-cols-2 gap-3" role="group" aria-labelledby="demo-f2">
               <Button
                 variant="secondary"
                 size="md"
@@ -201,9 +201,9 @@ export const DemoPanel: React.FC = () => {
 
           {/* Network Error Simulation */}
           <div className="pt-3 border-t border-sunken">
-            <label className="block text-meta font-bold text-ink/80 mb-2">
+            <p id="demo-f3" className="block text-meta font-bold text-ink/80 mb-2">
               مدیریت خطای شبکه (Network Chaos):
-            </label>
+            </p>
             <button
               onClick={handleToggleErrorSim}
               className={`w-full min-h-[48px] p-3 rounded-tile flex items-center justify-between border cursor-pointer text-meta font-bold transition-all ${
@@ -231,10 +231,14 @@ export const DemoPanel: React.FC = () => {
 
           {/* Quick Navigation to New Views */}
           <div className="pt-3 border-t border-sunken">
-            <label className="block text-meta font-bold text-ink/80 mb-2">
+            <p id="demo-f4" className="block text-meta font-bold text-ink/80 mb-2">
               دسترسی سریع به بخش‌های سازمانی و دمو:
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            </p>
+            <div
+              className="grid grid-cols-1 sm:grid-cols-3 gap-2"
+              role="group"
+              aria-labelledby="demo-f4"
+            >
               <a
                 href="/org/overview"
                 className="min-h-[44px] px-3 py-2 rounded-tile bg-surface hover:bg-canvas border border-sunken text-center text-meta font-bold text-primary flex items-center justify-center"

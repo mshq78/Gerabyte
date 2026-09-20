@@ -12,7 +12,6 @@ import {
   ChevronLeft,
   GraduationCap,
   Sliders,
-  Shield,
   Filter,
   Trophy,
   UploadCloud,
@@ -23,8 +22,6 @@ import { useApp } from '../state/AppContext';
 import { Avatar } from '../components/ui/Avatar';
 import { authApi } from '../api/auth';
 import { ScopeProvider, useOrgScope } from '../features/org/context/ScopeContext';
-import { OrgRole } from '../types/org';
-import { toFa } from '../lib/format';
 
 interface DashboardShellInnerProps {
   children?: ReactNode;

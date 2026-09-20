@@ -1,6 +1,5 @@
 import { ImportJob, ImportRowError, OrgMember } from '../../types/org';
 import { OrgRank, Level } from '../../types/domain';
-import { orgApi } from './client';
 import { subscriptionsApi } from './subscriptions';
 
 const STORAGE_KEY_IMPORT_HISTORY = 'gerabyte_org_import_history_v1';
@@ -82,7 +81,7 @@ export function normalizePhone(raw: string): string {
     str = str.replace(new RegExp(persianDigits[i], 'g'), String(i));
     str = str.replace(new RegExp(arabicDigits[i], 'g'), String(i));
   }
-  str = str.replace(/[\s\-\(\)]/g, '');
+  str = str.replace(/[\s\-()]/g, '');
   if (str.startsWith('+98')) {
     str = '0' + str.slice(3);
   } else if (str.startsWith('0098')) {
@@ -136,7 +135,6 @@ export const importApi = {
     const seenPhonesInFile = new Set<string>();
     const seenCodesInFile = new Set<string>();
     const existingPhones = new Set(existingMembers.map((m) => normalizePhone(m.phone)));
-    const existingCodes = new Set(existingMembers.map((m) => m.id));
     const knownUnitNames = new Set(existingUnits.map((u) => u.name.trim().toLowerCase()));
     const unknownUnitsSet = new Set<string>();
 

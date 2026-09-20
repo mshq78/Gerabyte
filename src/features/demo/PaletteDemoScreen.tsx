@@ -1,16 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  ChevronLeft,
-  Check,
-  Shield,
-  Flame,
-  Award,
-  HeartHandshake,
-  Briefcase,
-  Sparkles,
-} from 'lucide-react';
-import { toFa } from '../../lib/format';
+import { ChevronLeft, Shield, Flame, HeartHandshake, Briefcase, Sparkles } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { ByteRow } from '../../components/ui/ByteRow';
 

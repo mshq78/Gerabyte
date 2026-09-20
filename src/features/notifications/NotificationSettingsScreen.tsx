@@ -6,6 +6,7 @@ import { NotificationPrefs } from '../../types/domain';
 import { Button } from '../../components/ui/Button';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
+import { clickableProps } from '../../lib/a11y';
 
 const RESPECTFUL_SAMPLE_MESSAGES = [
   '۳ دقیقه خلوت امروز برای مرور شایستگی‌های شغلی آماده است. هر زمان فرصت داشتید در کنارتان هستیم.',
@@ -117,7 +118,7 @@ export const NotificationSettingsScreen: React.FC = () => {
             return (
               <div
                 key={ch.key}
-                onClick={() => handleToggleChannel(ch.key)}
+                {...clickableProps(() => handleToggleChannel(ch.key))}
                 className="flex items-center justify-between p-3 rounded-tile hover:bg-canvas cursor-pointer transition-colors min-h-[48px]"
               >
                 <div>

@@ -1,4 +1,4 @@
-import { ChallengeRequest, ChallengeRequestStatus, OrgScope } from '../../types/org';
+import { ChallengeRequest, OrgScope } from '../../types/org';
 import { Prize, Level, Challenge } from '../../types/domain';
 
 const STORAGE_KEY_CHALLENGE_REQUESTS = 'gerabyte_org_challenge_requests_v1';

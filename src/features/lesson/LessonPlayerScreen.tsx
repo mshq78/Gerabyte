@@ -23,6 +23,8 @@ import { ByteRow } from '../../components/ui/ByteRow';
 import { StreakChain } from '../../components/ui/StreakChain';
 import { useApp } from '../../state/AppContext';
 import { toFa, formatDurationFa } from '../../lib/toFa';
+import { errorMessage } from '../../lib/errors';
+import { clickableProps } from '../../lib/a11y';
 
 export const LessonPlayerScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -58,7 +60,7 @@ export const LessonPlayerScreen: React.FC = () => {
 
   // Timer intervals for mock media
   useEffect(() => {
-    let timer: any;
+    let timer: ReturnType<typeof setTimeout>;
     if (isVideoPlaying) {
       timer = setInterval(() => {
         setVideoElapsed((prev) => (prev < 140 ? prev + 1 : 140));
@@ -68,7 +70,7 @@ export const LessonPlayerScreen: React.FC = () => {
   }, [isVideoPlaying]);
 
   useEffect(() => {
-    let timer: any;
+    let timer: ReturnType<typeof setTimeout>;
     if (isAudioPlaying) {
       timer = setInterval(() => {
         setAudioElapsed((prev) => (prev < 180 ? prev + 1 : 180));
@@ -84,8 +86,8 @@ export const LessonPlayerScreen: React.FC = () => {
         setLoading(true);
         const data = await lessonsApi.get(id);
         setLesson(data);
-      } catch (err: any) {
-        showToast(err.message || 'خطا در بارگذاری گرابایت', 'error');
+      } catch (err) {
+        showToast(errorMessage(err) || 'خطا در بارگذاری گرابایت', 'error');
       } finally {
         setLoading(false);
       }
@@ -186,8 +188,8 @@ export const LessonPlayerScreen: React.FC = () => {
           setDisplayedXp(current);
         }
       }, 40);
-    } catch (err: any) {
-      showToast(err.message || 'خطا در ثبت پایان درس', 'error');
+    } catch (err) {
+      showToast(errorMessage(err) || 'خطا در ثبت پایان درس', 'error');
     }
   };
 
@@ -462,7 +464,7 @@ export const LessonPlayerScreen: React.FC = () => {
           </div>
         );
 
-      case 'flashcards':
+      case 'flashcards': {
         const fcSet = card as FlashcardSet;
         return (
           <div className="space-y-4">
@@ -477,12 +479,12 @@ export const LessonPlayerScreen: React.FC = () => {
                 return (
                   <div
                     key={fc.id}
-                    onClick={() =>
+                    {...clickableProps(() =>
                       setFlippedFlashcards((prev) => ({
                         ...prev,
                         [fc.id]: !prev[fc.id],
                       }))
-                    }
+                    )}
                     className="min-h-[110px] p-4 rounded-tile bg-surface border-2 border-sunken hover:border-primary/40 shadow-xs cursor-pointer flex flex-col justify-between transition-all select-none"
                   >
                     <div className="flex items-center justify-between text-meta text-ink/50 font-semibold">
@@ -508,8 +510,8 @@ export const LessonPlayerScreen: React.FC = () => {
             </div>
           </div>
         );
-
-      case 'scenario':
+      }
+      case 'scenario': {
         const sc = card as ScenarioCard;
         return (
           <div className="space-y-4">
@@ -557,8 +559,8 @@ export const LessonPlayerScreen: React.FC = () => {
             </div>
           </div>
         );
-
-      case 'quiz':
+      }
+      case 'quiz': {
         const q = card as QuizCard;
         const currentSelected = quizAnswers[q.id] || [];
 
@@ -618,7 +620,7 @@ export const LessonPlayerScreen: React.FC = () => {
             </div>
           </div>
         );
-
+      }
       default:
         return null;
     }

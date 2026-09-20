@@ -4,16 +4,15 @@ import {
   CheckCircle2,
   AlertTriangle,
   XCircle,
-  Sliders,
   ChevronDown,
   ChevronUp,
-  RefreshCw,
   Layers,
 } from 'lucide-react';
 import { challengeRequestsApi } from '../../../api/org/challengeRequests';
 import { subscriptionsApi } from '../../../api/org/subscriptions';
 import { ChallengeRequest, SeatSummary } from '../../../types/org';
 import { toFa } from '../../../lib/format';
+import { errorMessage } from '../../../lib/errors';
 
 export const OrgDemoPanel: React.FC<{ onRequestChanged?: () => void }> = ({ onRequestChanged }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,8 +51,8 @@ export const OrgDemoPanel: React.FC<{ onRequestChanged?: () => void }> = ({ onRe
       );
       await loadData();
       onRequestChanged?.();
-    } catch (err: any) {
-      setActionMessage(err.message || 'خطا در تأیید');
+    } catch (err) {
+      setActionMessage(errorMessage(err) || 'خطا در تأیید');
     } finally {
       setLoading(false);
     }

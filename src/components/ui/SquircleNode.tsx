@@ -21,7 +21,6 @@ export const SquircleNode: React.FC<SquircleNodeProps> = ({
   isCheckpoint = false,
   isCertificate = false,
   minutes = 3,
-  xp = 10,
   onClick,
   accentColor = 'var(--color-primary)',
   label,

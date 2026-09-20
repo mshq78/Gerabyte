@@ -4,29 +4,17 @@ import {
   FileSpreadsheet,
   Download,
   CheckCircle2,
-  AlertCircle,
   AlertTriangle,
   XCircle,
   ChevronLeft,
-  ChevronRight,
-  ArrowRight,
   Sparkles,
-  RefreshCw,
   Clock,
   Send,
-  HelpCircle,
 } from 'lucide-react';
-import {
-  importApi,
-  CSV_TEMPLATE_HEADERS,
-  CSV_TEMPLATE_SAMPLE_ROWS,
-  ParsedRawRow,
-  ValidationResult,
-  normalizePhone,
-} from '../../../api/org/import';
+import { importApi, ParsedRawRow, ValidationResult } from '../../../api/org/import';
 import { subscriptionsApi } from '../../../api/org/subscriptions';
 import { orgApi } from '../../../api/org/client';
-import { ImportJob, ImportRowError, OrgMember } from '../../../types/org';
+import { ImportJob } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
 import { toFa } from '../../../lib/format';
 import { OrgDemoPanel } from '../components/OrgDemoPanel';
@@ -36,17 +24,18 @@ type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
 export const OrgImportScreen: React.FC = () => {
   const { userRole, units } = useOrgScope();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const openFilePicker = () => fileInputRef.current?.click();
 
   // Wizard state
   const [step, setStep] = useState<WizardStep>(1);
-  const [file, setFile] = useState<File | null>(null);
+  const [, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string>('');
   const [parsedRows, setParsedRows] = useState<ParsedRawRow[]>([]);
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [showOnlyErrors, setShowOnlyErrors] = useState(false);
 
   // Column Mappings (standard keys -> column index or header name)
-  const [columnMapping, setColumnMapping] = useState<Record<string, string>>({
+  const [columnMapping] = useState<Record<string, string>>({
     fullName: 'نام و نام خانوادگی',
     phone: 'شماره موبایل',
     personnelCode: 'کد پرسنلی',
@@ -442,23 +431,26 @@ export const OrgImportScreen: React.FC = () => {
             <span>مرحله ۲: بارگذاری فایل CSV یا اکسل</span>
           </h2>
 
-          <div
-            onClick={() => fileInputRef.current?.click()}
-            className="p-10 border-2 border-dashed border-primary/40 hover:border-primary rounded-sheet bg-canvas hover:bg-primary/5 transition-all text-center cursor-pointer space-y-3"
+          <button
+            type="button"
+            onClick={openFilePicker}
+            className="block w-full p-10 border-2 border-dashed border-primary/40 hover:border-primary rounded-sheet bg-canvas hover:bg-primary/5 transition-all text-center cursor-pointer space-y-3"
           >
             <UploadCloud className="w-12 h-12 text-primary mx-auto" />
-            <div className="text-body font-black text-ink">
+            <span className="block text-body font-black text-ink">
               فایل CSV یا اکسل را اینجا بکشید یا برای انتخاب کلیک کنید
-            </div>
-            <p className="text-meta text-ink/60">پشتیبانی از حجم تا ۱۰ مگابایت و تا ۲۰،۰۰۰ ردیف</p>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-          </div>
+            </span>
+            <span className="block text-meta text-ink/60">
+              پشتیبانی از حجم تا ۱۰ مگابایت و تا ۲۰،۰۰۰ ردیف
+            </span>
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,.xlsx,.xls"
+            onChange={handleFileChange}
+            className="hidden"
+          />
 
           <div className="flex items-center justify-between pt-4 border-t border-sunken">
             <button
@@ -683,7 +675,10 @@ export const OrgImportScreen: React.FC = () => {
           <div className="space-y-4">
             {/* Sponsorship Toggle */}
             <div className="p-4 rounded-tile bg-canvas border border-sunken space-y-3">
-              <label className="flex items-center justify-between cursor-pointer">
+              <label
+                htmlFor="org-import-f1"
+                className="flex items-center justify-between cursor-pointer"
+              >
                 <div>
                   <strong className="text-body text-ink block">
                     تخصیص اشتراک سازمانی (اسپانسرشیپ)
@@ -693,6 +688,7 @@ export const OrgImportScreen: React.FC = () => {
                   </span>
                 </div>
                 <input
+                  id="org-import-f1"
                   type="checkbox"
                   checked={enableSponsorship}
                   onChange={(e) => {
@@ -722,7 +718,10 @@ export const OrgImportScreen: React.FC = () => {
 
             {/* SMS invite toggle */}
             <div className="p-4 rounded-tile bg-canvas border border-sunken">
-              <label className="flex items-center justify-between cursor-pointer">
+              <label
+                htmlFor="org-import-f2"
+                className="flex items-center justify-between cursor-pointer"
+              >
                 <div>
                   <strong className="text-body text-ink block">ارسال پیامک دعوت به ورود</strong>
                   <span className="text-meta text-ink/70">
@@ -730,6 +729,7 @@ export const OrgImportScreen: React.FC = () => {
                   </span>
                 </div>
                 <input
+                  id="org-import-f2"
                   type="checkbox"
                   checked={sendInviteSms}
                   onChange={(e) => setSendInviteSms(e.target.checked)}
@@ -740,7 +740,10 @@ export const OrgImportScreen: React.FC = () => {
 
             {/* Auto-create nodes toggle */}
             <div className="p-4 rounded-tile bg-canvas border border-sunken">
-              <label className="flex items-center justify-between cursor-pointer">
+              <label
+                htmlFor="org-import-f3"
+                className="flex items-center justify-between cursor-pointer"
+              >
                 <div>
                   <strong className="text-body text-ink block">
                     ساخت خودکار ساختارهای ناشناخته
@@ -750,6 +753,7 @@ export const OrgImportScreen: React.FC = () => {
                   </span>
                 </div>
                 <input
+                  id="org-import-f3"
                   type="checkbox"
                   checked={autoCreateNodes}
                   onChange={(e) => setAutoCreateNodes(e.target.checked)}

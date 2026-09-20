@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import {
-  HelpCircle,
-  ChevronDown,
-  ChevronUp,
-  Search,
-  BookOpen,
-  ShieldCheck,
-  Award,
-  Zap,
-} from 'lucide-react';
-import { toFa } from '../../lib/format';
+import { HelpCircle, ChevronDown, ChevronUp, Search } from 'lucide-react';
 
 interface FaqItem {
   id: string;

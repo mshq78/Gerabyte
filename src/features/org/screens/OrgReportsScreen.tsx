@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  FileSpreadsheet,
-  Printer,
-  TrendingUp,
-  BarChart3,
-  Award,
-  AlertTriangle,
-  Download,
-  CheckCircle2,
-  Calendar,
-} from 'lucide-react';
+import { FileSpreadsheet, Printer, TrendingUp, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -19,8 +9,6 @@ import {
   Tooltip,
   CartesianGrid,
   Cell,
-  LineChart,
-  Line,
 } from 'recharts';
 import { useOrgScope } from '../context/ScopeContext';
 import { orgApi } from '../../../api/org/client';
@@ -29,7 +17,7 @@ import { toFa } from '../../../lib/format';
 import { exportMembersToXlsx } from '../utils/export';
 
 export const OrgReportsScreen: React.FC = () => {
-  const { currentOrg, effectiveUnitId, units } = useOrgScope();
+  const { currentOrg, effectiveUnitId } = useOrgScope();
   const [kpis, setKpis] = useState<OrgKpiSummary | null>(null);
   const [members, setMembers] = useState<OrgMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -176,7 +164,7 @@ export const OrgReportsScreen: React.FC = () => {
               <XAxis dataKey="domainTitle" tick={{ fill: '#0D3F6B', fontSize: 11 }} interval={0} />
               <YAxis domain={[0, 100]} tick={{ fill: '#0D3F6B', fontSize: 12 }} />
               <Tooltip
-                formatter={(val: any) => [`${toFa(val)} از ۱۰۰`, 'میانگین نمره']}
+                formatter={(val) => [`${toFa(String(val ?? 0))} از ۱۰۰`, 'میانگین نمره']}
                 contentStyle={{
                   backgroundColor: '#FFFFFF',
                   borderColor: '#E8E1D5',

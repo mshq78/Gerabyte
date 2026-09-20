@@ -9,15 +9,14 @@ import {
   Users,
   Target,
   Gift,
-  HelpCircle,
   AlertCircle,
-  CheckCircle2,
   Sparkles,
 } from 'lucide-react';
 import { challengeRequestsApi } from '../../../api/org/challengeRequests';
 import { useOrgScope } from '../context/ScopeContext';
 import { toFa } from '../../../lib/format';
 import { Level } from '../../../types/domain';
+import { errorMessage } from '../../../lib/errors';
 
 export const OrgChallengeNewScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -116,8 +115,8 @@ export const OrgChallengeNewScreen: React.FC = () => {
       });
 
       navigate('/org/challenges');
-    } catch (err: any) {
-      setValidationErrors({ general: err.message || 'خطا در ثبت درخواست' });
+    } catch (err) {
+      setValidationErrors({ general: errorMessage(err) || 'خطا در ثبت درخواست' });
     } finally {
       setSubmitting(false);
     }
@@ -171,10 +170,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">
+              <label
+                htmlFor="org-challenge-new-f1"
+                className="block text-meta font-bold text-ink mb-1.5"
+              >
                 عنوان چالش <span className="text-danger">*</span>
               </label>
               <input
+                id="org-challenge-new-f1"
                 type="text"
                 placeholder="مثال: ماراتن دقت در ابعاد و استانداردهای نورد میلگرد"
                 value={title}
@@ -189,10 +192,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">
+              <label
+                htmlFor="org-challenge-new-f2"
+                className="block text-meta font-bold text-ink mb-1.5"
+              >
                 هدف چالش (چرا این چالش نیاز است؟) <span className="text-danger">*</span>
               </label>
               <textarea
+                id="org-challenge-new-f2"
                 rows={3}
                 placeholder="توضیح دهید این چالش چه معضل عملیاتی، ایمنی یا خطایی را در خط تولید یا فرایند حل می‌کند..."
                 value={objective}
@@ -224,8 +231,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">انتخاب واحد / بخش</label>
+              <label
+                htmlFor="org-challenge-new-f3"
+                className="block text-meta font-bold text-ink mb-1.5"
+              >
+                انتخاب واحد / بخش
+              </label>
               <select
+                id="org-challenge-new-f3"
                 value={targetScope}
                 onChange={(e) => setTargetScope(e.target.value)}
                 className="min-h-[48px] w-full px-3 py-2 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink focus:outline-none focus:border-primary cursor-pointer"
@@ -240,10 +253,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">
+              <p id="org-challenge-new-f4" className="block text-meta font-bold text-ink mb-1.5">
                 فیلتر سطوح شایستگی
-              </label>
-              <div className="flex items-center gap-2 pt-1 flex-wrap">
+              </p>
+              <div
+                className="flex items-center gap-2 pt-1 flex-wrap"
+                role="group"
+                aria-labelledby="org-challenge-new-f4"
+              >
                 {([1, 2, 3, 4, 5] as Level[]).map((lvl) => {
                   const active = selectedLevels.includes(lvl);
                   return (
@@ -278,10 +295,18 @@ export const OrgChallengeNewScreen: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">معیار سنجش پیروزی</label>
+              <label
+                htmlFor="org-challenge-new-f5"
+                className="block text-meta font-bold text-ink mb-1.5"
+              >
+                معیار سنجش پیروزی
+              </label>
               <select
+                id="org-challenge-new-f5"
                 value={goalType}
-                onChange={(e) => setGoalType(e.target.value as any)}
+                onChange={(e) =>
+                  setGoalType(e.target.value as 'lessons' | 'xp' | 'streak' | 'exam')
+                }
                 className="min-h-[48px] w-full px-3 py-2 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink focus:outline-none focus:border-primary cursor-pointer"
               >
                 <option value="xp">کسب امتیاز تجربی (XP)</option>
@@ -292,10 +317,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">
+              <label
+                htmlFor="org-challenge-new-f6"
+                className="block text-meta font-bold text-ink mb-1.5"
+              >
                 مقدار هدف عددی <span className="text-danger">*</span>
               </label>
               <input
+                id="org-challenge-new-f6"
                 type="number"
                 value={goalTarget}
                 onChange={(e) => setGoalTarget(Number(e.target.value))}
@@ -319,8 +348,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">تاریخ شروع (شمسی)</label>
+              <label
+                htmlFor="org-challenge-new-f7"
+                className="block text-meta font-bold text-ink mb-1.5"
+              >
+                تاریخ شروع (شمسی)
+              </label>
               <input
+                id="org-challenge-new-f7"
                 type="text"
                 placeholder="۱۴۰۳/۰۷/۱۵"
                 value={startsAt}
@@ -330,10 +365,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">
+              <label
+                htmlFor="org-challenge-new-f8"
+                className="block text-meta font-bold text-ink mb-1.5"
+              >
                 تاریخ پایان (شمسی)
               </label>
               <input
+                id="org-challenge-new-f8"
                 type="text"
                 placeholder="۱۴۰۳/۰۷/۲۹"
                 value={endsAt}
@@ -365,10 +404,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">
+              <label
+                htmlFor="org-challenge-new-f9"
+                className="block text-meta font-bold text-ink mb-1.5"
+              >
                 جایزه پیشنهادی به گرا (اختیاری)
               </label>
               <input
+                id="org-challenge-new-f9"
                 type="text"
                 placeholder="مثال: هندبوک تخصصی متالورژی ASM + ست هدیه گرا"
                 value={suggestedPrize}
@@ -378,10 +421,14 @@ export const OrgChallengeNewScreen: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-meta font-bold text-ink mb-1.5">
+              <label
+                htmlFor="org-challenge-new-f10"
+                className="block text-meta font-bold text-ink mb-1.5"
+              >
                 یادداشت‌ها و شرایط اجرایی خاص (اختیاری)
               </label>
               <textarea
+                id="org-challenge-new-f10"
                 rows={2}
                 placeholder="مثلاً ملاحظات مربوط به شیفت‌های چرخشی، نحوه هماهنگی سالن آزمون و..."
                 value={notes}

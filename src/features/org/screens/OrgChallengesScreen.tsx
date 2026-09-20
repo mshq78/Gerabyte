@@ -1,19 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Trophy,
   Plus,
-  Filter,
   Search,
   Calendar,
-  Users,
   Award,
-  Clock,
-  CheckCircle2,
   AlertCircle,
-  XCircle,
-  ArrowRight,
-  Flame,
   ChevronLeft,
   Sparkles,
 } from 'lucide-react';
@@ -69,14 +62,13 @@ const STATUS_LABELS: Record<
 };
 
 export const OrgChallengesScreen: React.FC = () => {
-  const navigate = useNavigate();
   const { userRole } = useOrgScope();
   const [requests, setRequests] = useState<ChallengeRequest[]>([]);
   const [statusFilter, setStatusFilter] = useState<ChallengeRequestStatus | 'all'>('all');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const list = await challengeRequestsApi.list({
@@ -88,11 +80,11 @@ export const OrgChallengesScreen: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, userRole]);
 
   useEffect(() => {
     loadData();
-  }, [statusFilter, userRole]);
+  }, [loadData]);
 
   const filteredRequests = requests.filter((r) => {
     if (!search.trim()) return true;
@@ -203,10 +195,8 @@ export const OrgChallengesScreen: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredRequests.map((req) => {
             const statusConfig = STATUS_LABELS[req.status];
-            const isTargetAll = req.target === 'all';
-            const targetLabel = isTargetAll
-              ? 'کل سازمان'
-              : (req.target as any).unitName || 'واحد مشخص';
+            const targetLabel =
+              req.target === 'all' ? 'کل سازمان' : req.target.unitName || 'واحد مشخص';
 
             return (
               <div

@@ -1,17 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {
-  PlusCircle,
-  GraduationCap,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  Users,
-  X,
-  Filter,
-  Layers,
-  ChevronLeft,
-} from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { PlusCircle, GraduationCap, Calendar, Users, X } from 'lucide-react';
 import { useOrgScope } from '../context/ScopeContext';
 import { orgApi } from '../../../api/org/client';
 import { PathAssignment } from '../../../types/org';
@@ -19,7 +7,7 @@ import { toFa } from '../../../lib/format';
 import { useApp } from '../../../state/AppContext';
 
 export const OrgAssignmentsScreen: React.FC = () => {
-  const { currentOrg, canManageAllUnits, effectiveUnitId, units } = useOrgScope();
+  const { currentOrg, effectiveUnitId, units } = useOrgScope();
   const { showToast } = useApp();
 
   const [assignments, setAssignments] = useState<PathAssignment[]>([]);
@@ -46,16 +34,16 @@ export const OrgAssignmentsScreen: React.FC = () => {
     { id: 'domain-5', title: 'فرهنگ ایمنی و سلامت کار' },
   ];
 
-  const fetchAssignments = async () => {
+  const fetchAssignments = useCallback(async () => {
     setLoading(true);
     const data = await orgApi.getAssignments(effectiveUnitId);
     setAssignments(data);
     setLoading(false);
-  };
+  }, [effectiveUnitId]);
 
   useEffect(() => {
     fetchAssignments();
-  }, [effectiveUnitId]);
+  }, [fetchAssignments]);
 
   const handleCreateAssignment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -233,10 +221,14 @@ export const OrgAssignmentsScreen: React.FC = () => {
 
             <form onSubmit={handleCreateAssignment} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">
+                <label
+                  htmlFor="org-assignments-f1"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
                   عنوان دوره یا مأموریت *
                 </label>
                 <input
+                  id="org-assignments-f1"
                   type="text"
                   required
                   value={newTitle}
@@ -247,10 +239,14 @@ export const OrgAssignmentsScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">
+                <label
+                  htmlFor="org-assignments-f2"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
                   توضیحات و اهداف یادگیری
                 </label>
                 <textarea
+                  id="org-assignments-f2"
                   rows={3}
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
@@ -260,10 +256,14 @@ export const OrgAssignmentsScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">
+                <label
+                  htmlFor="org-assignments-f3"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
                   حوزه مهارتی گرابایت
                 </label>
                 <select
+                  id="org-assignments-f3"
                   value={newDomainId}
                   onChange={(e) => setNewDomainId(e.target.value)}
                   className="w-full min-h-[48px] px-3.5 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
@@ -278,10 +278,16 @@ export const OrgAssignmentsScreen: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-meta font-bold text-ink mb-1">مخاطبان هدف</label>
+                  <label
+                    htmlFor="org-assignments-f4"
+                    className="block text-meta font-bold text-ink mb-1"
+                  >
+                    مخاطبان هدف
+                  </label>
                   <select
+                    id="org-assignments-f4"
                     value={newTargetType}
-                    onChange={(e) => setNewTargetType(e.target.value as any)}
+                    onChange={(e) => setNewTargetType(e.target.value as 'all' | 'unit')}
                     className="w-full min-h-[48px] px-3.5 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
                   >
                     <option value="all">تمام پرسنل سازمان</option>
@@ -291,8 +297,14 @@ export const OrgAssignmentsScreen: React.FC = () => {
 
                 {newTargetType === 'unit' && (
                   <div>
-                    <label className="block text-meta font-bold text-ink mb-1">انتخاب واحد</label>
+                    <label
+                      htmlFor="org-assignments-f5"
+                      className="block text-meta font-bold text-ink mb-1"
+                    >
+                      انتخاب واحد
+                    </label>
                     <select
+                      id="org-assignments-f5"
                       value={newTargetId}
                       onChange={(e) => setNewTargetId(e.target.value)}
                       className="w-full min-h-[48px] px-3.5 py-2 text-body bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
@@ -309,10 +321,14 @@ export const OrgAssignmentsScreen: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
-                  <label className="block text-meta font-bold text-ink mb-1">
+                  <label
+                    htmlFor="org-assignments-f6"
+                    className="block text-meta font-bold text-ink mb-1"
+                  >
                     مهلت انجام (سررسید)
                   </label>
                   <input
+                    id="org-assignments-f6"
                     type="text"
                     value={newDueDate}
                     onChange={(e) => setNewDueDate(e.target.value)}

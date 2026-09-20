@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   ChevronRight,
   Printer,
-  FileSpreadsheet,
   CheckCircle2,
   Clock,
   Flame,
   Award,
-  AlertTriangle,
-  UserCheck,
-  Shield,
   Briefcase,
   Mail,
   Phone,
-  QrCode,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -23,12 +18,6 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
   Radar,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
 } from 'recharts';
 import { QRCodeSVG } from 'qrcode.react';
 import { orgApi } from '../../../api/org/client';
@@ -40,7 +29,6 @@ import { useApp } from '../../../state/AppContext';
 
 export const OrgPersonDetailScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { canManageAllUnits, currentOrg } = useOrgScope();
   const { showToast } = useApp();
 
@@ -223,7 +211,7 @@ export const OrgPersonDetailScreen: React.FC = () => {
               <span className="text-meta font-bold text-ink/60">وضعیت فعالیت:</span>
               <select
                 value={member.status}
-                onChange={(e) => handleStatusChange(e.target.value as any)}
+                onChange={(e) => handleStatusChange(e.target.value as OrgMember['status'])}
                 className="min-h-[44px] px-3 py-1.5 text-meta font-bold bg-canvas rounded-tile border border-sunken focus:outline-none focus:border-primary text-ink"
               >
                 <option value="active">فعال و پویا</option>

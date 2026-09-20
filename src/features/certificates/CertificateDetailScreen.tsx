@@ -8,6 +8,8 @@ import { Button } from '../../components/ui/Button';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
 import { formatJalaliDate } from '../../lib/jalali';
+import { errorMessage } from '../../lib/errors';
+import { clickableProps } from '../../lib/a11y';
 
 export const CertificateDetailScreen: React.FC = () => {
   const { serial } = useParams<{ serial: string }>();
@@ -24,8 +26,8 @@ export const CertificateDetailScreen: React.FC = () => {
         setLoading(true);
         const data = await certificatesApi.getBySerial(serial);
         setCert(data);
-      } catch (err: any) {
-        showToast(err.message || 'گواهینامه یافت نشد', 'error');
+      } catch (err) {
+        showToast(errorMessage(err) || 'گواهینامه یافت نشد', 'error');
       } finally {
         setLoading(false);
       }
@@ -195,7 +197,7 @@ export const CertificatesScreen: React.FC = () => {
           certs.map((c) => (
             <div
               key={c.serial}
-              onClick={() => navigate(`/certificates/${c.serial}`)}
+              {...clickableProps(() => navigate(`/certificates/${c.serial}`))}
               className="p-4 rounded-tile bg-surface border border-sunken hover:border-primary/50 shadow-xs cursor-pointer transition-all flex items-center justify-between min-h-[48px]"
             >
               <div className="flex items-center gap-3">

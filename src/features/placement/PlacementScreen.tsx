@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
 import { LEVEL_NAMES } from '../../lib/format';
+import { errorMessage } from '../../lib/errors';
 
 export const PlacementScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -28,8 +29,8 @@ export const PlacementScreen: React.FC = () => {
         setLoading(true);
         const res = await placementApi.start();
         setQuestions(res.questions);
-      } catch (err: any) {
-        showToast(err.message || 'خطا در بارگذاری سوالات تعیین سطح', 'error');
+      } catch (err) {
+        showToast(errorMessage(err) || 'خطا در بارگذاری سوالات تعیین سطح', 'error');
       } finally {
         setLoading(false);
       }
@@ -72,8 +73,8 @@ export const PlacementScreen: React.FC = () => {
         setIsSubmitting(true);
         const res = await placementApi.submit(answers);
         setResult(res);
-      } catch (err: any) {
-        showToast(err.message || 'خطا در ثبت نتایج تعیین سطح', 'error');
+      } catch (err) {
+        showToast(errorMessage(err) || 'خطا در ثبت نتایج تعیین سطح', 'error');
       } finally {
         setIsSubmitting(false);
       }

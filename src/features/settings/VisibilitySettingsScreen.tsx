@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, ShieldCheck, ChevronLeft, Building2, Lock, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck, ChevronLeft, Building2, ArrowRight } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
-import { toFa } from '../../lib/format';
 
 export const VisibilitySettingsScreen: React.FC = () => {
   const navigate = useNavigate();

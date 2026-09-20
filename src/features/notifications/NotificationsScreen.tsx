@@ -13,14 +13,15 @@ import { notificationsApi } from '../../api/notifications';
 import { AppNotification } from '../../types/domain';
 import { useApp } from '../../state/AppContext';
 import { formatJalaliShort } from '../../lib/jalali';
+import { clickableProps } from '../../lib/a11y';
+
+type NotificationFilter = 'all' | 'reminder' | 'league' | 'challenge' | 'system';
 
 export const NotificationsScreen: React.FC = () => {
   const navigate = useNavigate();
   const { setUnreadNotifsCount } = useApp();
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
-  const [activeFilter, setActiveFilter] = useState<
-    'all' | 'reminder' | 'league' | 'challenge' | 'system'
-  >('all');
+  const [activeFilter, setActiveFilter] = useState<NotificationFilter>('all');
 
   useEffect(() => {
     async function load() {
@@ -91,16 +92,18 @@ export const NotificationsScreen: React.FC = () => {
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-meta">
-        {[
-          { id: 'all', label: 'همه' },
-          { id: 'reminder', label: 'یادآوری‌ها' },
-          { id: 'league', label: 'لیگ و رتبه‌بندی' },
-          { id: 'challenge', label: 'چالش‌ها' },
-          { id: 'system', label: 'سیستمی و اشتراک' },
-        ].map((tab) => (
+        {(
+          [
+            { id: 'all', label: 'همه' },
+            { id: 'reminder', label: 'یادآوری‌ها' },
+            { id: 'league', label: 'لیگ و رتبه‌بندی' },
+            { id: 'challenge', label: 'چالش‌ها' },
+            { id: 'system', label: 'سیستمی و اشتراک' },
+          ] as const
+        ).map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveFilter(tab.id as any)}
+            onClick={() => setActiveFilter(tab.id)}
             className={`min-h-[48px] px-3.5 py-1.5 rounded-tile font-bold whitespace-nowrap transition-all cursor-pointer ${
               activeFilter === tab.id
                 ? 'bg-primary text-surface shadow-xs'
@@ -122,7 +125,7 @@ export const NotificationsScreen: React.FC = () => {
           filtered.map((item) => (
             <div
               key={item.id}
-              onClick={() => handleMarkAsRead(item.id)}
+              {...clickableProps(() => handleMarkAsRead(item.id))}
               className={`p-3.5 min-h-[48px] rounded-tile border transition-all cursor-pointer flex items-start gap-3 ${
                 item.read
                   ? 'bg-surface border-sunken'

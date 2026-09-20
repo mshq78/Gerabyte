@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   CreditCard,
-  Users,
   Clock,
   Calendar,
   AlertTriangle,
@@ -9,8 +8,6 @@ import {
   CheckCircle2,
   TrendingUp,
   Plus,
-  RefreshCw,
-  Sparkles,
   ShieldCheck,
 } from 'lucide-react';
 import {
@@ -22,6 +19,7 @@ import { SeatSummary, OrgRenewalRequest } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
 import { toFa } from '../../../lib/format';
 import { OrgDemoPanel } from '../components/OrgDemoPanel';
+import { errorMessage } from '../../../lib/errors';
 
 export const OrgSubscriptionsScreen: React.FC = () => {
   const { userRole } = useOrgScope();
@@ -79,8 +77,8 @@ export const OrgSubscriptionsScreen: React.FC = () => {
       const res = await subscriptionsApi.sendRenewalReminder(memberId);
       setActionNotice(res.message);
       loadData();
-    } catch (err: any) {
-      setActionNotice(err.message);
+    } catch (err) {
+      setActionNotice(errorMessage(err) || 'خطای نامشخص رخ داد.');
     }
   };
 
@@ -95,8 +93,8 @@ export const OrgSubscriptionsScreen: React.FC = () => {
       setShowRenewalModal(false);
       setActionNotice('درخواست تمدید سازمانی با موفقیت ثبت گردید و برای واحد فروش گرا ارسال شد.');
       loadData();
-    } catch (err: any) {
-      setActionNotice(err.message);
+    } catch (err) {
+      setActionNotice(errorMessage(err) || 'خطای نامشخص رخ داد.');
     }
   };
 
@@ -405,10 +403,14 @@ export const OrgSubscriptionsScreen: React.FC = () => {
 
             <form onSubmit={handleCreateRenewalRequest} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1.5">
+                <label
+                  htmlFor="org-subscriptions-f1"
+                  className="block text-meta font-bold text-ink mb-1.5"
+                >
                   تعداد سهمیه مورد نیاز:
                 </label>
                 <select
+                  id="org-subscriptions-f1"
                   value={renewalSeats}
                   onChange={(e) => setRenewalSeats(Number(e.target.value))}
                   className="min-h-[48px] w-full px-4 rounded-tile bg-canvas border border-sunken text-body font-bold text-ink focus:outline-none focus:border-primary"
@@ -422,8 +424,14 @@ export const OrgSubscriptionsScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1.5">مدت زمان تمدید:</label>
+                <label
+                  htmlFor="org-subscriptions-f2"
+                  className="block text-meta font-bold text-ink mb-1.5"
+                >
+                  مدت زمان تمدید:
+                </label>
                 <select
+                  id="org-subscriptions-f2"
                   value={renewalDuration}
                   onChange={(e) => setRenewalDuration(Number(e.target.value))}
                   className="min-h-[48px] w-full px-4 rounded-tile bg-canvas border border-sunken text-body font-bold text-ink focus:outline-none focus:border-primary"

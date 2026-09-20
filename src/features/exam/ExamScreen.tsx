@@ -16,6 +16,7 @@ import { Exam } from '../../types/domain';
 import { Button } from '../../components/ui/Button';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
+import { errorMessage } from '../../lib/errors';
 
 export const ExamScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -37,8 +38,8 @@ export const ExamScreen: React.FC = () => {
         setLoading(true);
         const data = await examsApi.get(id);
         setExam(data);
-      } catch (err: any) {
-        showToast(err.message || 'خطا در بارگذاری آزمون', 'error');
+      } catch (err) {
+        showToast(errorMessage(err) || 'خطا در بارگذاری آزمون', 'error');
       } finally {
         setLoading(false);
       }
@@ -268,8 +269,8 @@ export const ExamScreen: React.FC = () => {
       const res = await examsApi.submit(exam.id, userAnswers);
       setResult(res);
       showToast(res.passed ? 'آزمون با قبولی ثبت شد!' : 'ارزیابی به پایان رسید.', 'info');
-    } catch (err: any) {
-      showToast(err.message || 'خطا در ثبت نتایج آزمون', 'error');
+    } catch (err) {
+      showToast(errorMessage(err) || 'خطا در ثبت نتایج آزمون', 'error');
     } finally {
       setIsSubmitting(false);
     }

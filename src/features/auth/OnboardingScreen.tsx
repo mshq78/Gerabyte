@@ -6,6 +6,7 @@ import { ByteRow } from '../../components/ui/ByteRow';
 import { useApp } from '../../state/AppContext';
 import { meApi } from '../../api/me';
 import { toFa } from '../../lib/toFa';
+import { clickableProps } from '../../lib/a11y';
 
 export const OnboardingScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ export const OnboardingScreen: React.FC = () => {
               ].map((opt) => (
                 <div
                   key={opt.count}
-                  onClick={() => setDailyGoal(opt.count)}
+                  {...clickableProps(() => setDailyGoal(opt.count))}
                   className={`p-3.5 min-h-[48px] rounded-tile border-2 transition-all cursor-pointer text-right flex items-center justify-between ${
                     dailyGoal === opt.count
                       ? 'border-primary bg-domain-1-tint shadow-xs'

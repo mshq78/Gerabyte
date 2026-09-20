@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
 import { formatJalaliShort } from '../../lib/jalali';
+import { errorMessage } from '../../lib/errors';
 
 export const RewardsScreen: React.FC = () => {
   const { user, updateUserLocal, showToast } = useApp();
@@ -26,8 +27,8 @@ export const RewardsScreen: React.FC = () => {
         ]);
         setRewards(storeList);
         setMyRedemptions(redList);
-      } catch (err: any) {
-        showToast(err.message || 'خطا در بارگذاری پاداش‌ها', 'error');
+      } catch (err) {
+        showToast(errorMessage(err) || 'خطا در بارگذاری پاداش‌ها', 'error');
       }
     }
     load();
@@ -46,8 +47,8 @@ export const RewardsScreen: React.FC = () => {
       setMyRedemptions((prev) => [res.redemption, ...prev]);
       setNewlyRedeemed(res.redemption);
       showToast(`جایزه «${reward.title}» با موفقیت دریافت شد!`, 'success');
-    } catch (err: any) {
-      showToast(err.message || 'خطا در دریافت جایزه', 'error');
+    } catch (err) {
+      showToast(errorMessage(err) || 'خطا در دریافت جایزه', 'error');
     } finally {
       setRedeemingId(null);
     }

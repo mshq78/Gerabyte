@@ -6,6 +6,8 @@ import { Subscription } from '../../types/domain';
 import { Button } from '../../components/ui/Button';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
+import { errorMessage } from '../../lib/errors';
+import { clickableProps } from '../../lib/a11y';
 
 export const SubscriptionScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -47,8 +49,8 @@ export const SubscriptionScreen: React.FC = () => {
       setSubscriptionLocal(res.subscription);
       showToast(res.message || 'کد فعال‌سازی با موفقیت اعمال گردید!', 'success');
       setActivationCode('');
-    } catch (err: any) {
-      showToast(err.message || 'کد فعال‌سازی نامعتبر است.', 'error');
+    } catch (err) {
+      showToast(errorMessage(err) || 'کد فعال‌سازی نامعتبر است.', 'error');
     } finally {
       setIsActivating(false);
     }
@@ -64,8 +66,8 @@ export const SubscriptionScreen: React.FC = () => {
       });
       setSubscriptionLocal(res.subscription);
       showToast('پرداخت تستی با موفقیت انجام شد.', 'success');
-    } catch (err: any) {
-      showToast(err.message || 'خطا در انجام تراکنش.', 'error');
+    } catch (err) {
+      showToast(errorMessage(err) || 'خطا در انجام تراکنش.', 'error');
     } finally {
       setIsCheckingOut(false);
     }
@@ -223,7 +225,7 @@ export const SubscriptionScreen: React.FC = () => {
             return (
               <div
                 key={plan.id}
-                onClick={() => setSelectedPlanId(plan.id)}
+                {...clickableProps(() => setSelectedPlanId(plan.id))}
                 className={`p-3 min-h-[48px] rounded-tile border-2 transition-all cursor-pointer flex flex-col justify-between select-none ${
                   isSelected
                     ? 'bg-surface border-primary shadow-md'

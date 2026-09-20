@@ -1,4 +1,5 @@
 import { OrgUnit, OrgMember, PathAssignment, OrgKpiSummary } from '../../types/org';
+import { Level, OrgRank } from '../../types/domain';
 
 // Seeded PRNG for deterministic, reproducible mock data
 function createPrng(seed: number) {
@@ -97,8 +98,8 @@ export function getMockOrgMembers(): OrgMember[] {
     unitId: string;
     unitName: string;
     role: 'org_admin' | 'unit_manager' | 'learner';
-    rank: any;
-    level: any;
+    rank: OrgRank;
+    level: Level;
     phone: string;
     email: string;
   }[] = [

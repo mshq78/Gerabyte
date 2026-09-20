@@ -8,6 +8,7 @@ import { ByteRow } from '../../components/ui/ByteRow';
 import { Avatar } from '../../components/ui/Avatar';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
+import { errorMessage } from '../../lib/errors';
 
 export const ChallengeDetailScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,8 +26,8 @@ export const ChallengeDetailScreen: React.FC = () => {
         setLoading(true);
         const data = await challengesApi.get(id);
         setChallenge(data);
-      } catch (err: any) {
-        showToast(err.message || 'خطا در دریافت چالش', 'error');
+      } catch (err) {
+        showToast(errorMessage(err) || 'خطا در دریافت چالش', 'error');
       } finally {
         setLoading(false);
       }
@@ -54,8 +55,8 @@ export const ChallengeDetailScreen: React.FC = () => {
       const updated = await challengesApi.join(challenge.id);
       setChallenge(updated);
       showToast('با موفقیت به چالش ملحق شدید!', 'success');
-    } catch (err: any) {
-      showToast(err.message || 'خطا در پیوستن به چالش', 'error');
+    } catch (err) {
+      showToast(errorMessage(err) || 'خطا در پیوستن به چالش', 'error');
     } finally {
       setIsJoining(false);
     }

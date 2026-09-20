@@ -1,16 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Award,
-  Search,
-  Filter,
-  Download,
-  ExternalLink,
-  Calendar,
-  Layers,
-  CheckCircle2,
-  FileSpreadsheet,
-} from 'lucide-react';
+import { Award, Search, Download, ExternalLink } from 'lucide-react';
 import { certificatesApi } from '../../../api/org/certificates';
 import { OrgCertificateItem } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
@@ -25,7 +15,7 @@ export const OrgCertificatesScreen: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const [list, paths] = await Promise.all([
@@ -42,11 +32,11 @@ export const OrgCertificatesScreen: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userRole, selectedUnit, selectedPath, search]);
 
   useEffect(() => {
     loadData();
-  }, [userRole, selectedUnit, selectedPath, search]);
+  }, [loadData]);
 
   // Totals by path
   const totalsByPath = certificates.reduce<Record<string, number>>((acc, item) => {
@@ -128,8 +118,14 @@ export const OrgCertificatesScreen: React.FC = () => {
           {/* Unit Filter */}
           {userRole === 'org_admin' ? (
             <div>
-              <label className="block text-meta font-bold text-ink mb-1">واحد سازمانی:</label>
+              <label
+                htmlFor="org-certificates-f1"
+                className="block text-meta font-bold text-ink mb-1"
+              >
+                واحد سازمانی:
+              </label>
               <select
+                id="org-certificates-f1"
                 value={selectedUnit}
                 onChange={(e) => setSelectedUnit(e.target.value)}
                 className="min-h-[44px] w-full px-3 py-1.5 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink cursor-pointer"
@@ -144,7 +140,7 @@ export const OrgCertificatesScreen: React.FC = () => {
             </div>
           ) : (
             <div>
-              <label className="block text-meta font-bold text-ink mb-1">محدوده نمایش:</label>
+              <p className="block text-meta font-bold text-ink mb-1">محدوده نمایش:</p>
               <div className="min-h-[44px] px-3 py-2 rounded-tile bg-canvas border border-sunken text-meta font-bold text-primary">
                 واحد نورد گرم و مقاطع (زیرشاخه شما)
               </div>
@@ -153,8 +149,14 @@ export const OrgCertificatesScreen: React.FC = () => {
 
           {/* Path Filter */}
           <div>
-            <label className="block text-meta font-bold text-ink mb-1">مسیر آموزشی:</label>
+            <label
+              htmlFor="org-certificates-f3"
+              className="block text-meta font-bold text-ink mb-1"
+            >
+              مسیر آموزشی:
+            </label>
             <select
+              id="org-certificates-f3"
               value={selectedPath}
               onChange={(e) => setSelectedPath(e.target.value)}
               className="min-h-[44px] w-full px-3 py-1.5 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink cursor-pointer"
@@ -170,10 +172,16 @@ export const OrgCertificatesScreen: React.FC = () => {
 
           {/* Search */}
           <div>
-            <label className="block text-meta font-bold text-ink mb-1">جستجو:</label>
+            <label
+              htmlFor="org-certificates-f4"
+              className="block text-meta font-bold text-ink mb-1"
+            >
+              جستجو:
+            </label>
             <div className="relative">
               <Search className="w-4 h-4 absolute right-3 top-3.5 text-ink/40" />
               <input
+                id="org-certificates-f4"
                 type="text"
                 placeholder="جستجوی نام همکار، سریال یا عنوان..."
                 value={search}

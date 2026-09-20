@@ -1,22 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-  BarChart3,
-  TrendingUp,
-  Smile,
-  GraduationCap,
-  Briefcase,
-  Target,
-  Plus,
-  Printer,
-  CheckCircle2,
-  AlertCircle,
-  HelpCircle,
-  Sparkles,
-  Layers,
-} from 'lucide-react';
+import { BarChart3, Plus, Printer, CheckCircle2, HelpCircle } from 'lucide-react';
 import { effectivenessApi } from '../../../api/org/effectiveness';
 import { EffectivenessReport } from '../../../types/org';
 import { toFa } from '../../../lib/format';
+import { errorMessage } from '../../../lib/errors';
 
 export const OrgEffectivenessScreen: React.FC = () => {
   const [report, setReport] = useState<EffectivenessReport | null>(null);
@@ -67,8 +54,8 @@ export const OrgEffectivenessScreen: React.FC = () => {
       setShowKpiModal(false);
       setNotice(`شاخص «${kpiName}» با موفقیت افزوده شد.`);
       loadData();
-    } catch (err: any) {
-      setNotice(err.message);
+    } catch (err) {
+      setNotice(errorMessage(err) || 'خطای نامشخص رخ داد.');
     }
   };
 
@@ -79,8 +66,8 @@ export const OrgEffectivenessScreen: React.FC = () => {
       setShowSurveyModal(false);
       setNotice(res.message);
       loadData();
-    } catch (err: any) {
-      setNotice(err.message);
+    } catch (err) {
+      setNotice(errorMessage(err) || 'خطای نامشخص رخ داد.');
     }
   };
 
@@ -382,8 +369,14 @@ export const OrgEffectivenessScreen: React.FC = () => {
 
             <form onSubmit={handleAddKpi} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">نام شاخص عملیاتی:</label>
+                <label
+                  htmlFor="org-effectiveness-f1"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
+                  نام شاخص عملیاتی:
+                </label>
                 <input
+                  id="org-effectiveness-f1"
                   type="text"
                   placeholder="مثال: نرخ ضایعات کلاف نورد"
                   value={kpiName}
@@ -394,8 +387,14 @@ export const OrgEffectivenessScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">واحد سنجش:</label>
+                <label
+                  htmlFor="org-effectiveness-f2"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
+                  واحد سنجش:
+                </label>
                 <input
+                  id="org-effectiveness-f2"
                   type="text"
                   placeholder="مثال: درصد وزنی، ساعت در ماه، و..."
                   value={kpiUnit}
@@ -407,10 +406,14 @@ export const OrgEffectivenessScreen: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-meta font-bold text-ink mb-1">
+                  <label
+                    htmlFor="org-effectiveness-f3"
+                    className="block text-meta font-bold text-ink mb-1"
+                  >
                     مقدار قبل از دوره:
                   </label>
                   <input
+                    id="org-effectiveness-f3"
                     type="number"
                     step="0.1"
                     value={kpiBefore}
@@ -420,10 +423,14 @@ export const OrgEffectivenessScreen: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-meta font-bold text-ink mb-1">
+                  <label
+                    htmlFor="org-effectiveness-f4"
+                    className="block text-meta font-bold text-ink mb-1"
+                  >
                     مقدار پس از دوره:
                   </label>
                   <input
+                    id="org-effectiveness-f4"
                     type="number"
                     step="0.1"
                     value={kpiAfter}
@@ -479,8 +486,14 @@ export const OrgEffectivenessScreen: React.FC = () => {
 
             <form onSubmit={handleCreateSurvey} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">عنوان نظرسنجی:</label>
+                <label
+                  htmlFor="org-effectiveness-f5"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
+                  عنوان نظرسنجی:
+                </label>
                 <input
+                  id="org-effectiveness-f5"
                   type="text"
                   value={surveyTitle}
                   onChange={(e) => setSurveyTitle(e.target.value)}
@@ -490,10 +503,14 @@ export const OrgEffectivenessScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">
+                <label
+                  htmlFor="org-effectiveness-f6"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
                   دوره ارزیابی بعد از آموزش:
                 </label>
                 <select
+                  id="org-effectiveness-f6"
                   value={surveyDays}
                   onChange={(e) => setSurveyDays(Number(e.target.value))}
                   className="min-h-[44px] w-full px-3 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink"

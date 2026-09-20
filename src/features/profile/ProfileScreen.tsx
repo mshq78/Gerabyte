@@ -22,6 +22,7 @@ import { LEVEL_NAMES } from '../../lib/format';
 import { getJalaliMonthGrid, JalaliCalendarCell } from '../../lib/jalali';
 import { meApi } from '../../api/me';
 import { Badge, Level } from '../../types/domain';
+import { clickableProps } from '../../lib/a11y';
 
 export const ProfileScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -133,7 +134,7 @@ export const ProfileScreen: React.FC = () => {
         </div>
 
         <div
-          onClick={() => navigate('/certificates')}
+          {...clickableProps(() => navigate('/certificates'))}
           className="p-3.5 rounded-tile bg-surface border border-sunken hover:border-primary/40 shadow-xs flex items-center gap-3 cursor-pointer min-h-[48px]"
         >
           <div className="w-10 h-10 rounded-tile bg-domain-4-tint text-domain-4 flex items-center justify-center shrink-0">

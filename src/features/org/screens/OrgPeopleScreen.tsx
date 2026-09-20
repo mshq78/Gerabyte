@@ -1,33 +1,32 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   Search,
-  Filter,
   FileSpreadsheet,
   Upload,
   UserCheck,
   UserX,
   AlertTriangle,
-  MoveRight,
   ChevronLeft,
   X,
-  Check,
-  ArrowUpDown,
   Download,
-  Shield,
-  Layers,
 } from 'lucide-react';
 import { useOrgScope } from '../context/ScopeContext';
 import { orgApi } from '../../../api/org/client';
-import { OrgMember, OrgRole } from '../../../types/org';
+import { OrgMember } from '../../../types/org';
 import { toFa } from '../../../lib/format';
 import { Avatar } from '../../../components/ui/Avatar';
 import { useApp } from '../../../state/AppContext';
-import { exportMembersToXlsx, exportMembersToCsv, parseMembersFromFile } from '../utils/export';
+import {
+  exportMembersToXlsx,
+  exportMembersToCsv,
+  parseMembersFromFile,
+  RawImportRow,
+} from '../utils/export';
 
 export const OrgPeopleScreen: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { currentOrg, userRole, effectiveUnitId, units, canManageAllUnits } = useOrgScope();
+  const [searchParams] = useSearchParams();
+  const { currentOrg, effectiveUnitId, units, canManageAllUnits } = useOrgScope();
   const { showToast } = useApp();
 
   const [members, setMembers] = useState<OrgMember[]>([]);
@@ -38,7 +37,7 @@ export const OrgPeopleScreen: React.FC = () => {
   const initialUnit = searchParams.get('unit') || effectiveUnitId;
   const [unitFilter, setUnitFilter] = useState<string>(initialUnit);
   const [statusFilter, setStatusFilter] = useState<string>(searchParams.get('status') || 'all');
-  const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [roleFilter] = useState<string>('all');
   const [levelFilter, setLevelFilter] = useState<string>('all');
 
   // Multi-selection
@@ -47,8 +46,9 @@ export const OrgPeopleScreen: React.FC = () => {
   // Import Modal
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [importFile, setImportFile] = useState<File | null>(null);
-  const [importPreview, setImportPreview] = useState<any[]>([]);
+  const [importPreview, setImportPreview] = useState<RawImportRow[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const openFilePicker = () => fileInputRef.current?.click();
 
   // Sync unit filter with scope if user is unit_manager
   useEffect(() => {
@@ -57,7 +57,7 @@ export const OrgPeopleScreen: React.FC = () => {
     }
   }, [canManageAllUnits, effectiveUnitId]);
 
-  const fetchMembers = async () => {
+  const fetchMembers = useCallback(async () => {
     setLoading(true);
     const data = await orgApi.getMembers({
       unitId: unitFilter,
@@ -67,11 +67,11 @@ export const OrgPeopleScreen: React.FC = () => {
     });
     setMembers(data);
     setLoading(false);
-  };
+  }, [unitFilter, statusFilter, roleFilter, search]);
 
   useEffect(() => {
     fetchMembers();
-  }, [unitFilter, statusFilter, roleFilter, search]);
+  }, [fetchMembers]);
 
   // Filtered by level locally
   const filteredMembers = useMemo(() => {
@@ -121,7 +121,7 @@ export const OrgPeopleScreen: React.FC = () => {
     try {
       const parsed = await parseMembersFromFile(file);
       setImportPreview(parsed.slice(0, 5));
-    } catch (err: any) {
+    } catch (err) {
       showToast('خطا در خواندن فایل بارگذاری شده.', 'error');
     }
   };
@@ -457,23 +457,24 @@ export const OrgPeopleScreen: React.FC = () => {
               انتخاب نمایید.
             </p>
 
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-sunken hover:border-primary p-6 rounded-tile text-center cursor-pointer bg-canvas/40 transition-colors"
+            <button
+              type="button"
+              onClick={openFilePicker}
+              className="block w-full border-2 border-dashed border-sunken hover:border-primary p-6 rounded-tile text-center cursor-pointer bg-canvas/40 transition-colors"
             >
               <Upload className="w-8 h-8 text-primary mx-auto mb-2" />
               <span className="text-body font-bold text-ink">برای انتخاب فایل کلیک کنید</span>
-              <p className="text-meta text-ink/50 mt-1">
+              <span className="block text-meta text-ink/50 mt-1">
                 پشتیبانی از فایل‌های اکسل و CSV با فونت فارسی
-              </p>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".xlsx,.csv"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </div>
+              </span>
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".xlsx,.csv"
+              onChange={handleFileChange}
+              className="hidden"
+            />
 
             {importFile && (
               <div className="p-3 rounded-tile bg-domain-1-tint border border-primary/20 text-meta font-bold text-primary flex items-center justify-between">

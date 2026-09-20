@@ -260,7 +260,7 @@ export const OrgOverviewScreen: React.FC = () => {
                 <XAxis dataKey="dayName" tick={{ fill: '#0D3F6B', fontSize: 13 }} />
                 <YAxis tick={{ fill: '#0D3F6B', fontSize: 13 }} />
                 <Tooltip
-                  formatter={(val: any) => [`${toFa(val)} گرابایت`, 'دروس تکمیل شده']}
+                  formatter={(val) => [`${toFa(String(val ?? 0))} گرابایت`, 'دروس تکمیل شده']}
                   labelFormatter={(label) => `روز ${label}`}
                   contentStyle={{
                     backgroundColor: '#FFFFFF',
@@ -311,7 +311,7 @@ export const OrgOverviewScreen: React.FC = () => {
                   tick={{ fill: '#0D3F6B', fontSize: 11, textAnchor: 'end' }}
                 />
                 <Tooltip
-                  formatter={(val: any) => [`${toFa(val)}٪`, 'نرخ انطباق']}
+                  formatter={(val) => [`${toFa(String(val ?? 0))}٪`, 'نرخ انطباق']}
                   contentStyle={{
                     backgroundColor: '#FFFFFF',
                     borderColor: '#E8E1D5',

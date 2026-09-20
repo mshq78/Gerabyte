@@ -4,6 +4,18 @@ import readXlsxFile from 'read-excel-file/browser';
 import { OrgMember } from '../../../types/org';
 import { toFa } from '../../../lib/format';
 
+/** One row of a user-supplied CSV/XLSX import, keyed by its header cell. */
+export type RawImportRow = Record<string, unknown>;
+
+/**
+ * `write-excel-file/browser` overloads badly for the schema form; this is the
+ * shape we actually call.
+ */
+type XlsxWriter = (
+  rows: OrgMember[],
+  options: { schema: typeof EXCEL_SCHEMA; fileName: string }
+) => Promise<void>;
+
 export const EXCEL_SCHEMA = [
   { column: 'شناسه پرسنلی', type: String, value: (m: OrgMember) => m.id, width: 14 },
   { column: 'نام و نام خانوادگی', type: String, value: (m: OrgMember) => m.fullName, width: 22 },
@@ -40,7 +52,7 @@ export async function exportMembersToXlsx(
   members: OrgMember[],
   fileName = 'گزارش_پرسنل_گرابایت.xlsx'
 ): Promise<void> {
-  await (writeXlsx as any)(members, {
+  await (writeXlsx as unknown as XlsxWriter)(members, {
     schema: EXCEL_SCHEMA,
     fileName,
   });
@@ -85,23 +97,23 @@ export function exportMembersToCsv(
   URL.revokeObjectURL(url);
 }
 
-export async function parseMembersFromFile(file: File): Promise<any[]> {
+export async function parseMembersFromFile(file: File): Promise<RawImportRow[]> {
   if (file.name.endsWith('.csv')) {
     return new Promise((resolve, reject) => {
       Papa.parse(file, {
         header: true,
         skipEmptyLines: true,
-        complete: (results) => resolve(results.data),
+        complete: (results) => resolve(results.data as RawImportRow[]),
         error: (error) => reject(error),
       });
     });
   } else {
     // Excel file
-    const rows = (await readXlsxFile(file)) as unknown as any[][];
+    const rows = (await readXlsxFile(file)) as unknown as unknown[][];
     if (rows.length < 2) return [];
     const headers = rows[0].map(String);
-    const data = rows.slice(1).map((row: any[]) => {
-      const obj: Record<string, any> = {};
+    const data = rows.slice(1).map((row: unknown[]) => {
+      const obj: RawImportRow = {};
       headers.forEach((h, i) => {
         obj[h] = row[i];
       });

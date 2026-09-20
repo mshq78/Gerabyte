@@ -5,6 +5,7 @@ import { authApi } from '../../api/auth';
 import { Button } from '../../components/ui/Button';
 import { useApp } from '../../state/AppContext';
 import { toFa } from '../../lib/toFa';
+import { errorMessage } from '../../lib/errors';
 
 export const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -48,8 +49,8 @@ export const LoginScreen: React.FC = () => {
       setResendTimer(60);
       showToast('کد ۵ رقمی ارسال شد (کد آزمایشی: ۱۲۳۴۵)', 'info');
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
-    } catch (err: any) {
-      showToast(err.message || 'خطا در ارسال کد', 'error');
+    } catch (err) {
+      showToast(errorMessage(err) || 'خطا در ارسال کد', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -91,8 +92,8 @@ export const LoginScreen: React.FC = () => {
         showToast('ورود با موفقیت انجام شد.', 'success');
         navigate('/');
       }
-    } catch (err: any) {
-      showToast(err.message || 'کد وارد شده صحیح نمی‌باشد.', 'error');
+    } catch (err) {
+      showToast(errorMessage(err) || 'کد وارد شده صحیح نمی‌باشد.', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -109,8 +110,8 @@ export const LoginScreen: React.FC = () => {
       updateUserLocal(res.user);
       showToast('ورود با موفقیت انجام شد.', 'success');
       navigate('/');
-    } catch (err: any) {
-      showToast(err.message || 'نام کاربری یا رمز عبور اشتباه است.', 'error');
+    } catch (err) {
+      showToast(errorMessage(err) || 'نام کاربری یا رمز عبور اشتباه است.', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -178,10 +179,14 @@ export const LoginScreen: React.FC = () => {
                 {otpStep === 'request' ? (
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-meta font-bold mb-1.5 text-ink">
+                      <label
+                        htmlFor="login-f1"
+                        className="block text-meta font-bold mb-1.5 text-ink"
+                      >
                         شماره تلفن همراه:
                       </label>
                       <input
+                        id="login-f1"
                         type="tel"
                         value={mobile}
                         onChange={(e) => setMobile(e.target.value)}
@@ -267,10 +272,11 @@ export const LoginScreen: React.FC = () => {
             {activeTab === 'password' && (
               <div className="space-y-3 pt-1">
                 <div>
-                  <label className="block text-meta font-bold mb-1.5 text-ink">
+                  <label htmlFor="login-f2" className="block text-meta font-bold mb-1.5 text-ink">
                     شماره تلفن همراه:
                   </label>
                   <input
+                    id="login-f2"
                     type="tel"
                     value={mobile}
                     onChange={(e) => setMobile(e.target.value)}
@@ -281,8 +287,11 @@ export const LoginScreen: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-meta font-bold mb-1.5 text-ink">کلمه عبور:</label>
+                  <label htmlFor="login-f3" className="block text-meta font-bold mb-1.5 text-ink">
+                    کلمه عبور:
+                  </label>
                   <input
+                    id="login-f3"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -313,10 +322,11 @@ export const LoginScreen: React.FC = () => {
 
             <div className="space-y-3 pt-1">
               <div>
-                <label className="block text-meta font-bold mb-1 text-ink">
+                <label htmlFor="login-f4" className="block text-meta font-bold mb-1 text-ink">
                   نام و نام خانوادگی:
                 </label>
                 <input
+                  id="login-f4"
                   type="text"
                   value={setupFullName}
                   onChange={(e) => setSetupFullName(e.target.value)}
@@ -325,10 +335,11 @@ export const LoginScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold mb-1 text-ink">
+                <label htmlFor="login-f5" className="block text-meta font-bold mb-1 text-ink">
                   نام مستعار در جدول عمومی (اختیاری):
                 </label>
                 <input
+                  id="login-f5"
                   type="text"
                   value={setupNickname}
                   onChange={(e) => setSetupNickname(e.target.value)}

@@ -12,6 +12,7 @@ import { pathsApi } from '../../api/paths';
 import { challengesApi } from '../../api/challenges';
 import { meApi } from '../../api/me';
 import { Challenge, LessonSummary } from '../../types/domain';
+import { clickableProps } from '../../lib/a11y';
 
 export const HomeScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export const HomeScreen: React.FC = () => {
       <header className="flex items-center justify-between bg-surface p-3 rounded-tile border border-sunken shadow-xs">
         {/* User Identity & Level */}
         <div
-          onClick={() => navigate('/profile')}
+          {...clickableProps(() => navigate('/profile'))}
           className="flex items-center gap-3 cursor-pointer group select-none min-h-[48px]"
         >
           <Avatar seed={user.avatarSeed} size={44} />
@@ -252,7 +253,7 @@ export const HomeScreen: React.FC = () => {
       {/* 6. Active Challenge Strip (if any) */}
       {activeChallenge && (
         <section
-          onClick={() => navigate(`/challenges/${activeChallenge.id}`)}
+          {...clickableProps(() => navigate(`/challenges/${activeChallenge.id}`))}
           className="p-4 rounded-tile bg-surface border border-sunken hover:border-primary/50 shadow-xs cursor-pointer transition-all"
         >
           <div className="flex items-center justify-between mb-2">
@@ -287,7 +288,7 @@ export const HomeScreen: React.FC = () => {
 
       {/* 7. Compact League Standing */}
       <section
-        onClick={() => navigate('/league')}
+        {...clickableProps(() => navigate('/league'))}
         className="p-4 rounded-tile bg-surface border border-sunken hover:border-primary/50 shadow-xs cursor-pointer transition-all flex items-center justify-between min-h-[48px]"
       >
         <div className="flex items-center gap-3">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Sparkles } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 
 export const OrgDashboardScreen: React.FC = () => {
   return (

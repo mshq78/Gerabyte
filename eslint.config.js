@@ -33,6 +33,8 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       ...jsxA11y.flatConfigs.recommended.rules,
       'react-hooks/exhaustive-deps': 'error',
+      // label text lives inside a <div><strong>…</strong><span>…</span></div>
+      'jsx-a11y/label-has-associated-control': ['error', { depth: 3 }],
       // React-Compiler rule: every screen loads its data from the mock API in a
       // mount effect. Re-architecting that belongs with the real data layer in
       // Phase 2, not in a cleanup pass.

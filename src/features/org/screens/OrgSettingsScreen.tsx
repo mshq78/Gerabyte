@@ -12,16 +12,14 @@ import {
   Move,
   AlertTriangle,
   CheckCircle2,
-  ChevronLeft,
-  ChevronDown,
   Info,
-  Users,
 } from 'lucide-react';
 import { orgSettingsApi, OrgProfileSettings } from '../../../api/org/settings';
 import { orgApi } from '../../../api/org/client';
 import { OrgUnit, OrgReminderPolicy, OrgMember } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
 import { toFa } from '../../../lib/format';
+import { errorMessage } from '../../../lib/errors';
 
 export const OrgSettingsScreen: React.FC = () => {
   const { userRole } = useOrgScope();
@@ -94,8 +92,8 @@ export const OrgSettingsScreen: React.FC = () => {
       setNewUnitName('');
       setMessage({ type: 'success', text: `واحد «${newUnitName}» با موفقیت افزوده شد.` });
       loadData();
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.message });
+    } catch (err) {
+      setMessage({ type: 'error', text: errorMessage(err) || 'خطای نامشخص رخ داد.' });
     }
   };
 
@@ -107,8 +105,8 @@ export const OrgSettingsScreen: React.FC = () => {
       setShowRenameModal(false);
       setMessage({ type: 'success', text: 'نام واحد با موفقیت تغییر یافت.' });
       loadData();
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.message });
+    } catch (err) {
+      setMessage({ type: 'error', text: errorMessage(err) || 'خطای نامشخص رخ داد.' });
     }
   };
 
@@ -120,8 +118,8 @@ export const OrgSettingsScreen: React.FC = () => {
       setShowMoveModal(false);
       setMessage({ type: 'success', text: 'واحد با موفقیت در درخت سازمان جابجا شد.' });
       loadData();
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.message });
+    } catch (err) {
+      setMessage({ type: 'error', text: errorMessage(err) || 'خطای نامشخص رخ داد.' });
     }
   };
 
@@ -131,8 +129,8 @@ export const OrgSettingsScreen: React.FC = () => {
       await orgSettingsApi.deleteUnit(unit.id);
       setMessage({ type: 'success', text: `واحد «${unit.name}» حذف گردید.` });
       loadData();
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.message });
+    } catch (err) {
+      setMessage({ type: 'error', text: errorMessage(err) || 'خطای نامشخص رخ داد.' });
     }
   };
 
@@ -150,8 +148,8 @@ export const OrgSettingsScreen: React.FC = () => {
         text: `همکار گرامی «${member.fullName}» به‌عنوان مدیر واحد «${selectedUnit.name}» منصوب شد و دسترسی unit_manager به ایشان تخصیص یافت.`,
       });
       loadData();
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.message });
+    } catch (err) {
+      setMessage({ type: 'error', text: errorMessage(err) || 'خطای نامشخص رخ داد.' });
     }
   };
 
@@ -254,7 +252,6 @@ export const OrgSettingsScreen: React.FC = () => {
         {/* Units Tree List */}
         <div className="space-y-2 pt-2">
           {units.map((unit) => {
-            const hasChildren = units.some((u) => u.parentId === unit.id);
             const parent = units.find((u) => u.id === unit.parentId);
 
             return (
@@ -478,8 +475,14 @@ export const OrgSettingsScreen: React.FC = () => {
             <h3 className="text-title font-black text-ink">افزودن واحد جدید به درخت سازمان</h3>
             <form onSubmit={handleAddUnit} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">نام واحد سازمانی:</label>
+                <label
+                  htmlFor="org-settings-f1"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
+                  نام واحد سازمانی:
+                </label>
                 <input
+                  id="org-settings-f1"
                   type="text"
                   placeholder="مثال: کارگاه تراشکاری و سنگ‌زنی"
                   value={newUnitName}
@@ -490,10 +493,14 @@ export const OrgSettingsScreen: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">
+                <label
+                  htmlFor="org-settings-f2"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
                   موقعیت در درخت (واحد والد):
                 </label>
                 <select
+                  id="org-settings-f2"
                   value={newUnitParentId || ''}
                   onChange={(e) => setNewUnitParentId(e.target.value || null)}
                   className="min-h-[44px] w-full px-3 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink"
@@ -534,8 +541,14 @@ export const OrgSettingsScreen: React.FC = () => {
             <h3 className="text-title font-black text-ink">تغییر نام واحد</h3>
             <form onSubmit={handleRenameUnit} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">نام جدید واحد:</label>
+                <label
+                  htmlFor="org-settings-f3"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
+                  نام جدید واحد:
+                </label>
                 <input
+                  id="org-settings-f3"
                   type="text"
                   value={renameValue}
                   onChange={(e) => setRenameValue(e.target.value)}
@@ -573,10 +586,14 @@ export const OrgSettingsScreen: React.FC = () => {
             </h3>
             <form onSubmit={handleMoveUnit} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">
+                <label
+                  htmlFor="org-settings-f4"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
                   انتخاب واحد والد جدید:
                 </label>
                 <select
+                  id="org-settings-f4"
                   value={targetParentId || ''}
                   onChange={(e) => setTargetParentId(e.target.value || null)}
                   className="min-h-[44px] w-full px-3 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink"
@@ -621,10 +638,14 @@ export const OrgSettingsScreen: React.FC = () => {
             </h3>
             <form onSubmit={handleAssignManager} className="space-y-4">
               <div>
-                <label className="block text-meta font-bold text-ink mb-1">
+                <label
+                  htmlFor="org-settings-f5"
+                  className="block text-meta font-bold text-ink mb-1"
+                >
                   انتخاب از میان سرپرستان و مدیران:
                 </label>
                 <select
+                  id="org-settings-f5"
                   value={selectedManagerId}
                   onChange={(e) => setSelectedManagerId(e.target.value)}
                   className="min-h-[44px] w-full px-3 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink"
