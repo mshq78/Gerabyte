@@ -14,13 +14,15 @@ import {
 } from 'lucide-react';
 import { challengeRequestsApi } from '../../../api/org/challengeRequests';
 import { useOrgScope } from '../context/ScopeContext';
+import { useApp } from '../../../state/AppContext';
 import { toFa } from '../../../lib/format';
 import { Level } from '../../../types/domain';
 import { errorMessage } from '../../../lib/errors';
 
 export const OrgChallengeNewScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { units, userRole } = useOrgScope();
+  const { units } = useOrgScope();
+  const { user } = useApp();
 
   // Form State
   const [title, setTitle] = useState('');
@@ -110,7 +112,7 @@ export const OrgChallengeNewScreen: React.FC = () => {
         endsAt,
         suggestedPrize,
         notes,
-        requestedByName: userRole === 'unit_manager' ? 'مهندس علیرضا رضایی' : 'مهندس محمدرضا صادقی',
+        requestedByName: user.fullName,
         status,
       });
 

@@ -16,6 +16,7 @@ import { subscriptionsApi } from '../../../api/org/subscriptions';
 import { orgApi } from '../../../api/org/client';
 import { ImportJob } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
+import { can } from '../../../lib/permissions';
 import { toFa } from '../../../lib/format';
 
 type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
@@ -84,7 +85,8 @@ export const OrgImportScreen: React.FC = () => {
   }, []);
 
   // Access check: org_admin only
-  if (userRole === 'unit_manager') {
+  // TODO(server): authoritative RBAC and scope on every endpoint; UI guards are UX only.
+  if (!can(userRole, 'org.import.manage')) {
     return (
       <div className="p-8 text-center space-y-4 max-w-lg mx-auto">
         <div className="w-16 h-16 rounded-full bg-domain-2-tint text-danger flex items-center justify-center mx-auto">

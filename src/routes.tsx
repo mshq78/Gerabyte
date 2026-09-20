@@ -1,6 +1,8 @@
-import React, { ReactNode, Suspense } from 'react';
+import React, { ReactNode, Suspense, useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { hasSession } from './api/auth';
+import { useApp } from './state/AppContext';
+import { canOpenDashboard, isGeraAdmin } from './lib/permissions';
 import { LearnerShell } from './shells/LearnerShell';
 import { DashboardShell } from './shells/DashboardShell';
 
@@ -102,6 +104,34 @@ export const RequireAuth: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   if (!hasSession()) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return <>{children}</>;
+};
+
+/**
+ * Route guard for role-restricted areas. Sends anyone without the role back to
+ * the learner home with an explanation.
+ *
+ * TODO(server): authoritative RBAC and scope on every endpoint; UI guards are UX only.
+ */
+export const RequireRole: React.FC<{ area: 'org' | 'admin'; children: ReactNode }> = ({
+  area,
+  children,
+}) => {
+  const { user, showToast } = useApp();
+  const allowed = area === 'org' ? canOpenDashboard(user) : isGeraAdmin(user);
+  const warned = useRef(false);
+
+  useEffect(() => {
+    if (!allowed && !warned.current) {
+      warned.current = true;
+      showToast('به این بخش دسترسی ندارید', 'error');
+    }
+  }, [allowed, showToast]);
+
+  if (!allowed) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
@@ -271,159 +301,141 @@ export const AppRoutes: React.FC = () => {
       </Route>
 
       {/* =========================================
-          3. DASHBOARD SHELL LAYOUT ROUTE
+          3. ORGANIZATION DASHBOARD (org_admin | unit_manager)
          ========================================= */}
-      <Route element={<DashboardShell />}>
-        <Route
-          path="/org"
-          element={
-            <RequireAuth>
-              <Navigate to="/org/overview" replace />
-            </RequireAuth>
-          }
-        />
+      <Route
+        element={
+          <RequireAuth>
+            <RequireRole area="org">
+              <DashboardShell />
+            </RequireRole>
+          </RequireAuth>
+        }
+      >
+        <Route path="/org" element={<Navigate to="/org/overview" replace />} />
         <Route
           path="/org/overview"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgOverviewScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgOverviewScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/people"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgPeopleScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgPeopleScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/people/:id"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgPersonDetailScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgPersonDetailScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/import"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgImportScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgImportScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/assignments"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgAssignmentsScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgAssignmentsScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/challenges"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgChallengesScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgChallengesScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/challenges/new"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgChallengeNewScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgChallengeNewScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/challenges/:id"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgChallengeDetailScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgChallengeDetailScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/subscriptions"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgSubscriptionsScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgSubscriptionsScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/certificates"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgCertificatesScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgCertificatesScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/effectiveness"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgEffectivenessScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgEffectivenessScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/settings"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgSettingsScreen />
-              </Suspense>
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgSettingsScreen />
+            </Suspense>
           }
         />
         <Route
           path="/org/reports"
           element={
-            <RequireAuth>
-              <Suspense fallback={<OrgLoadingFallback />}>
-                <OrgReportsScreen />
-              </Suspense>
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <RequireAuth>
-              <AdminDashboardScreen />
-            </RequireAuth>
+            <Suspense fallback={<OrgLoadingFallback />}>
+              <OrgReportsScreen />
+            </Suspense>
           }
         />
       </Route>
 
       {/* =========================================
-          4. CATCH-ALL REDIRECT
+          4. GERA ADMIN PANEL (gera_admin)
+         ========================================= */}
+      <Route
+        element={
+          <RequireAuth>
+            <RequireRole area="admin">
+              <DashboardShell />
+            </RequireRole>
+          </RequireAuth>
+        }
+      >
+        <Route path="/admin" element={<AdminDashboardScreen />} />
+      </Route>
+
+      {/* =========================================
+          5. CATCH-ALL REDIRECT
          ========================================= */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

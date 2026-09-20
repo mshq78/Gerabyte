@@ -86,14 +86,17 @@ export interface OrgKpiSummary {
 
 export interface ScopeContextType {
   currentOrg: { id: string; name: string };
+  /** Derived from the session's roles; never switchable from the UI. */
   userRole: OrgRole;
-  availableRoles: OrgRole[];
-  setUserRole: (role: OrgRole) => void;
   selectedUnitId: string | 'all';
   setSelectedUnitId: (unitId: string | 'all') => void;
   units: OrgUnit[];
   canManageAllUnits: boolean;
   effectiveUnitId: string | 'all';
+  /** Root of a unit manager's subtree; undefined for an org admin. */
+  managedNodeId?: string;
+  /** Display name for that subtree, falling back to the organization name. */
+  managedUnitName: string;
 }
 
 export type OrgScope = 'all' | { unitId: string; unitName?: string; includeChildren?: boolean };

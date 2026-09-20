@@ -14,12 +14,12 @@ import {
 import { challengeRequestsApi } from '../../../api/org/challengeRequests';
 import { ChallengeRequest } from '../../../types/org';
 import { toFa } from '../../../lib/format';
-import { useOrgScope } from '../context/ScopeContext';
+import { useApp } from '../../../state/AppContext';
 import { errorMessage } from '../../../lib/errors';
 
 export const OrgChallengeDetailScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { userRole } = useOrgScope();
+  const { user } = useApp();
   const [request, setRequest] = useState<ChallengeRequest | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -61,10 +61,7 @@ export const OrgChallengeDetailScreen: React.FC = () => {
 
   const handleWithdraw = async () => {
     try {
-      const updated = await challengeRequestsApi.withdraw(
-        request.id,
-        userRole === 'unit_manager' ? 'مهندس علیرضا رضایی' : 'مهندس محمدرضا صادقی'
-      );
+      const updated = await challengeRequestsApi.withdraw(request.id, user.fullName);
       setRequest(updated);
       setActionMessage('درخواست جهت ویرایش مجدد بازپس‌گرفته شد.');
     } catch (err) {
@@ -74,10 +71,7 @@ export const OrgChallengeDetailScreen: React.FC = () => {
 
   const handleSubmitAgain = async () => {
     try {
-      const updated = await challengeRequestsApi.submit(
-        request.id,
-        userRole === 'unit_manager' ? 'مهندس علیرضا رضایی' : 'مهندس محمدرضا صادقی'
-      );
+      const updated = await challengeRequestsApi.submit(request.id, user.fullName);
       setRequest(updated);
       setActionMessage('درخواست به تیم پشتیبانی گرا ارسال گردید.');
     } catch (err) {

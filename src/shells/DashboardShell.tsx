@@ -23,6 +23,7 @@ import { Avatar } from '../components/ui/Avatar';
 import { DevTools } from '../components/DevTools';
 import { authApi } from '../api/auth';
 import { ScopeProvider, useOrgScope } from '../features/org/context/ScopeContext';
+import { Permission, can } from '../lib/permissions';
 
 interface DashboardShellInnerProps {
   children?: ReactNode;
@@ -34,8 +35,15 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useApp();
-  const { currentOrg, userRole, selectedUnitId, setSelectedUnitId, units, canManageAllUnits } =
-    useOrgScope();
+  const {
+    currentOrg,
+    userRole,
+    selectedUnitId,
+    setSelectedUnitId,
+    units,
+    canManageAllUnits,
+    managedUnitName,
+  } = useOrgScope();
 
   const isAdmin = location.pathname.startsWith('/admin');
   const panelTitle = isAdmin ? 'پنل تیم گرا' : 'داشبورد سازمان';
@@ -46,29 +54,80 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
     navigate('/login');
   };
 
+  // Every dashboard entry names the permission it needs, so a role that cannot
+  // use a screen never sees a link to it.
+  //
+  // TODO(server): authoritative RBAC and scope on every endpoint; UI guards are UX only.
+  const orgNavItems: { path: string; label: string; icon: typeof BarChart3; needs: Permission }[] =
+    [
+      {
+        path: '/org/overview',
+        label: 'نمای کلی و شاخص‌ها',
+        icon: BarChart3,
+        needs: 'org.overview.view',
+      },
+      {
+        path: '/org/people',
+        label: 'همکاران و مدیریت دسترسی',
+        icon: Users,
+        needs: 'org.people.view',
+      },
+      {
+        path: '/org/import',
+        label: 'بارگذاری گروهی پرسنل',
+        icon: UploadCloud,
+        needs: 'org.import.manage',
+      },
+      {
+        path: '/org/assignments',
+        label: 'مأموریت‌ها و مسیرها',
+        icon: GraduationCap,
+        needs: 'org.assignments.manage',
+      },
+      {
+        path: '/org/challenges',
+        label: 'چالش‌های سازمانی',
+        icon: Trophy,
+        needs: 'org.challengeRequests.manage',
+      },
+      {
+        path: '/org/certificates',
+        label: 'گواهینامه‌های رسمی',
+        icon: Award,
+        needs: 'org.certificates.view',
+      },
+      {
+        path: '/org/effectiveness',
+        label: 'ارزیابی اثربخشی (L1-L4)',
+        icon: LineChart,
+        needs: 'org.effectiveness.view',
+      },
+      {
+        path: '/org/subscriptions',
+        label: 'سهمیه‌ها و اشتراک‌ها',
+        icon: CreditCard,
+        needs: 'org.subscriptions.manage',
+      },
+      {
+        path: '/org/reports',
+        label: 'گزارش‌های تحلیلی و چاپ',
+        icon: BarChart3,
+        needs: 'org.reports.view',
+      },
+      {
+        path: '/org/settings',
+        label: 'تنظیمات و ساختار درخت',
+        icon: Settings,
+        needs: 'org.settings.manage',
+      },
+    ];
+
   const navItems = isAdmin
     ? [
         { path: '/admin', label: 'مدیریت محتوا و سامانه', icon: Sliders },
         { path: '/org/overview', label: 'داشبورد سازمانی', icon: Building2 },
       ]
-    : [
-        { path: '/org/overview', label: 'نمای کلی و شاخص‌ها', icon: BarChart3 },
-        { path: '/org/people', label: 'همکاران و مدیریت دسترسی', icon: Users },
-        ...(userRole === 'org_admin'
-          ? [{ path: '/org/import', label: 'بارگذاری گروهی پرسنل', icon: UploadCloud }]
-          : []),
-        { path: '/org/assignments', label: 'مأموریت‌ها و مسیرها', icon: GraduationCap },
-        { path: '/org/challenges', label: 'چالش‌های سازمانی', icon: Trophy },
-        { path: '/org/certificates', label: 'گواهینامه‌های رسمی', icon: Award },
-        { path: '/org/effectiveness', label: 'ارزیابی اثربخشی (L1-L4)', icon: LineChart },
-        ...(userRole === 'org_admin'
-          ? [{ path: '/org/subscriptions', label: 'سهمیه‌ها و اشتراک‌ها', icon: CreditCard }]
-          : []),
-        { path: '/org/reports', label: 'گزارش‌های تحلیلی و چاپ', icon: BarChart3 },
-        ...(userRole === 'org_admin'
-          ? [{ path: '/org/settings', label: 'تنظیمات و ساختار درخت', icon: Settings }]
-          : []),
-      ];
+    : orgNavItems.filter((item) => can(userRole, item.needs));
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-surface border-l border-sunken text-ink">
@@ -133,7 +192,7 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
           <div className="flex-1 min-w-0">
             <h4 className="text-meta font-bold text-ink truncate">{user.fullName}</h4>
             <p className="text-meta text-ink/60 truncate">
-              {userRole === 'org_admin' ? 'مدیر ارشد سازمان' : 'مدیر واحد (شیفت)'}
+              {userRole === 'org_admin' ? 'مدیر ارشد سازمان' : `مدیر ${managedUnitName}`}
             </p>
           </div>
         </div>
@@ -204,7 +263,7 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
             </div>
           </div>
 
-          {/* Scope Controls & Role Switcher */}
+          {/* Scope Controls */}
           <div className="flex flex-wrap items-center gap-3">
             {/* Unit filter dropdown for org_admin */}
             {canManageAllUnits ? (
@@ -227,7 +286,7 @@ const DashboardShellInner: React.FC<DashboardShellInnerProps> = ({ children, tit
               </div>
             ) : (
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-tile bg-canvas border border-sunken text-meta font-bold text-ink">
-                <span>واحد نورد گرم (شیفت)</span>
+                <span>{managedUnitName}</span>
               </div>
             )}
 

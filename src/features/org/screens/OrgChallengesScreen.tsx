@@ -13,6 +13,7 @@ import {
 import { challengeRequestsApi } from '../../../api/org/challengeRequests';
 import { ChallengeRequest, ChallengeRequestStatus } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
+import { useApp } from '../../../state/AppContext';
 import { toFa } from '../../../lib/format';
 
 const STATUS_LABELS: Record<
@@ -62,6 +63,7 @@ const STATUS_LABELS: Record<
 
 export const OrgChallengesScreen: React.FC = () => {
   const { userRole } = useOrgScope();
+  const { user } = useApp();
   const [requests, setRequests] = useState<ChallengeRequest[]>([]);
   const [statusFilter, setStatusFilter] = useState<ChallengeRequestStatus | 'all'>('all');
   const [search, setSearch] = useState('');
@@ -73,13 +75,13 @@ export const OrgChallengesScreen: React.FC = () => {
       const list = await challengeRequestsApi.list({
         status: statusFilter,
         role: userRole,
-        managerName: userRole === 'unit_manager' ? 'علیرضا رضایی' : undefined,
+        managerName: userRole === 'unit_manager' ? user.fullName : undefined,
       });
       setRequests(list);
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, userRole]);
+  }, [statusFilter, userRole, user.fullName]);
 
   useEffect(() => {
     loadData();

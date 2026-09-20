@@ -18,6 +18,7 @@ import { orgSettingsApi, OrgProfileSettings } from '../../../api/org/settings';
 import { orgApi } from '../../../api/org/client';
 import { OrgUnit, OrgReminderPolicy, OrgMember } from '../../../types/org';
 import { useOrgScope } from '../context/ScopeContext';
+import { can } from '../../../lib/permissions';
 import { toFa } from '../../../lib/format';
 import { errorMessage } from '../../../lib/errors';
 
@@ -67,7 +68,8 @@ export const OrgSettingsScreen: React.FC = () => {
     loadData();
   }, []);
 
-  if (userRole === 'unit_manager') {
+  // TODO(server): authoritative RBAC and scope on every endpoint; UI guards are UX only.
+  if (!can(userRole, 'org.settings.manage')) {
     return (
       <div className="p-8 text-center space-y-4 max-w-lg mx-auto">
         <div className="w-16 h-16 rounded-full bg-domain-2-tint text-danger flex items-center justify-center mx-auto">
