@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 import { useLocation, Outlet } from 'react-router-dom';
 import { BottomNav } from '../components/layout/BottomNav';
 import { OfflineBanner } from '../components/ui/OfflineBanner';
-import { Toast } from '../components/ui/Toast';
 import { useApp } from '../state/AppContext';
 
 interface LearnerShellProps {
@@ -10,7 +9,7 @@ interface LearnerShellProps {
 }
 
 export const LearnerShell: React.FC<LearnerShellProps> = ({ children }) => {
-  const { isOffline, toast } = useApp();
+  const { isOffline } = useApp();
   const location = useLocation();
 
   // Hide bottom nav on full-screen flows (lesson player, exam, login, onboarding, placement)
@@ -28,9 +27,6 @@ export const LearnerShell: React.FC<LearnerShellProps> = ({ children }) => {
       <div className="w-full max-w-[480px] min-h-screen bg-canvas shadow-2xl relative flex flex-col overflow-x-hidden">
         {/* Offline Banner */}
         <OfflineBanner isOffline={isOffline} />
-
-        {/* Floating Toast notifications */}
-        <Toast toast={toast} />
 
         {/* Main View Container */}
         <main className={`flex-1 flex flex-col ${isFullScreenFlow ? '' : 'pb-24'}`}>
