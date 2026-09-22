@@ -164,8 +164,8 @@ the real API rather than a stubbed session. `check` runs the server tests when
 
 Created with the Neon and Vercel MCP tools:
 
-- Neon project **`gerabyte`** (`winter-darkness-24928445`), `aws-us-east-2`,
-  Postgres 17. Branch `staging` (`br-fancy-mode-b4saatcn`), database
+- Neon project **`gerabyte`** (`<neon-project-id>`), `aws-us-east-2`,
+  Postgres 17. Branch `staging` (`<neon-staging-branch-id>`), database
   `gerabyte`, role `gerabyte_app`. Both migrations applied: 10 tables, 33
   indexes, 11 foreign keys, 4 enums, both audit triggers, and the two
   `drizzle.__drizzle_migrations` rows so `npm run db:migrate` from a machine
@@ -253,7 +253,7 @@ Vercel, so the scrypt fallback stayed a fallback (it is still implemented and
 
 ## Exact Vercel environment variables
 
-Project `gerabyte` (`prj_FL0e4SQXnQ5VQtrofbmJCEa2EVuJ`), team `gerabyte`.
+Project `gerabyte` (`<vercel-project-id>`), team `gerabyte`.
 All eleven are set on **Production + Preview**, except `APP_ORIGIN`.
 
 | Key                     | Target        | Type      | Value                                         |

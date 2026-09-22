@@ -29,17 +29,22 @@ build. `DEPLOY_ENV` is explicit and says what we actually mean:
 ### Cloud resources
 
 - **Vercel** — team `gerabyte`, project `gerabyte`
-  (`prj_FL0e4SQXnQ5VQtrofbmJCEa2EVuJ`). Vercel Authentication (SSO protection)
+  (`<vercel-project-id>`). Vercel Authentication (SSO protection)
   is **on**: every deployment, staging included, is behind the team login. Keep
   it on until there is a real production domain.
-- **Neon** — project `gerabyte` (`winter-darkness-24928445`), region
+- **Neon** — project `gerabyte` (`<neon-project-id>`), region
   `aws-us-east-2`, Postgres 17. Branch `staging`
-  (`br-fancy-mode-b4saatcn`), database `gerabyte`, role `gerabyte_app`.
-  Pooled host `ep-bold-cherry-b4xhcn08-pooler.c-6.us-east-2.aws.neon.tech`;
+  (`<neon-staging-branch-id>`), database `gerabyte`, role `gerabyte_app`.
+  Pooled host `<project>-pooler.<region>.aws.neon.tech`;
   the direct host is the same name without `-pooler`.
 
-The older Neon project `geradb` (`dawn-dream-86280570`) belongs to a previous
-app and is not used by GeraByte. Leave it alone.
+The older Neon project `geradb` belongs to a previous app and is not used by
+GeraByte. Leave it alone.
+
+The real project, branch and endpoint identifiers are deliberately not in
+this file: the repository is public, and naming the exact database endpoint
+tells an attacker where to aim without telling you anything you cannot read
+off the Neon and Vercel dashboards in ten seconds.
 
 ---
 
